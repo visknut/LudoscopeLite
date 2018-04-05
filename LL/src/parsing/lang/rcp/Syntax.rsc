@@ -1,4 +1,4 @@
-module lang::rcp::Syntax
+module parsing::lang::rcp::Syntax
 import ParseTree;
 
 start syntax RCP

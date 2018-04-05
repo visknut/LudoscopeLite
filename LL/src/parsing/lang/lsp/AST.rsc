@@ -1,7 +1,7 @@
 /*****************************************************************************/
 /*!
 * LSP (Ludoscope Project) Abstract Syntax
-* @package      lang::lsp
+* @package      parsing::lang::lsp
 * @file         AST.rsc
 * @brief        Defines Ludoscope Project Abstract Syntax
 * @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
@@ -9,16 +9,16 @@
 * @note         Language: Rascal
 */
 /*****************************************************************************/
-module lang::lsp::AST
+module parsing::lang::lsp::AST
 
-import lang::lsp::Syntax;
+import parsing::lang::lsp::Syntax;
 import ParseTree;
 
 /***************************************************************************** 
  * Public APIs
  *****************************************************************************/
 public lang::lsp::AST::LSP lsp_implode(Tree tree)
-  = implode(#lang::lsp::AST::LSP, tree);
+  = implode(#parsing::lang::lsp::AST::LSP, tree);
 
 /***************************************************************************** 
  * Source location annotations

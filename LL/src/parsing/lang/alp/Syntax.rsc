@@ -1,4 +1,4 @@
-module lang::alp::Syntax
+module parsing::lang::alp::Syntax
 import ParseTree;
 
 start syntax ALP
@@ -55,4 +55,4 @@ public start[ALP] alp_parse(loc file) =
   parse(#start[ALP], file);
   
 public start[ALP] alp_parse_test() = 
-   alp_parse(|project://LL/src/lang/completeAlphabet/test.alp|);
+   alp_parse(|project://LL/src/Tests/testData/completeAlphabet.alp|);

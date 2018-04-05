@@ -1,4 +1,0 @@
-CreateTileMap(width, height, "undefined")
-IterateRule("PlaceStart")
-ExecuteRule("MoveExit", 100)
-ExecuteRule("AddVariation", 2)

@@ -1,50 +1,39 @@
 /*****************************************************************************/
 /*!
-* GRM (Ludoscope Grammar) Abstract Syntax
-* @package      lang::grm
+* ALP (Ludoscope Alphabet) Abstract Syntax
+* @package      parsing::lang::alp
 * @file         AST.rsc
-* @brief        Defines Ludoscope Grammar Abstract Syntax
+* @brief        Defines Ludoscope Alphabet Abstract Syntax
 * @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
 * @date         March 9th 2018
 * @note         Language: Rascal
 */
 /*****************************************************************************/
-module lang::grm::AST
+module parsing::lang::alp::AST
 
-import lang::grm::Syntax;
+import parsing::lang::alp::Syntax;
 import ParseTree;
 
 /***************************************************************************** 
  * Public APIs
  *****************************************************************************/
-public lang::grm::AST::GRM grm_implode(Tree tree)
-  = implode(#lang::grm::AST::GRM, tree);
+public lang::alp::AST::ALP alp_implode(Tree tree)
+  = implode(#parsing::lang::alp::AST::ALP, tree);
 
 /***************************************************************************** 
  * Source location annotations
  *****************************************************************************/
-anno loc GRM@location;
+anno loc ALP@location;
 
 /***************************************************************************** 
  * LSP (Ludoscope Project) AST
  *****************************************************************************/			
-data GRM
-	= grm(str name, Start strmap, list[Rule] rules);
+data ALP 
+	= alp(MapType mapType, list[Symbol] symbols);
 	
-data Start
- = startmap(str maptype, int width, int height, list[Tile] tiles);
- 
-data Tile
-	= tile(int identifier, str label, str expression);
+data MapType
+	= mapType(int width, int height);
 	
-data Rule
-	= rule(str name, Settings settings, Righthand right, list[Lefthand] left);
-	
-data Righthand
-	= righthand(str maptype, int width, int height, list[Tile] tiles);
-
-data Lefthand
-	= lefthand(int indertifier, str expression, str maptype, int width, int height, list[Tile] tiles);
-	
-data Settings
-	= settings(str width, str height, str gt);// TODO: read them as strings.
+data Symbol
+	= symbol(str name, str color, str fill, str abbreviation)
+	| symbolWithShape(str name, str color, str fill, str abbreviation, int shape);

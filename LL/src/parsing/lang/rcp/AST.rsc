@@ -1,7 +1,7 @@
 /*****************************************************************************/
 /*!
 * RCP (Ludoscope recipe) Abstract Syntax
-* @package      lang::rcp
+* @package      parsing::lang::rcp
 * @file         AST.rsc
 * @brief        Defines Ludoscope Recipe Abstract Syntax
 * @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
@@ -9,16 +9,16 @@
 * @note         Language: Rascal
 */
 /*****************************************************************************/
-module lang::rcp::AST
+module parsing::lang::rcp::AST
 
-import lang::rcp::Syntax;
+import parsing::lang::rcp::Syntax;
 import ParseTree;
 
 /***************************************************************************** 
  * Public APIs
  *****************************************************************************/
 public lang::rcp::AST::RCP rcp_implode(Tree tree)
-  = implode(#lang::rcp::AST::RCP, tree);
+  = implode(#parsing::lang::rcp::AST::RCP, tree);
 
 /***************************************************************************** 
  * Source location annotations

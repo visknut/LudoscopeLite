@@ -1,4 +1,4 @@
-module lang::lsp::Syntax
+module parsing::lang::lsp::Syntax
 import ParseTree;
 
 start syntax LSP
@@ -12,10 +12,10 @@ syntax Module
 
 syntax Variable
 	= varInt: 	NAME VALUE
-	| varStr:	NAME String
+	| varStr:		NAME String
 	| varList: 	NAME "[" String* "]" // List of strings without brackets.
 	| varBool: 	NAME BOOLEAN
-	| varPos:	NAME Position
+	| varPos:		NAME Position
 	| varMisc:	NAME NAME
 	| varNull: 	NAME "null";
   
@@ -53,4 +53,4 @@ public start[LSP] lsp_parse(loc file) =
   parse(#start[LSP], file);
   
 public start[LSP] lsp_parse_test() = 
-   lsp_parse(|project://LL/src/lang/testdate/completeProject.lsp|);
+   lsp_parse(|project://LL/src/Tests/testData/simpleRecipe.rcp|);

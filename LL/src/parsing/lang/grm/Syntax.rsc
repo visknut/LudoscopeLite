@@ -1,4 +1,4 @@
-module lang::grm::Syntax
+module parsing::lang::grm::Syntax
 import ParseTree;
 
 start syntax GRM
@@ -8,13 +8,13 @@ syntax Start
   = startmap: "start" ":" MAPTYPE VALUE VALUE Tile*;
   
 syntax Rule
-	= rule: "rule" ":" IDENTIFIER Settings? "=" Righthand "\>" Lefthand+;
+	= rule: "rule" ":" IDENTIFIER Settings? "=" LeftHand "\>" RightHand+;
 	
-syntax Righthand
-	= righthand: MAPTYPE VALUE VALUE Tile*;
+syntax LeftHand
+	= leftHand: MAPTYPE VALUE VALUE Tile*;
 	
-syntax Lefthand
-	= lefthand: "{" VALUE Expression? "=" MAPTYPE VALUE VALUE Tile* "}";
+syntax RightHand
+	= rightHand: "{" VALUE Expression? "=" MAPTYPE VALUE VALUE Tile* "}";
 	
 syntax Settings
 	= settings: "(" ("width" "=" VALUE)? ("height" "=" VALUE)? ("gt" "=" VALUE)? ")";
@@ -65,4 +65,4 @@ public start[GRM] grm_parse(loc file) =
   parse(#start[GRM], file);
   
 public start[GRM] grm_parse_test() = 
-   grm_parse(|project://LL/src/lang/testdate/grammarNoExpressions.grm|);
+   grm_parse(|project://LL/src/Tests/testData/grammarNoExpressions.grm|);
