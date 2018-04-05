@@ -1,0 +1,3 @@
+version: 0.6f
+start: TILEMAP 1 1 0:undefined
+rule: RuleName = TILEMAP 1 1 0:undefined > {0 = TILEMAP 1 1 0:undefined}

@@ -1,0 +1,3 @@
+IterateRule("ruleName")
+ExecuteRule("ruleName", 100)
+CreateTileMap(width, height, "undefined")

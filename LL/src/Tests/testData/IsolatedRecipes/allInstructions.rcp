@@ -1,0 +1,10 @@
+IterateRuleCellular("ruleName")
+ExecuteRuleCellular("ruleName", 1)
+IterateRuleLSystem("ruleName")
+ExecuteRuleLSystem("ruleName", 1)
+IterateRule("ruleName")
+ExecuteRule("ruleName", 100)
+ReplaceLabels("ruleName", "undefined")
+CreateTileMap(width, height, "undefined")
+TransformSymbols("symbolName", "symbolName(setting=value)")
+KeepTopOfStack
