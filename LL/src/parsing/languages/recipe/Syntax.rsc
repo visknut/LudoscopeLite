@@ -1,5 +1,20 @@
-module parsing::lang::rcp::Syntax
+//////////////////////////////////////////////////////////////////////////////
+//
+// Syntax for .rcp files.
+// @brief        This files contains the syntax needed for parsing .rcp files.
+//							 .rcp files contain the recipe that is used to execute a grammar.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         03-04-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
+module parsing::languages::recipe::Syntax
+
 import ParseTree;
+
+//////////////////////////////////////////////////////////////////////////////
+// Syntax
+//////////////////////////////////////////////////////////////////////////////  
 
 start syntax RCP
   = rcp: Commands*;
@@ -10,7 +25,7 @@ syntax Commands
   | iterateFromRegister: 	"IterateFromRegister" "(" String ")"
   | iterateRuleLSystem:		"IterateRuleLSystem" "(" String ")"
   | iterateRuleCellular: 	"IterateRuleCellular" "(" String ")"
-  | executeFromRegister: 	"ExecuteFromRegister" "(" String VALUE")" // TODO: executions can also use the 'D' notation. (for example 'D2')
+  | executeFromRegister: 	"ExecuteFromRegister" "(" String VALUE")" // TODO: executions can also use the dice notation. (for example 'D2')
   | executeRuleLSystem: 	"ExecuteRuleLSystem" "(" String VALUE")"
   | executeRuleCellular: 	"ExecuteRuleCellular" "(" String VALUE")"
   | executeRule: 			"ExecuteRule" "(" String VALUE")"
@@ -59,8 +74,9 @@ keyword Keyword
   | "CreateTileMap"
   | "KeepTopOfStack";
   
-public start[RCP] rcp_parse(loc file) = 
-  parse(#start[RCP], file);
+//////////////////////////////////////////////////////////////////////////////
+// API
+//////////////////////////////////////////////////////////////////////////////
   
-public start[RCP] rcp_parse_test() = 
-   rcp_parse(|project://LL/src/lang/testdate/simpleRecipe.rcp|);
+public start[RCP] parseRecipe(loc file) = 
+  parse(#start[RCP], file);

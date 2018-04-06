@@ -1,5 +1,20 @@
-module parsing::lang::grm::Syntax
+//////////////////////////////////////////////////////////////////////////////
+//
+// Syntax for .grm files.
+// @brief        This files contains the syntax needed for parsing .grm files.
+//							 .grm files contain the grammar of a module.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         03-04-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
+module parsing::languages::grammar::Syntax
+
 import ParseTree;
+
+//////////////////////////////////////////////////////////////////////////////
+// Syntax
+//////////////////////////////////////////////////////////////////////////////  
 
 start syntax GRM
 	= grm: "version" ":" NAME Start Rule*;
@@ -61,8 +76,9 @@ keyword Keyword
   | "height"
   | "gt";
   
-public start[GRM] grm_parse(loc file) = 
-  parse(#start[GRM], file);
+//////////////////////////////////////////////////////////////////////////////
+// API
+//////////////////////////////////////////////////////////////////////////////
   
-public start[GRM] grm_parse_test() = 
-   grm_parse(|project://LL/src/Tests/testData/grammarNoExpressions.grm|);
+public start[GRM] parseGrammar(loc file) = 
+  parse(#start[GRM], file);

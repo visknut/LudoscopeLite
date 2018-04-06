@@ -1,5 +1,20 @@
-module parsing::lang::lsp::Syntax
+//////////////////////////////////////////////////////////////////////////////
+//
+// Syntax for .lsp files.
+// @brief        This files contains the syntax needed for parsing .lsp files.
+// 							 .lsp files contain the structure of a ludoscope project.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         03-04-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
+module parsing::languages::project::Syntax
+
 import ParseTree;
+
+//////////////////////////////////////////////////////////////////////////////
+// Syntax
+//////////////////////////////////////////////////////////////////////////////  
 
 start syntax LSP
 	= lsp: Alphabet* Module* ("register" Variable)* ("option" Variable)*;
@@ -49,8 +64,9 @@ lexical LAYOUT
 keyword Keyword
   = "alphabet" | "module" | "register" | "option" | "true" | "false" | "null" ;
   
-public start[LSP] lsp_parse(loc file) = 
-  parse(#start[LSP], file);
+//////////////////////////////////////////////////////////////////////////////
+// API
+//////////////////////////////////////////////////////////////////////////////
   
-public start[LSP] lsp_parse_test() = 
-   lsp_parse(|project://LL/src/Tests/testData/simpleRecipe.rcp|);
+public start[LSP] parseProject(loc file) = 
+  parse(#start[LSP], file);
