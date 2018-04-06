@@ -17,8 +17,11 @@ import ParseTree;
 /***************************************************************************** 
  * Public APIs
  *****************************************************************************/
-public lang::rcp::AST::RCP rcp_implode(Tree tree)
+public parsing::lang::rcp::AST::RCP rcp_implode(Tree tree)
   = implode(#parsing::lang::rcp::AST::RCP, tree);
+  
+public parsing::lang::rcp::AST::RCP parseToAST(loc location)
+= rcp_implode(rcp_parse(location));
 
 /***************************************************************************** 
  * Source location annotations

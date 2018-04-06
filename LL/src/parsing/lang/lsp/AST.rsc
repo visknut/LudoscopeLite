@@ -17,9 +17,12 @@ import ParseTree;
 /***************************************************************************** 
  * Public APIs
  *****************************************************************************/
-public lang::lsp::AST::LSP lsp_implode(Tree tree)
+public parsing::lang::lsp::AST::LSP lsp_implode(Tree tree)
   = implode(#parsing::lang::lsp::AST::LSP, tree);
-
+  
+public parsing::lang::lsp::AST::LSP parseToAST(loc location)
+  = lsp_implode(lsp_parse(location));
+  
 /***************************************************************************** 
  * Source location annotations
  *****************************************************************************/

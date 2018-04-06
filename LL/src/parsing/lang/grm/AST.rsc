@@ -17,8 +17,12 @@ import ParseTree;
 /***************************************************************************** 
  * Public APIs
  *****************************************************************************/
-public lang::grm::AST::GRM grm_implode(Tree tree)
+public parsing::lang::grm::AST::GRM grm_implode(Tree tree)
   = implode(#parsing::lang::grm::AST::GRM, tree);
+  
+public parsing::lang::grm::AST::GRM parseToAST(loc location)
+= grm_implode(grm_parse(location));
+  
 
 /***************************************************************************** 
  * Source location annotations

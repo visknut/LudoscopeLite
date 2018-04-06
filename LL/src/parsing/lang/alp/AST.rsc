@@ -17,8 +17,11 @@ import ParseTree;
 /***************************************************************************** 
  * Public APIs
  *****************************************************************************/
-public lang::alp::AST::ALP alp_implode(Tree tree)
+public parsing::lang::alp::AST::ALP alp_implode(Tree tree)
   = implode(#parsing::lang::alp::AST::ALP, tree);
+  
+public parsing::lang::alp::AST::ALP parseToAST(loc location)
+  = alp_implode(alp_parse(location));
 
 /***************************************************************************** 
  * Source location annotations
