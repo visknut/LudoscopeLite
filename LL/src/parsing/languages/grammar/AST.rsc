@@ -17,33 +17,77 @@ import ParseTree;
 // APIs
 //////////////////////////////////////////////////////////////////////////////
 
-public parsing::languages::grammar::AST::GRM implodeGrammar(Tree tree)
-  = implode(#parsing::languages::grammar::AST::GRM, tree);
+public parsing::languages::grammar::AST::Grammar implodeGrammar(Tree tree)
+  = implode(#parsing::languages::grammar::AST::Grammar, tree);
   
-public parsing::languages::grammar::AST::GRM parseGrammarToAST(loc location)
-= implodeGrammar(parseGrammar(location));
+public parsing::languages::grammar::AST::Grammar parseGrammarToAST(loc location)
+	= implodeGrammar(parseGrammar(location));
 
 //////////////////////////////////////////////////////////////////////////////
 // AST
 //////////////////////////////////////////////////////////////////////////////
 		
-data GRM
-	= grm(str name, Start strmap, list[Rule] rules);
-	
-data Start
- = startmap(str maptype, int width, int height, list[Tile] tiles);
- 
-data Tile
-	= tile(int identifier, str label, str expression);
-	
-data Rule
-	= rule(str name, Settings settings, LeftHand leftHand, list[RightHand] rightHand);
-	
-data Lefthand
-	= leftHand(str maptype, int width, int height, list[Tile] tiles);
+data Grammar
+	= grammar(str version, 
+	StartInput startInput,
+	list[Rule] rules,
+	Options options);
 
-data Righthand
-	= rightHand(int indertifier, str expression, str maptype, int width, int height, list[Tile] tiles);
+data StartInput
+	= startInput(Expression expression);
+
+data Rule
+	= rule(str name, list[RuleSetting] settings, LeftHandExpression leftHand, 
+		list[RightHandExpression] rightHands);
 	
-data Settings
-	= settings(str width, str height, str gt);// TODO: read them as strings.
+data Expression
+	= expression(MapType mapType, list[Symbol] symbols);
+	
+data LeftHandExpression
+	= leftHandExpression(MapType mapType, list[LeftHandSymbol] symbols);
+	
+data RightHandExpression
+	= rightHandExpression(int id, Expression expression);
+	
+data MapType
+	= tileMap(int width, int height)
+	| string()
+	| graph()
+	| shape();
+	
+data Symbol
+	= symbol(int id, str name, list[MemberStatement] members);
+	
+data LeftHandSymbol
+	= leftHandSymbol(int id, str name, list[MemberExpression] members);
+	
+data Options
+	= options(str checkCollisions, 
+		str stayWithinBounds, 
+		str trackNonTerminals, 
+		str findOnlyOneOption);
+		
+data RuleSetting
+	= ruleWidth(int width)
+	| ruleHeight(int height)
+	| ruleTopology(int topology);
+		
+data MemberStatement
+	= memberStatement(str identifier, Value memberValue);
+	
+data MemberExpression
+	= memberExpression(str identifier, Value memberValue);
+	
+data Value
+	= integerValue(str integer)
+	| floatValue(str float)
+	| stringValue(str string)
+	| booleanValue(str boolean)
+	| colorValue(str color)
+	| vectorValue(Vector vector)
+	| listValue(list[Value] memberList);
+	
+data Vector
+	= vector2d(int x, int y)
+	| vector3d(int x, int y, int z)
+	| vecotr4d(int x, int y, int z, int a);

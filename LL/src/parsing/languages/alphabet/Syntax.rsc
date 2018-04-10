@@ -16,59 +16,61 @@ import ParseTree;
 // Syntax
 //////////////////////////////////////////////////////////////////////////////  
 
-start syntax ALP
-	= alp: MapType Symbol*;
+start syntax Alphabet
+	= alphabet: MapType Symbol*;
 	
 syntax MapType
-	= mapType: "TILEMAP" VALUE VALUE;
+	= tileMap: "TILEMAP" INTEGER INTEGER
+	| string: "STRING"
+	| graph: "GRAPH"
+	| shape: "SHAPE";
 	
 syntax Symbol
-	= symbol: IDENTIFIER "(" Color Color Abbreviation ")"
-	| symbolWithShape: IDENTIFIER "(" Color Color Abbreviation Shape ")"; // TODO: implement wildcard symbol.
-
-syntax Color
-	= ("color" | "fill") "=" COLORCODE;
+	= symbol: IDENTIFIER "(" 
+	"color" COLORCODE
+	"fill" COLORCODE
+	("abbreviation" String)?
+	("shape" INTEGER)?
+	")";
 	
-syntax Abbreviation
-	= "abbreviation" "=" String;
-	
-syntax Shape
-	= "shape" "=" VALUE;
-
 syntax String
-  = @category="String"  "\"" STRING "\""; // TODO: How to clean \" form the string in parser?
+  = "\"" STRING "\"";
     
 syntax IDENTIFIER
   = indentifier: NAME;
 
 lexical NAME
-  = ([a-zA-Z_$] [a-zA-Z0-9_$]* !>> [a-zA-Z0-9_$]) \ Keyword;
+  = ([a-zA-Z_$] [a-zA-Z0-9_$]* !>> [a-zA-Z0-9_$]) \ Keyword
+  | "*";
 
 lexical COLORCODE
-	= "#" [0-9A-Z]*;
+	= "#" [0-9A-F] [0-9A-F] [0-9A-F] [0-9A-F] [0-9A-F] [0-9A-F];
  
-lexical VALUE
-  = @category="Value" ("-"?[0-9]+([.][0-9]+?)?); // TODO: check IDE for coloring.
+lexical INTEGER
+  = "-"?[0-9]+;
   
 lexical STRING
   = ![\"]*;
 
 layout LAYOUTLIST
-  = LAYOUT* !>> [\t-\n \r \ : ,];
+  = LAYOUT* !>> [\t-\n \r \ : , =];
 
 lexical LAYOUT
-  =  [\t-\n \r \ : ,];
+  =  [\t-\n \r \ : , =];
   
 keyword Keyword
   = "color"
   | "fill"
   | "abbreviation"
   | "shape"
-  | "TILEMAP";
+  | "TILEMAP"
+  | "STRING"
+  | "GRAPH"
+  | "SHAPE";
   
 //////////////////////////////////////////////////////////////////////////////
 // API
 //////////////////////////////////////////////////////////////////////////////
 
-public start[ALP] parseAlphabet(loc file) = 
-  parse(#start[ALP], file);
+public start[Alphabet] parseAlphabet(loc file) = 
+  parse(#start[Alphabet], file);

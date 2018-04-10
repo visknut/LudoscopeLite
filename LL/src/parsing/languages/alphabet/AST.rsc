@@ -17,22 +17,28 @@ import ParseTree;
 // APIs
 //////////////////////////////////////////////////////////////////////////////
 
-public parsing::languages::alphabet::AST::ALP implodeAlphabet(Tree tree)
-  = implode(#parsing::languages::alphabet::AST::ALP, tree);
+public parsing::languages::alphabet::AST::Alphabet implodeAlphabet(Tree tree)
+  = implode(#parsing::languages::alphabet::AST::Alphabet, tree);
   
-public parsing::languages::alphabet::AST::ALP parseAlphabetToAST(loc location)
+public parsing::languages::alphabet::AST::Alphabet parseAlphabetToAST(loc location)
   = implodeAlphabet(parseAlphabet(location));
+  
+anno loc Alphabet@location;
+anno loc MapType@location;
+anno loc Symbol@location;
 
 //////////////////////////////////////////////////////////////////////////////
 // AST
 //////////////////////////////////////////////////////////////////////////////
 		
-data ALP 
-	= alp(MapType mapType, list[Symbol] symbols);
+data Alphabet
+	= alphabet(str mapType, list[Symbol] symbols);
 	
 data MapType
-	= mapType(int width, int height);
-	
+	= tileMap(int width, int height)
+	|	string()
+	|	graph()
+	|	shape();
+
 data Symbol
-	= symbol(str name, str color, str fill, str abbreviation)
-	| symbolWithShape(str name, str color, str fill, str abbreviation, int shape);
+	= symbol(str name, str color, str fill, str abbreviation, str shape); // TODO: accept shape as int
