@@ -1,0 +1,8 @@
+version: 0.6f
+start: TILEMAP 1 1 0:undefined
+rule: RuleName = TILEMAP 1 1 0:undefined(setting==false) > {0 = TILEMAP 1 1 0:undefined(setting=true)}
+rule: RuleName = TILEMAP 1 1 0:undefined(setting==5) > {0 = TILEMAP 1 1 0:undefined(setting=-5)}
+rule: RuleName = TILEMAP 1 1 0:undefined(setting==-1.2f) > {0 = TILEMAP 1 1 0:undefined(setting=1.2f)}
+rule: RuleName = TILEMAP 1 1 0:undefined(setting==#FFFFFF) > {0 = TILEMAP 1 1 0:undefined(setting=#000000)}
+rule: RuleName = TILEMAP 1 1 0:undefined(setting==(1,2,3)) > {0 = TILEMAP 1 1 0:undefined(setting=(3,2,1))}
+rule: RuleName = TILEMAP 1 1 0:undefined(settings==["string", 1, 2, 3, true]) > {0 = TILEMAP 1 1 0:undefined(setting=["otherString", 3, 2, 1, false])}

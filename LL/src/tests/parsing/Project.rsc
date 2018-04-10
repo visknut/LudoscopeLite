@@ -9,6 +9,8 @@
 
 module tests::parsing::Project
 
+import IO;
+import ParseTree;
 import parsing::languages::project::Syntax;
 import parsing::languages::project::AST;
 
@@ -20,104 +22,75 @@ public bool runAllTests()
 	&& tryParsingSingleModule()
 	&& tryParsingMultipleModulesWithAlphabet()
 	&& tryParsingCompleteModule()
-	&& tryParsingComplexProject()
-	&& tryImplodingOnlyAlphabet()
-	&& tryImplodingOptions()
-	&& tryImplodingRegisters()
-	&& tryImplodingSingleModule()
-	&& tryImplodingMultipleModulesWithAlphabet()
-	&& tryImplodingCompleteModule()
-	&& tryImplodingComplexProject();
+	&& tryParsingComplexProject();
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Tests for parser.
 //////////////////////////////////////////////////////////////////////////////
 
+private bool projectParsingTest(loc fileToParse)
+{
+	Tree tree;
+	/* First try parsing to a parse tree. */
+	try {
+		tree = parseProject(fileToParse);
+	}
+	catch ParseError(loc errorLocation):
+	{
+		print("Error: could not parse the file. \n@");
+		println(errorLocation);
+		return false;
+	}
+	catch Ambiguity(loc errorLocation, str usedSyntax, str parsedText):
+	{
+		print("Error: ambiguity found during parsing. \n@");
+		println(errorLocation);
+		return false;
+	}
+	/* Then try to implode the parse tree to an AST. */
+	try {
+		implodeProject(tree);
+	}
+	catch IllegalArgument(value v, str message):
+	{
+		println("Error: could not implode the parse tree to an AST");
+		return false;
+	}
+	return true;
+}
+
 private test bool tryParsingOnlyAlphabet()
 {
-	parseProject(|project://LL/src/tests/testData/isolatedProjects/OnlyAlphabet.lsp|);
-	return true;
+	return projectParsingTest(|project://LL/src/tests/testData/isolatedProjects/OnlyAlphabet.lsp|);
 }
 
 private test bool tryParsingOptions()
 {
-	parseProject(|project://LL/src/tests/testData/isolatedProjects/Options.lsp|);
-	return true;
+	return projectParsingTest(|project://LL/src/tests/testData/isolatedProjects/Options.lsp|);
 }
 
 private test bool tryParsingRegisters()
 {
-	parseProject(|project://LL/src/tests/testData/isolatedProjects/Registers.lsp|);
-	return true;
+	return projectParsingTest(|project://LL/src/tests/testData/isolatedProjects/Registers.lsp|);
 }
 
 private test bool tryParsingSingleModule()
 {
-	parseProject(|project://LL/src/tests/testData/isolatedProjects/SingleModule.lsp|);
-	return true;
+	return projectParsingTest(|project://LL/src/tests/testData/isolatedProjects/SingleModule.lsp|);
 }
 
 private test bool tryParsingMultipleModulesWithAlphabet()
 {
-	parseProject(|project://LL/src/tests/testData/isolatedProjects/MultipleModulesWithAlphabet.lsp|);
-	return true;
+	return projectParsingTest(|project://LL/src/tests/testData/isolatedProjects/MultipleModulesWithAlphabet.lsp|);
 }
 
 private test bool tryParsingCompleteModule()
 {
-	parseProject(|project://LL/src/tests/testData/isolatedProjects/CompleteModule.lsp|);
-	return true;
+	return projectParsingTest(|project://LL/src/tests/testData/isolatedProjects/CompleteModule.lsp|);
 }
 
 private test bool tryParsingComplexProject()
 {
-	parseProject(|project://LL/src/tests/testData/isolatedProjects/ComplexProject.lsp|);
-	return true;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// Tests for AST.
-//////////////////////////////////////////////////////////////////////////////
-
-private test bool tryImplodingOnlyAlphabet()
-{
-	parseProjectToAST(|project://LL/src/tests/testData/isolatedProjects/OnlyAlphabet.lsp|);
-	return true;
-}
-
-private test bool tryImplodingOptions()
-{
-	parseProjectToAST(|project://LL/src/tests/testData/isolatedProjects/Options.lsp|);
-	return true;
-}
-
-private test bool tryImplodingRegisters()
-{
-	parseProjectToAST(|project://LL/src/tests/testData/isolatedProjects/Registers.lsp|);
-	return true;
-}
-
-private test bool tryImplodingSingleModule()
-{
-	parseProjectToAST(|project://LL/src/tests/testData/isolatedProjects/SingleModule.lsp|);
-	return true;
-}
-
-private test bool tryImplodingMultipleModulesWithAlphabet()
-{
-	parseProjectToAST(|project://LL/src/tests/testData/isolatedProjects/MultipleModulesWithAlphabet.lsp|);
-	return true;
-}
-
-private test bool tryImplodingCompleteModule()
-{
-	parseProjectToAST(|project://LL/src/tests/testData/isolatedProjects/CompleteModule.lsp|);
-	return true;
-}
-
-private test bool tryImplodingComplexProject()
-{
-	parseProjectToAST(|project://LL/src/tests/testData/isolatedProjects/ComplexProject.lsp|);
-	return true;
+	return projectParsingTest(|project://LL/src/tests/testData/isolatedProjects/ComplexProject.lsp|);
 }

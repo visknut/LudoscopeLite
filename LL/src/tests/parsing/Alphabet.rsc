@@ -9,87 +9,70 @@
 
 module tests::parsing::Alphabet
 
+import IO;
+import ParseTree;
 import parsing::languages::alphabet::Syntax;
 import parsing::languages::alphabet::AST;
 
 public bool runAllTests()
 {
 	return tryParsingOnlyColors()
-	&& tryParsingNoShape()
 	&& tryParsingColorsAndAbbreviation()
 	&& tryParsingCompleteSymbol()
-	&& tryParsingMixedSymbols()
-	&& tryImplodingOnlyColors()
-	&& tryImplodingNoShape()
-	&& tryImplodingColorsAndAbbreviation()
-	&& tryImplodingCompleteSymbol()
-	&& tryImplodingMixedSymbols();
+	&& tryParsingMixedSymbols();
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Tests for pasrser.
 //////////////////////////////////////////////////////////////////////////////
 
-private test bool tryParsingOnlyColors()
+private bool alphabetParsingTest(loc fileToParse)
 {
-	parseAlphabet(|project://LL/src/tests/testData/isolatedAlphabets/OnlyColors.alp|);
+	Tree tree;
+	/* First try parsing to a parse tree. */
+	try {
+		tree = parseAlphabet(fileToParse);
+	}
+	catch ParseError(loc errorLocation):
+	{
+		print("Error: could not parse the file. \n@");
+		println(errorLocation);
+		return false;
+	}
+	catch Ambiguity(loc errorLocation, str usedSyntax, str parsedText):
+	{
+		print("Error: ambiguity found during parsing. \n@");
+		println(errorLocation);
+		return false;
+	}
+	/* Then try to implode the parse tree to an AST. */
+	try {
+		implodeAlphabet(tree);
+	}
+	catch IllegalArgument(value v, str message):
+	{
+		println("Error: could not implode the parse tree to an AST");
+		return false;
+	}
 	return true;
 }
 
-private test bool tryParsingNoShape()
+private test bool tryParsingOnlyColors()
 {
-	parseAlphabet(|project://LL/src/tests/testData/isolatedAlphabets/NoShape.alp|);
-	return true;
+	return alphabetParsingTest(|project://LL/src/tests/testData/isolatedAlphabets/OnlyColors.alp|);
 }
 
 private test bool tryParsingColorsAndAbbreviation()
 {
-	parseAlphabet(|project://LL/src/tests/testData/isolatedAlphabets/ColorsAndAbbreviation.alp|);
-	return true;
+	return alphabetParsingTest(|project://LL/src/tests/testData/isolatedAlphabets/ColorsAndAbbreviation.alp|);
 }
 
 private test bool tryParsingCompleteSymbol()
 {
-	parseAlphabet(|project://LL/src/tests/testData/isolatedAlphabets/CompleteSymbol.alp|);
-	return true;
+	return alphabetParsingTest(|project://LL/src/tests/testData/isolatedAlphabets/CompleteSymbol.alp|);
 }
 
 private test bool tryParsingMixedSymbols()
 {
-	parseAlphabet(|project://LL/src/tests/testData/isolatedAlphabets/MixedSymbols.alp|);
-	return true;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// Tests for AST.
-//////////////////////////////////////////////////////////////////////////////
-
-private test bool tryImplodingOnlyColors()
-{
-	parseAlphabetToAST(|project://LL/src/tests/testData/isolatedAlphabets/OnlyColors.alp|);
-	return true;
-}
-
-private test bool tryImplodingNoShape()
-{
-	parseAlphabetToAST(|project://LL/src/tests/testData/isolatedAlphabets/NoShape.alp|);
-	return true;
-}
-
-private test bool tryImplodingColorsAndAbbreviation()
-{
-	parseAlphabetToAST(|project://LL/src/tests/testData/isolatedAlphabets/ColorsAndAbbreviation.alp|);
-	return true;
-}
-
-private test bool tryImplodingCompleteSymbol()
-{
-	parseAlphabetToAST(|project://LL/src/tests/testData/isolatedAlphabets/CompleteSymbol.alp|);
-	return true;
-}
-
-private test bool tryImplodingMixedSymbols()
-{
-	parseAlphabetToAST(|project://LL/src/tests/testData/isolatedAlphabets/MixedSymbols.alp|);
-	return true;
+	return alphabetParsingTest(|project://LL/src/tests/testData/isolatedAlphabets/MixedSymbols.alp|);
 }

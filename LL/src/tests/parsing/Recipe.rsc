@@ -9,6 +9,8 @@
 
 module tests::parsing::Recipe
 
+import IO;
+import ParseTree;
 import parsing::languages::recipe::Syntax;
 import parsing::languages::recipe::AST;
 
@@ -19,91 +21,70 @@ public bool runAllTests()
 	&& tryParsingDiceNotation()
 	&& tryParsingBasicInstructions()
 	&& tryParsingAdvancedInstructions()
-	&& tryParsingAllInstructions()
-	&& tryImplodingComment()
-	&& tryImplodingSingleInstruction()
-	&& tryImplodingDiceNotation()
-	&& tryImplodingBasicInstructions()
-	&& tryImplodingAdvancedInstructions()
-	&& tryImplodingAllInstructions();
+	&& tryParsingAllInstructions();
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Tests for parser.
 //////////////////////////////////////////////////////////////////////////////
 
+private bool recipeParsingTest(loc fileToParse)
+{
+	Tree tree;
+	/* First try parsing to a parse tree. */
+	try {
+		tree = parseRecipe(fileToParse);
+	}
+	catch ParseError(loc errorLocation):
+	{
+		print("Error: could not parse the file. \n@");
+		println(errorLocation);
+		return false;
+	}
+	catch Ambiguity(loc errorLocation, str usedSyntax, str parsedText):
+	{
+		print("Error: ambiguity found during parsing. \n@");
+		println(errorLocation);
+		return false;
+	}
+	/* Then try to implode the parse tree to an AST. */
+	try {
+		implodeRecipe(tree);
+	}
+	catch IllegalArgument(value v, str message):
+	{
+		println("Error: could not implode the parse tree to an AST");
+		return false;
+	}
+	return true;
+}
+
 private test bool tryParsingComment()
 {
-	parseRecipe(|project://LL/src/tests/testData/isolatedRecipes/Comment.rcp|);
-	return true;
+	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/Comment.rcp|);
 }
 
 private test bool tryParsingSingleInstruction()
 {
-	parseRecipe(|project://LL/src/tests/testData/isolatedRecipes/SingleInstruction.rcp|);
-	return true;
+	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/SingleInstruction.rcp|);
 }
 
 private test bool tryParsingDiceNotation()
 {
-	parseRecipe(|project://LL/src/tests/testData/isolatedRecipes/DiceNotation.rcp|);
-	return true;
+	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/DiceNotation.rcp|);
 }
 
 private test bool tryParsingBasicInstructions()
 {
-	parseRecipe(|project://LL/src/tests/testData/isolatedRecipes/BasicInstructions.rcp|);
-	return true;
+	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/BasicInstructions.rcp|);
 }
 
 private test bool tryParsingAdvancedInstructions()
 {
-	parseRecipe(|project://LL/src/tests/testData/isolatedRecipes/AdvancedInstructions.rcp|);
-	return true;
+	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/AdvancedInstructions.rcp|);
 }
 
 private test bool tryParsingAllInstructions()
 {
-	parseRecipe(|project://LL/src/tests/testData/isolatedRecipes/AllInstructions.rcp|);
-	return true;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// Tests for AST.
-//////////////////////////////////////////////////////////////////////////////
-
-private test bool tryImplodingComment()
-{
-	parseRecipeToAST(|project://LL/src/tests/testData/isolatedRecipes/Comment.rcp|);
-	return true;
-}
-
-private test bool tryImplodingSingleInstruction()
-{
-	parseRecipeToAST(|project://LL/src/tests/testData/isolatedRecipes/SingleInstruction.rcp|);
-	return true;
-}
-
-private test bool tryImplodingDiceNotation()
-{
-	parseRecipeToAST(|project://LL/src/tests/testData/isolatedRecipes/DiceNotation.rcp|);
-	return true;
-}
-
-private test bool tryImplodingBasicInstructions()
-{
-	parseRecipeToAST(|project://LL/src/tests/testData/isolatedRecipes/BasicInstructions.rcp|);
-	return true;
-}
-
-private test bool tryImplodingAdvancedInstructions()
-{
-	parseRecipeToAST(|project://LL/src/tests/testData/isolatedRecipes/AdvancedInstructions.rcp|);
-	return true;
-}
-
-private test bool tryImplodingAllInstructions()
-{
-	parseRecipeToAST(|project://LL/src/tests/testData/isolatedRecipes/AllInstructions.rcp|);
-	return true;
+	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/AllInstructions.rcp|);
 }

@@ -3,4 +3,4 @@ start: TILEMAP 1 1 0:undefined
 checkCollisions: true
 stayWithinBounds: true
 trackNonTerminals: true
-findOnlyOneOption: true
+findOnlyOneOption: false
