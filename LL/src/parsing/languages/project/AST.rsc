@@ -17,39 +17,59 @@ import ParseTree;
 // APIs
 //////////////////////////////////////////////////////////////////////////////
 
-public parsing::languages::project::AST::LSP implodeProject(Tree tree)
-  = implode(#parsing::languages::project::AST::LSP, tree);
+public parsing::languages::project::AST::Project implodeProject(Tree tree)
+  = implode(#parsing::languages::project::AST::Project, tree);
   
-public parsing::languages::project::AST::LSP parseProjectToAST(loc location)
+public parsing::languages::project::AST::Project parseProjectToAST(loc location)
   = implodeProject(parseProject(location));
 
 //////////////////////////////////////////////////////////////////////////////
 // AST
 //////////////////////////////////////////////////////////////////////////////
 		
-data LSP 
-	= lsp(list[Alphabet] alphabets, list[Module] modules, list[var] registers, list[var] options);
+data Project
+	= project(str version, list[Declaration] declarations);
+	
+data Declaration
+	= declaredAlphabet(Alphabet declaredAlphabet)
+	| declaredModule(Module declaredModule)
+	| declaredOption(Option declaredOption)
+	| declaredRegister(Register declaredRegister);
 
 data Alphabet 
-	= alphabet(list[var]);
+	= alphabet(str name, Position position);
 
 data Module 
-	= lspmodule(list[var]);
+	= lspmodule(str name,
+	str alphabet,
+	str position,
+	str moduleType,
+	str fileName,
+	str match,
+	list[str] inputs,
+	str maxIterations,
+	str moduleFilter,
+	str grammar,
+	str executionType,
+	str recipe,
+	str showMembers,
+	str alwaysStartWithToken);
 
 data Register 
-	= register(var content);
+	= register(Variable registerContent);
 
 data Option 
-	= option(var content);
+	= option(Variable optionContent);
 
-data var 
-	= varInt(str name, int intVal)
-	| varList(str name, list[str] listVal)
-	| varStr(str name, str strVal)
-	| varBool(str name, bool boolVal)
-	| varPos(str name, pos posVal)	
-	| varMisc(str name, str miscVal)
-	| varNull(str name);
+data Variable
+	= variableInteger(str name, int integer)
+	| variableFloat(str name, str float)
+	| variableString(str name, str string)
+	| variableList(str name, list[str] listOfVariable)
+	| variableBoolean(str name, bool boolean)	
+	| variablePosition(str name, Position position)
+	| variableName(str name, str variableName)
+	| variableNull(str name);
 
-data pos 
+data Position 
 	= position(int x, int y);

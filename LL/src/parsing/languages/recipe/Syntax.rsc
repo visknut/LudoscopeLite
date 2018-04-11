@@ -41,12 +41,12 @@ syntax String
   
 syntax Expression
 	= expression: INTEGER; // TODO: what is allowed to be in registers?
+	
+// TODO: Add dice notation.
   
 //////////////////////////////////////////////////////////////////////////////
 // Lexer Rules
 //////////////////////////////////////////////////////////////////////////////
-
- // TODO: Add dice notation.
 
 lexical NAME
   = ([a-zA-Z_$*] [a-zA-Z0-9_$*]* !>> [a-zA-Z0-9_$*]) \ Keyword;

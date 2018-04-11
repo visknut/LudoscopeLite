@@ -99,7 +99,7 @@ lexical INTEGER
   = ("-"?[0-9]+);
   
 lexical FLOAT
-  = ("-"?[0-9]+([.][0-9]+?)?"f");
+  = INTEGER ([.][0-9]+?)? "f";
     
 lexical STRING
   = ![\"]*;
