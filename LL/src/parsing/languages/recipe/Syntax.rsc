@@ -13,44 +13,56 @@ module parsing::languages::recipe::Syntax
 import ParseTree;
 
 //////////////////////////////////////////////////////////////////////////////
-// Syntax
-//////////////////////////////////////////////////////////////////////////////  
+// Parser Rules
+////////////////////////////////////////////////////////////////////////////// 
 
-start syntax RCP
-  = rcp: Commands*;
+start syntax Recipe
+  = recipe: Commands*;
   
 syntax Commands
-  = setRegister: 			"SetRegister" "(" String VALUE ")" // TODO: registers can hold mutiple values, including expressions.
-  | iterateRule: 			"IterateRule" "(" String ")"
-  | iterateFromRegister: 	"IterateFromRegister" "(" String ")"
-  | iterateRuleLSystem:		"IterateRuleLSystem" "(" String ")"
-  | iterateRuleCellular: 	"IterateRuleCellular" "(" String ")"
-  | executeFromRegister: 	"ExecuteFromRegister" "(" String VALUE")" // TODO: executions can also use the dice notation. (for example 'D2')
-  | executeRuleLSystem: 	"ExecuteRuleLSystem" "(" String VALUE")"
-  | executeRuleCellular: 	"ExecuteRuleCellular" "(" String VALUE")"
-  | executeRule: 			"ExecuteRule" "(" String VALUE")"
-  | splitTiles: 			"SplitTiles" "(" VALUE VALUE ")"
-  | replaceLabels: 			"ReplaceLabels" "(" String String")"
-  | keepTopOfStack: 		"KeepTopOfStack"
-  | createTileMap: 			"CreateTileMap" "(" NAME NAME String ")"; // TODO: it should probably also be possible to use integers.
-  
-//  | transformSymbols: 		"TransformSymbols" "(" ")"
+  = setRegister: 								COMMENTED? "SetRegister" "(" String Expression ")" // TODO: registers can hold mutiple values, including expressions.
+  | iterateRule: 								COMMENTED? "IterateRule" "(" String ")"
+  | iterateFromRegister: 				COMMENTED? "IterateFromRegister" "(" String ")"
+  | iterateRuleLSystem:					COMMENTED? "IterateRuleLSystem" "(" String ")"
+  | iterateRuleCellular: 				COMMENTED? "IterateRuleCellular" "(" String ")"
+  | executeFromRegister: 				COMMENTED? "ExecuteFromRegister" "(" String INTEGER ")" // TODO: executions can also use the dice notation. (for example 'D2')
+  | executeRuleLSystem: 				COMMENTED? "ExecuteRuleLSystem" "(" String INTEGER ")"
+  | executeRuleCellular: 				COMMENTED? "ExecuteRuleCellular" "(" String INTEGER ")"
+  | executeRule: 								COMMENTED? "ExecuteRule" "(" String INTEGER ")"
+  | splitTiles: 								COMMENTED? "SplitTiles" "(" INTEGER INTEGER ")"
+  | replaceLabels: 							COMMENTED? "ReplaceLabels" "(" String String")"
+  | keepTopOfStack: 						COMMENTED? "KeepTopOfStack"
+  | createTileMapFromRegisters: COMMENTED? "CreateTileMap" "(" NAME NAME String ")"
+  | createTileMapFromIntegers:	COMMENTED? "CreateTileMap" "(" INTEGER INTEGER String ")"
+  | transformSymbols:						COMMENTED? "TransformSymbols" "(" String String ")";
 
-syntax IDENTIFIER
-  = indentifier: NAME;
+syntax String
+  = "\"" STRING "\"";
+  
+syntax Expression
+	= expression: INTEGER; // TODO: what is allowed to be in registers?
+  
+//////////////////////////////////////////////////////////////////////////////
+// Lexer Rules
+//////////////////////////////////////////////////////////////////////////////
+
+ // TODO: Add dice notation.
 
 lexical NAME
-  = ([a-zA-Z_$] [a-zA-Z0-9_$]* !>> [a-zA-Z0-9_$]) \ Keyword;
+  = ([a-zA-Z_$*] [a-zA-Z0-9_$*]* !>> [a-zA-Z0-9_$*]) \ Keyword;
 
-// TODO: the use of wildcards is possible in the use of rulenames.
-syntax String
-  = @category="String"  "\"" STRING "\""; // TODO: How to clean \" form the string in parser?
-
-lexical VALUE
-  = @category="Value" ("-"?[0-9]+([.][0-9]+?)?); // TODO: Meaning @category?
+lexical INTEGER
+  = ("-"?[0-9]+);
 
 lexical STRING
   = ![\"]*;
+  
+lexical COMMENTED
+	= "//";
+
+//////////////////////////////////////////////////////////////////////////////
+// Layout
+////////////////////////////////////////////////////////////////////////////// 
 
 layout LAYOUTLIST
   = LAYOUT* !>> [\t-\n \r \ : ,];
@@ -78,5 +90,5 @@ keyword Keyword
 // API
 //////////////////////////////////////////////////////////////////////////////
   
-public start[RCP] parseRecipe(loc file) = 
-  parse(#start[RCP], file);
+public start[Recipe] parseRecipe(loc file) = 
+  parse(#start[Recipe], file);

@@ -17,30 +17,35 @@ import ParseTree;
 // APIs
 //////////////////////////////////////////////////////////////////////////////
 
-public parsing::languages::recipe::AST::RCP implodeRecipe(Tree tree)
-  = implode(#parsing::languages::recipe::AST::RCP, tree);
+public parsing::languages::recipe::AST::Recipe implodeRecipe(Tree tree)
+  = implode(#parsing::languages::recipe::AST::Recipe, tree);
   
-public parsing::languages::recipe::AST::RCP parseRecipeToAST(loc location)
-= implodeRecipe(rcp_parse(location));
+public parsing::languages::recipe::AST::Recipe parseRecipeToAST(loc location)
+= implodeRecipe(parseRecipe(location));
 
 //////////////////////////////////////////////////////////////////////////////
 // AST
 //////////////////////////////////////////////////////////////////////////////
 		
-data RCP
-	= rcp(list[cmd] commands);
+data Recipe
+	= recipe(list[cmd] commands);
 	
 data cmd
-	= setRegister(str name, int newValue)
-	| iterateRule(str name)
-  	| iterateFromRegister(str name)
-  	| iterateRuleLSystem(str name)
-  	| iterateRuleCellular(str name)
-  	| executeFromRegister(str name, int executions)
-  	| executeRuleLSystem(str name, int executions)
-  	| executeRuleCellular(str name, int executions)
-  	| executeRule(str name, int executions)
-  	| replaceLabels(str oldLabel, str newLabel)
-  	| splitTiles(int width, int height)
-  	| createTileMap(str mapWidth, str mapHeight, str name)
-  	| keepTopOfStack();
+	= setRegister(bool commented, str regsiterName, Expression newValue)
+	| iterateRule(bool commented, str ruleName)
+	| iterateFromRegister(bool commented, str registerName)
+	| iterateRuleLSystem(bool commented, str ruleName)
+	| iterateRuleCellular(bool commented, str ruleName)
+	| executeFromRegister(bool commented, str ruleName, int executions)
+	| executeRuleLSystem(bool commented, str ruleName, int executions)
+	| executeRuleCellular(bool commented, str ruleName, int executions)
+	| executeRule(bool commented, str ruleName, int executions)
+	| replaceLabels(bool commented, str oldLabel, str newLabel)
+	| splitTiles(bool commented, int width, int height)
+	| createTileMapFromRegisters(bool commented, str registerWidth, str registerHeigth, str name)
+	| createTileMapFromIntegers(bool commented, int mapWidth, int mapHeight, str name)
+	| keepTopOfStack(bool commented)
+	| transformSymbols(bool commented, str oldSymbol, str newSymbol); 
+	
+data Expression
+	= expression(int newValue);
