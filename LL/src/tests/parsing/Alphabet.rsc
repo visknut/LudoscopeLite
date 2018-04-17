@@ -76,3 +76,8 @@ private test bool tryParsingMixedSymbols()
 {
 	return alphabetParsingTest(|project://LL/src/tests/testData/isolatedAlphabets/MixedSymbols.alp|);
 }
+
+private test bool tryParsingSymbolWithWildCard()
+{
+	return alphabetParsingTest(|project://LL/src/tests/testData/isolatedAlphabets/SymbolWithWildCard.alp|);
+}

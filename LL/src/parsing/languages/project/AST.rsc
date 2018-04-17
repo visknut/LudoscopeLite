@@ -22,6 +22,15 @@ public parsing::languages::project::AST::Project implodeProject(Tree tree)
   
 public parsing::languages::project::AST::Project parseProjectToAST(loc location)
   = implodeProject(parseProject(location));
+  
+anno loc Project@location;
+anno loc Declaration@location;
+anno loc Alphabet@location;
+anno loc Module@location;
+anno loc Register@location;
+anno loc Option@location;
+anno loc Variable@location;
+anno loc Position@location;
 
 //////////////////////////////////////////////////////////////////////////////
 // AST

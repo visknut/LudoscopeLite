@@ -1,1 +1,1 @@
-ExecuteRule("rule", 100)
+ExecuteRule("ruleName", 100)

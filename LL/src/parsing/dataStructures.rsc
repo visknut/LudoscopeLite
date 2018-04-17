@@ -10,17 +10,37 @@
 
 module parsing::DataStructures
 
-// TODO add alias
-// TODO: add registers & options
+alias Tile = int;
+alias TileMap = list[list[Tile]];
+alias Alphabet = map[str, int];
+alias AlphabetMap = map[str, Alphabet];
+alias RuleMap	= map[str, Rule];
+
+data ProjectInformation
+	= projectInformation(LudoscopeProject project, loc projectFile);
+
 data LudoscopeProject
-	= ludoscopeProject(list[LudoscopeModule] modules, list[map[str, int]] alphabets);
+	= ludoscopeProject(list[LudoscopeModule] modules, 
+	AlphabetMap alphabets);
 	
 data LudoscopeModule
-	= ludoscopeModule(LudoscopeModule input, list[list[int]] startingState, list[Rule] rules, list[Instruction] recipe); // aplhabet
+	= ludoscopeModule(str name,
+	list[str] inputs,
+	str alphabetName,
+	TileMap startingState, 
+	RuleMap rules, 
+	list[Instruction] recipe);
 	
 data Rule
-	= rule(int width, int height, bool rotateHorizontal, bool rotateVertical, list[list[int]] leftHand, list[list[int]] rightHands);
+	= rule(Topology topology, 
+	TileMap leftHand, 
+	list[TileMap] rightHands);
+	
+data Topology
+	= topology(bool mirrorHorizontal, 
+	bool mirrorVertical, 
+	bool rotate);
 	
 data Instruction
-	= itterateRule(Rule rule)
-	| executeRule(Rule rule, int itterations);
+	= itterateRule(str ruleName)
+	| executeRule(str ruleName, int itterations);

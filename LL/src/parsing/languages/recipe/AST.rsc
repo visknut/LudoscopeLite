@@ -28,9 +28,9 @@ public parsing::languages::recipe::AST::Recipe parseRecipeToAST(loc location)
 //////////////////////////////////////////////////////////////////////////////
 		
 data Recipe
-	= recipe(list[cmd] commands);
+	= recipe(list[Instruction] instructions);
 	
-data cmd
+data Instruction
 	= setRegister(bool commented, str regsiterName, Expression newValue)
 	| iterateRule(bool commented, str ruleName)
 	| iterateFromRegister(bool commented, str registerName)

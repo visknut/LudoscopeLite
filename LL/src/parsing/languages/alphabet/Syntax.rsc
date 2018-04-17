@@ -26,7 +26,7 @@ syntax MapType
 	| shape: "SHAPE";
 	
 syntax Symbol
-	= symbol: IDENTIFIER "(" 
+	= symbol: NAME "(" 
 	"color" COLORCODE
 	"fill" COLORCODE
 	("abbreviation" String)?
@@ -35,9 +35,6 @@ syntax Symbol
 	
 syntax String
   = "\"" STRING "\"";
-    
-syntax IDENTIFIER
-  = indentifier: NAME;
 
 lexical NAME
   = ([a-zA-Z_$] [a-zA-Z0-9_$]* !>> [a-zA-Z0-9_$]) \ Keyword
