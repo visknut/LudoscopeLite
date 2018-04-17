@@ -11,9 +11,23 @@
 module parsing::ParserAPI
 
 import IO;
+import List;
 import parsing::fromAstToData::Project;
+import parsing::DataStructures;
+import errors::Parsing;
 
-public void parseLudoscopeProject(loc projectFile)
+public void parseAndPrint(loc projectFile)
 {
-	println(parseProject(projectFile));
+	ParsingArtifact artifact = parseProject(projectFile);
+	if (size(artifact.environment.errors) > 0)
+	{
+		for (ParsingError error <- artifact.environment.errors)
+		{
+			println(errorToString(error));
+		}
+	}
+	else
+	{
+		println(artifact.project);
+	}
 }

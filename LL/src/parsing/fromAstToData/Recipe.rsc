@@ -15,35 +15,51 @@ import Exception;
 import parsing::languages::recipe::AST;
 import parsing::DataStructures;
 import util::string;
+import errors::Parsing;
 
 
-public list[Instruction] parseRecipe(
-	str fileName, 
-	ProjectInformation projectInfo)
+public ParsingArtifact parseRecipe(ParsingArtifact artifact, str fileName)
 {
-	list[Instruction] recipe = [];
-	loc recipeFile = fileLocation(projectInfo.projectFile, fileName, ".rcp");
+	loc recipeFile = fileLocation(artifact.environment.projectFile, fileName, ".rcp");
 		
 	if (exists(recipeFile))
 	{
-		parsing::languages::recipe::AST::Recipe abstractRecipe 
-			= parseRecipeToAST(recipeFile);
-		for (parsing::languages::recipe::AST::Instruction instruction 
-			<- abstractRecipe.instructions)
+		/* Try parsing the recipe file and catch any errors thrown. */
+		try 
 		{
-			if (!instruction.commented)
+			parsing::languages::recipe::AST::Recipe abstractRecipe 
+				= parseRecipeToAST(recipeFile);
+			/* Transfer parsed recipe to the new data structure. */
+			for (parsing::languages::recipe::AST::Instruction instruction 
+				<- abstractRecipe.instructions)
 			{
-				recipe += [parseInstruction(instruction)];
+				if (!instruction.commented)
+				{
+					artifact.environment.newModule.recipe += 
+						[parseInstruction(instruction)];
+				}
 			}
+		}
+		catch ParseError(loc errorLocation):
+		{
+			artifact.environment.errors += [errors::Parsing::parsing(errorLocation)];
+		}
+		catch Ambiguity(loc errorLocation, str usedSyntax, str parsedText):
+		{
+			artifact.environment.errors += 
+				[errors::Parsing::ambiguity(errorLocation, usedSyntax)];
+		}
+		catch IllegalArgument(value v, str message):
+		{
+			artifact.environment.errors += [errors::Parsing::imploding(recipeFile)];
 		}
 	}
 	else
 	{
-		println("Error: defined file does not exist");
-		throw(PathNotFound(recipeFile));
+		artifact.environment.errors += [errors::Parsing::fileNotFound(recipeFile)];
 	}
 	
-	return recipe;
+	return artifact;
 }
 
 private Instruction parseInstruction(iterateRule(bool commented, str ruleName))

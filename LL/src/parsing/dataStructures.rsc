@@ -10,36 +10,45 @@
 
 module parsing::DataStructures
 
+import errors::Parsing;
+
 alias Tile = int;
 alias TileMap = list[list[Tile]];
 alias Alphabet = map[str, int];
 alias AlphabetMap = map[str, Alphabet];
 alias RuleMap	= map[str, Rule];
 
-data ProjectInformation
-	= projectInformation(LudoscopeProject project, loc projectFile);
+data ParsingArtifact
+	= parsingArtifact(Environment environment, 
+		LudoscopeProject project);
+
+data Environment
+	= environment(loc projectFile, 
+		list[ParsingError] errors,
+		LudoscopeModule newModule);
 
 data LudoscopeProject
 	= ludoscopeProject(list[LudoscopeModule] modules, 
-	AlphabetMap alphabets);
+		AlphabetMap alphabets);
 	
 data LudoscopeModule
 	= ludoscopeModule(str name,
-	list[str] inputs,
-	str alphabetName,
-	TileMap startingState, 
-	RuleMap rules, 
-	list[Instruction] recipe);
+		list[str] inputs,
+		str alphabetName,
+		TileMap startingState, 
+		RuleMap rules, 
+		list[Instruction] recipe)
+	| undefinedModule();
 	
 data Rule
 	= rule(Topology topology, 
-	TileMap leftHand, 
-	list[TileMap] rightHands);
+		TileMap leftHand, 
+		list[TileMap] rightHands);
 	
 data Topology
 	= topology(bool mirrorHorizontal, 
-	bool mirrorVertical, 
-	bool rotate);
+		bool mirrorVertical, 
+		bool rotate);
 	
 data Instruction
 	= itterateRule(str ruleName)

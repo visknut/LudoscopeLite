@@ -18,70 +18,55 @@ import parsing::DataStructures;
 import util::string;
 
 
-public LudoscopeModule parseGrammar(str fileName, 
-		ProjectInformation projectInfo,
-		LudoscopeModule newModule)
+public ParsingArtifact parseGrammar(ParsingArtifact artifact, str fileName)
 {
 	list[Instruction] recipe = [];
-	loc grammarFile = fileLocation(projectInfo.projectFile, fileName, ".grm");
+	loc grammarFile = fileLocation(artifact.environment.projectFile, fileName, ".grm");
 		
 	if (exists(grammarFile))
 	{
 		parsing::languages::grammar::AST::Grammar abstractGrammar
 			= parseGrammarToAST(grammarFile);
 			
-		newModule.startingState = parseExpression(projectInfo,
-			newModule,
+		artifact.environment.newModule.startingState = parseExpression(artifact,
 			abstractGrammar.startInput.expression.symbols,
 			abstractGrammar.startInput.expression.mapType);
-			
-		newModule.rules = parseRules(projectInfo,
-			newModule,
-			abstractGrammar.rules);
+		
+		artifact = parseRules(artifact, abstractGrammar.rules);
 	}
 	else
 	{
-		println("Error: defined file does not exist");
-		throw(PathNotFound(recipeFile));
+		artifact.environment.errors += [errors::Parsing::fileNotFound(grammarFile)];
 	}
 	
-	return newModule;
+	return artifact;
 }
 
-private RuleMap parseRules(ProjectInformation projectInfo,
-			LudoscopeModule newModule,
+private ParsingArtifact parseRules(ParsingArtifact artifact,
 			list[parsing::languages::grammar::AST::Rule] rules)
 {
-	RuleMap ruleMap = ();
-	
 	for (parsing::languages::grammar::AST::Rule abstractRule <- rules)
 	{
 		Topology topology = parseSettings(abstractRule.settings);
-		TileMap leftHand = parseExpression(projectInfo,
-			newModule,
+		TileMap leftHand = parseExpression(artifact,
 			abstractRule.leftHand.symbols,
 			abstractRule.leftHand.mapType);
-		list[TileMap] rightHands = parseRightHands(projectInfo,
-			newModule,
+		list[TileMap] rightHands = parseRightHands(artifact,
 			abstractRule.rightHands);
 		Rule newRule = parsing::DataStructures::rule(topology, leftHand, rightHands);
 		
-		ruleMap += (abstractRule.name : newRule);
+		artifact.environment.newModule.rules += (abstractRule.name : newRule);
 	}
-
-	return (ruleMap);
+	return artifact;
 }
 
-private list[TileMap] parseRightHands(ProjectInformation projectInfo,
-			LudoscopeModule newModule,
+private list[TileMap] parseRightHands(ParsingArtifact artifact,
 			list[RightHandExpression] abstractRightHands)
 {
 	list[TileMap] rightHands = [];
 	for (RightHandExpression rightHand <- abstractRightHands)
 	{
-		rightHands += [parseExpression(projectInfo,
-			newModule,
-			rightHand.expression.symbols,
+		rightHands += [parseExpression(artifact, rightHand.expression.symbols, 
 			rightHand.expression.mapType)];
 	}
 	return rightHands;
@@ -126,15 +111,15 @@ public Topology parseTopology(int i)
 	return topology(mirrorHorizontal, mirrorVertical, rotate);
 }
 
-private TileMap parseExpression(ProjectInformation projectInfo,
-			LudoscopeModule newModule,
+private TileMap parseExpression(ParsingArtifact artifact,
 			list[Symbol] symbols, 
 			tileMap(int width, int height))
 {
 	TileMap newTileMap = [];
 	int i = 0;
 	list[Tile] row = [];
-	Alphabet alphabet = projectInfo.project.alphabets[newModule.alphabetName];
+	Alphabet alphabet = 
+		artifact.project.alphabets[artifact.environment.newModule.alphabetName];
 	for (Symbol symbol <- symbols)
 	{
 		row += [alphabet[symbol.name]];
@@ -149,26 +134,23 @@ private TileMap parseExpression(ProjectInformation projectInfo,
 	return newTileMap;
 }
 
-private TileMap parseExpression(ProjectInformation projectInfo,
-			LudoscopeModule newModule,
+private TileMap parseExpression(ParsingArtifact artifact,
 			list[Symbol] symbols,
 			string())
 {
 	println("Error: unsuported map type.");
-	return newTileMap;
+	return [[]];
 }
 
-private TileMap parseExpression(ProjectInformation projectInfo,
-			LudoscopeModule newModule,
+private TileMap parseExpression(ParsingArtifact artifact,
 			list[Symbol] symbols, 
 			graph())
 {
 	println("Error: unsuported map type.");
-	return newTileMap;
+	return [[]];
 }
 
-private TileMap parseExpression(ProjectInformation projectInfo,
-			LudoscopeModule newModule,
+private TileMap parseExpression(ParsingArtifact artifact,
 			list[Symbol] symbols, 
 			shape())
 {
@@ -176,15 +158,15 @@ private TileMap parseExpression(ProjectInformation projectInfo,
 	return [[]];
 }
 
-private TileMap parseExpression(ProjectInformation projectInfo,
-			LudoscopeModule newModule,
+private TileMap parseExpression(ParsingArtifact artifact,
 			list[LeftHandSymbol] symbols, 
 			tileMap(int width, int height))
 {
 	TileMap newTileMap = [];
 	int i = 0;
 	list[Tile] row = [];
-	Alphabet alphabet = projectInfo.project.alphabets[newModule.alphabetName];
+	Alphabet alphabet = 
+		artifact.project.alphabets[artifact.environment.newModule.alphabetName];
 	for (LeftHandSymbol symbol <- symbols)
 	{
 		row += [alphabet[symbol.name]];
@@ -199,26 +181,23 @@ private TileMap parseExpression(ProjectInformation projectInfo,
 	return newTileMap;
 }
 
-private TileMap parseExpression(ProjectInformation projectInfo,
-			LudoscopeModule newModule,
+private TileMap parseExpression(ParsingArtifact artifact,
 			list[LeftHandSymbol] symbols,
 			string())
 {
 	println("Error: unsuported map type.");
-	return newTileMap;
+	return [[]];
 }
 
-private TileMap parseExpression(ProjectInformation projectInfo,
-			LudoscopeModule newModule,
+private TileMap parseExpression(ParsingArtifact artifact,
 			list[LeftHandSymbol] symbols, 
 			graph())
 {
 	println("Error: unsuported map type.");
-	return newTileMap;
+	return [[]];
 }
 
-private TileMap parseExpression(ProjectInformation projectInfo,
-			LudoscopeModule newModule,
+private TileMap parseExpression(ParsingArtifact artifact,
 			list[LeftHandSymbol] symbols, 
 			shape())
 {
