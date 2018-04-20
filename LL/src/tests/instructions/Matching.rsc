@@ -1,6 +1,6 @@
 module tests::instructions::Matching
 
-import instructions::Matching;
+import instructions::util::Matching;
 import parsing::DataStructures;
 
 public bool runAllTests()

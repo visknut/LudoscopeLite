@@ -1,10 +1,9 @@
-module instructions::Matching
+module instructions::util::Matching
 
 import IO;
 import List;
 import parsing::DataStructures;
-	
-	
+
 // TODO: try different approach (for example: generate permutations and compair to pattern).
 public list[Coordinates] findPatternInGrid(TileMap grid, TileMap pattern)
 {
