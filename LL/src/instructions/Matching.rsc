@@ -4,18 +4,17 @@ import IO;
 import List;
 import parsing::DataStructures;
 	
+	
+// TODO: try different approach (for example: generate permutations and compair to pattern).
 public list[Coordinates] findPatternInGrid(TileMap grid, TileMap pattern)
 {
 	list[Coordinates] matches = [];
 	int patternWidth = size(pattern[0]);
 	int patternHeight = size(pattern);
-	
-	int gridWidth = size(grid[0]);
 	int gridHeight = size(grid);
-	
 	list[int] patternFirstLine = pattern[0];
 	
-	for (/list[list[int]] m:[C*, [A*, patternFirstLine, B*], D*] := grid)
+	for (/[C*, [A*, patternFirstLine, B*], D*] := grid)
 	{
 		int widthOffset = size(A);
 		int heightOffset = size(C);
