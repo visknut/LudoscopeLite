@@ -49,7 +49,10 @@ data Topology
 	= topology(bool mirrorHorizontal, 
 		bool mirrorVertical, 
 		bool rotate);
-	
+		
+data Coordinates
+	= coordinates(int x, int y);
+
 data Instruction
 	= itterateRule(str ruleName)
 	| executeRule(str ruleName, int itterations);

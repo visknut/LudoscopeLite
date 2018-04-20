@@ -15,11 +15,13 @@ import tests::parsing::Grammar;
 import tests::parsing::Alphabet;
 import tests::parsing::Recipe;
 import tests::parsing::Project;
+import tests::instructions::Matching;
 
 public test bool runAllParsingTests()
 {
 	return tests::parsing::Grammar::runAllTests()
 	&& tests::parsing::Alphabet::runAllTests()
 	&& tests::parsing::Recipe::runAllTests()
-	&& tests::parsing::Project::runAllTests();
+	&& tests::parsing::Project::runAllTests()
+	&& tests::instructions::Matching::runAllTests();
 }
