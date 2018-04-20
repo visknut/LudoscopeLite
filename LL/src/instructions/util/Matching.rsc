@@ -1,3 +1,13 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// Function for matching pattern in a grid.
+// @brief        This file contains the function for matching pattern 
+//							 in a grid.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         20-04-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
 module instructions::util::Matching
 
 import IO;

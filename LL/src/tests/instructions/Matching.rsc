@@ -1,3 +1,12 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// Tests for pattern matching
+// @brief        This file contains all tests for for pattern matching.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         20-04-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
 module tests::instructions::Matching
 
 import instructions::util::Matching;

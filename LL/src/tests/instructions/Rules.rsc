@@ -1,3 +1,12 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// Tests for rules.
+// @brief        This file contains all tests for instructions that apply rules.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         20-04-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
 module tests::instructions::Rules
 
 import instructions::Rules;

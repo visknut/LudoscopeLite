@@ -1,3 +1,13 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// Instructions that apply rules to the map.
+// @brief        This file contains the functions for  the instructions 
+//							 that apply rules.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         20-04-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
 module instructions::Rules
 
 import instructions::util::Matching;
