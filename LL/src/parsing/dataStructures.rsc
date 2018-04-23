@@ -17,15 +17,11 @@ alias TileMap = list[list[Tile]];
 alias Alphabet = map[str, int];
 alias AlphabetMap = map[str, Alphabet];
 alias RuleMap	= map[str, Rule];
+alias Recipe = list[Instruction];
 
-data ParsingArtifact
-	= parsingArtifact(Environment environment, 
-		LudoscopeProject project);
-
-data Environment
-	= environment(loc projectFile, 
-		list[ParsingError] errors,
-		LudoscopeModule newModule);
+data TransformationArtifact
+	= transformationArtifact(LudoscopeProject project, 
+		list[ParsingError] errors);
 
 data LudoscopeProject
 	= ludoscopeProject(list[LudoscopeModule] modules, 
@@ -37,16 +33,15 @@ data LudoscopeModule
 		str alphabetName,
 		TileMap startingState, 
 		RuleMap rules, 
-		list[Instruction] recipe)
-	| undefinedModule();
+		Recipe recipe);
 	
 data Rule
-	= rule(Topology topology, 
+	= rule(Reflections reflections, 
 		TileMap leftHand, 
 		list[TileMap] rightHands);
 	
-data Topology
-	= topology(bool mirrorHorizontal, 
+data Reflections
+	= reflections(bool mirrorHorizontal, 
 		bool mirrorVertical, 
 		bool rotate);
 		

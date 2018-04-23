@@ -63,7 +63,7 @@ syntax MapType
 syntax RuleSettings
 	= ruleWidth: "width" "=" INTEGER
 	|	ruleHeight: "height" "=" INTEGER
-	| ruleTopology: "gt" "=" INTEGER;
+	| ruleReflections: "gt" "=" INTEGER;
 
 syntax Value
 	= integerValue: INTEGER 

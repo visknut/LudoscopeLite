@@ -15,7 +15,8 @@ data ParsingError
 	| version(str version)
 	| fileNotFound(loc fileLocation)
 	| parsing(loc fileLocation)
-	| ambiguity(loc fileLocation, str usedSyntax);
+	| ambiguity(loc fileLocation, str usedSyntax)
+	| extension(loc fileLocation);
 	
 str errorToString(parsing(loc fileLocation))
 {
@@ -49,4 +50,10 @@ str errorToString(fileNotFound(loc fileLocation))
 {
 	return "Input error: could not find the following file: 
 		<fileLocation.path>";
+}
+
+str errorToString(extension(loc fileLocation))
+{
+		return "Input error: could not parse <fileLocation>, because 
+		the extension \".<fileLocation.extension>\" is not supported by LL.";
 }

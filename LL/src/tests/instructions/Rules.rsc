@@ -25,7 +25,7 @@ public bool runAllTests()
 private test bool itterateRuleSingleResult()
 {
 	/* Arrange */
-	Rule rule = rule(topology(false,false,false),[[1]],[[[2]]]);
+	Rule rule = rule(reflections(false,false,false),[[1]],[[[2]]]);
 	TileMap startingMap = [[0, 0], [1, 0]];
 	TileMap expectedResult = [[0, 0], [2, 0]];
 	
@@ -39,7 +39,7 @@ private test bool itterateRuleSingleResult()
 private test bool itterateRuleMultipleResults()
 {
 	/* Arrange */
-	Rule rule = rule(topology(false,false,false),[[1]],[[[2]]]);
+	Rule rule = rule(reflections(false,false,false),[[1]],[[[2]]]);
 	TileMap startingMap = [[1, 0], [1, 0]];
 	list[TileMap] expectedResults = [[[1, 0], [2, 0]],
 																	 [[2, 0], [1, 0]]];
@@ -54,7 +54,7 @@ private test bool itterateRuleMultipleResults()
 private test bool executeRuleSingleResult()
 {
 	/* Arrange */
-	Rule rule = rule(topology(false,false,false),[[1]],[[[2]]]);
+	Rule rule = rule(reflections(false,false,false),[[1]],[[[2]]]);
 	TileMap startingMap = [[1, 1], [1, 1]];
 	TileMap expectedResult = [[2, 2], [2, 2]];
 	int itterations = 4;
@@ -69,7 +69,7 @@ private test bool executeRuleSingleResult()
 private test bool executeRuleMultipleResults()
 {
 	/* Arrange */
-	Rule rule = rule(topology(false,false,false),[[1]],[[[2]]]);
+	Rule rule = rule(reflections(false,false,false),[[1]],[[[2]]]);
 	TileMap startingMap = [[1, 1], [1, 1]];
 	list[TileMap] expectedResults = [[[1, 2], [2, 2]],
 																	 [[2, 1], [2, 2]],

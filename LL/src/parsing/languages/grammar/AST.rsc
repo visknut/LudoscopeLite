@@ -70,7 +70,7 @@ data Options
 data RuleSetting
 	= ruleWidth(int width)
 	| ruleHeight(int height)
-	| ruleTopology(int topology);
+	| ruleReflections(int reflections);
 		
 data MemberStatement
 	= memberStatement(str identifier, Value memberValue);
