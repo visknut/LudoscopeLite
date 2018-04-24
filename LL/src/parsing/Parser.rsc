@@ -19,9 +19,6 @@ import parsing::languages::alphabet::AST;
 import parsing::languages::recipe::AST;
 import parsing::languages::grammar::AST;
 
-import parsing::fromAstToData::CreateSyntaxTree;
-import parsing::fromAstToData::TransformSyntaxTree;
-
 import parsing::DataStructures;
 import errors::Parsing;
 import util::string;
@@ -71,4 +68,45 @@ public SyntaxTree parseFile(loc file, SyntaxTree syntaxTree)
 		syntaxTree.errors += [errors::Parsing::fileNotFound(file)];
 	}
 	return syntaxTree;
+}
+
+public SyntaxTree parseCompleteProject(loc projectFile)
+{
+	SyntaxTree syntaxTree = syntaxTree([], (), (), (), []);
+	
+	syntaxTree = parseFile(projectFile, syntaxTree);
+	
+	list[loc] fileLocations = 
+	 	gatherFileLocations(syntaxTree, projectFile);
+
+	for (loc file <- fileLocations)
+	{
+		syntaxTree = parseFile(file, syntaxTree);
+	}
+	
+	return syntaxTree;
+}
+
+private list[loc] gatherFileLocations(SyntaxTree syntaxTree, loc projectFile)
+{
+	list[loc] fileLocations = [];
+
+	visit(syntaxTree)
+	{
+		case lspmodule(str name, str alphabet, str position, str moduleType, str fileName,
+			str match, list[str] inputs, str maxIterations,	str moduleFilter,	str grammar,
+			str executionType, str recipe, str showMembers, str alwaysStartWithToken) :
+			{
+				fileLocations += [fileLocation(projectFile, cleanGrammarName(name), ".grm")];
+				if (cleanRecipeBool(recipe) == "true")
+				{
+					fileLocations += [fileLocation(projectFile, cleanGrammarName(name), ".rcp")];
+				}
+			}
+		case alphabet(str name, Position position) :
+		{
+			fileLocations += [fileLocation(projectFile, removeQuotes(name), ".alp")];
+		}
+	}
+	return fileLocations;
 }

@@ -1,3 +1,13 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// Transform Instructions
+// @brief        Functions that replace the AST constructor with a new
+//               constructor from DataStructures.rsc.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         23-04-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
 module parsing::transformations::TransformInstructions
 
 import parsing::DataStructures;

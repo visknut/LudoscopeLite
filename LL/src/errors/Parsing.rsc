@@ -7,7 +7,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-
 module errors::Parsing
 
 data ParsingError
@@ -16,18 +15,22 @@ data ParsingError
 	| fileNotFound(loc fileLocation)
 	| parsing(loc fileLocation)
 	| ambiguity(loc fileLocation, str usedSyntax)
-	| extension(loc fileLocation);
+	| extension(loc fileLocation)
+	| mapType(str mapType, loc fileLocation)
+	| mapSize(int size, int symbols, loc fileLocation)
+	| rightAndLeftHandSize(int leftWidth, int leftHeight, 
+		int rightWidth, int rightHeight, loc fileLocation);
 	
 str errorToString(parsing(loc fileLocation))
 {
-	return "Parsing Error:
+	return "Parsing error:
 		\n File: <fileLocation.path>
 		\n Line: <fileLocation.begin.line>";
 }
 
 str errorToString(ambiguity(loc fileLocation, str usedSyntax))
 {
-	return "Parsing Error: ambiguity found while parsing.
+	return "Parsing error: ambiguity found while parsing.
 		\n Syntax: <usedSyntax>
 		\n File: <fileLocation.path>
 		\n Line: <fileLocation.begin.line>";
@@ -35,7 +38,7 @@ str errorToString(ambiguity(loc fileLocation, str usedSyntax))
 
 str errorToString(imploding(loc location))
 {
-	return "Parsing Error: could not implode the parsing tree to
+	return "Parsing error: could not implode the parsing tree to
 		the AST.
 		\n File: <location.path>";
 }
@@ -55,5 +58,29 @@ str errorToString(fileNotFound(loc fileLocation))
 str errorToString(extension(loc fileLocation))
 {
 		return "Input error: could not parse <fileLocation>, because 
-		the extension \".<fileLocation.extension>\" is not supported by LL.";
+			the extension \".<fileLocation.extension>\" is not supported by LL.";
+}
+
+str errorToString(mapType(str mapType, loc fileLocation))
+{
+	return "Type error: \'<mapType>\' maps are not supported by LL
+		\n File: <fileLocation.path>
+		\n Line: <fileLocation.begin.line>";
+}
+
+str errorToString(mapSize(int size, int symbols, loc fileLocation))
+{
+	return "Error: the declared size of the map (<size>) does not match with
+		the amount of symbols that follow (<symbols>).
+		\n File: <fileLocation.path>
+		\n Line: <fileLocation.begin.line>";
+}
+
+str errorToString(rightAndLeftHandSize(int leftWidth, int leftHeight, 
+		int rightWidth, int rightHeight, loc fileLocation))
+{
+	return "Error: the dimensions of the left hand (<leftWidth>, <leftHeight>) 
+	do not match with	the dimensions of the right hand (<rightWidth>, <rightHeight>).
+		\n File: <fileLocation.path>
+		\n Line: <fileLocation.begin.line>";
 }

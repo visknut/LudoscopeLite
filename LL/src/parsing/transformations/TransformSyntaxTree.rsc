@@ -1,3 +1,13 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// Transform AST
+// @brief        Functions that move the relevant content from the AST to
+//							 a new ADT declared in DataStructures.rsc.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         23-04-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
 module parsing::transformations::TransformSyntaxTree
 
 import IO;
