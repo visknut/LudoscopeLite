@@ -12,6 +12,9 @@ module tests::parsing::Project
 import parsing::Parser;
 import tests::parsing::Utility;
 
+loc fileLocation = |project://LL/src/tests/correctTestData/isolatedProjects/notSet.txt|;
+SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), []);
+
 public bool runAllTests()
 {
 	return tryParsingOnlyAlphabet()
@@ -29,49 +32,84 @@ public bool runAllTests()
 
 private test bool tryParsingOnlyAlphabet()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedProjects/OnlyAlphabet.lsp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "OnlyAlphabet.lsp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingOptions()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedProjects/Options.lsp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "Options.lsp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingRegisters()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedProjects/Registers.lsp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "Registers.lsp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingSingleModule()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedProjects/SingleModule.lsp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "SingleModule.lsp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingMultipleModulesWithAlphabet()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedProjects/MultipleModulesWithAlphabet.lsp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "MultipleModulesWithAlphabet.lsp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingCompleteModule()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedProjects/CompleteModule.lsp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "CompleteModule.lsp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingComplexProject()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedProjects/ComplexProject.lsp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "ComplexProject.lsp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }

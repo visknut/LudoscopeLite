@@ -12,6 +12,9 @@ module tests::parsing::Alphabet
 import parsing::Parser;
 import tests::parsing::Utility;
 
+loc fileLocation = |project://LL/src/tests/correctTestData/isolatedAlphabets/notSet.txt|;
+SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), []);
+
 public bool runAllTests()
 {
 	return tryParsingOnlyColors()
@@ -21,40 +24,65 @@ public bool runAllTests()
 }
 
 //////////////////////////////////////////////////////////////////////////////
-// Tests for pasrser.
+// Tests for parser.
 //////////////////////////////////////////////////////////////////////////////
 
 private test bool tryParsingOnlyColors()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedAlphabets/OnlyColors.alp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "OnlyColors.alp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingColorsAndAbbreviation()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedAlphabets/ColorsAndAbbreviation.alp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "ColorsAndAbbreviation.alp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingCompleteSymbol()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedAlphabets/CompleteSymbol.alp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "CompleteSymbol.alp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingMixedSymbols()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedAlphabets/MixedSymbols.alp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "MixedSymbols.alp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingSymbolWithWildCard()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedAlphabets/SymbolWithWildCard.alp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "SymbolWithWildCard.alp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }

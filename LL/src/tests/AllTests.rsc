@@ -15,6 +15,9 @@ import tests::parsing::Grammar;
 import tests::parsing::Alphabet;
 import tests::parsing::Recipe;
 import tests::parsing::Project;
+import tests::parsing::Checking;
+import tests::parsing::CompleteProjects;
+
 import tests::instructions::Matching;
 import tests::instructions::Rules;
 
@@ -24,6 +27,8 @@ public test bool runAllParsingTests()
 	&& tests::parsing::Alphabet::runAllTests()
 	&& tests::parsing::Recipe::runAllTests()
 	&& tests::parsing::Project::runAllTests()
+	&& tests::parsing::Checking::runAllTests()
+	&& tests::parsing::CompleteProjects::runAllTests()
 	&& tests::instructions::Matching::runAllTests()
 	&& tests::instructions::Rules::runAllTests();
 }

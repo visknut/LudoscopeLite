@@ -15,6 +15,7 @@ module parsing::check::Maps
 
 import parsing::languages::grammar::AST;
 
+import List;
 import parsing::Parser;
 import errors::Parsing;
 

@@ -12,6 +12,9 @@ module tests::parsing::Grammar
 import parsing::Parser;
 import tests::parsing::Utility;
 
+loc fileLocation = |project://LL/src/tests/correctTestData/isolatedGrammars/notSet.txt|;
+SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), []);
+
 public bool runAllTests()
 {
 	return tryParsingAllOptions()
@@ -28,50 +31,85 @@ public bool runAllTests()
 
 private test bool tryParsingAllOptions()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/AllOptions.grm|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "AllOptions.grm";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingAllRuleSettings()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/AllRuleSettings.grm|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "AllRuleSettings.grm";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingOnlyStart()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/OnlyStart.grm|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "OnlyStart.grm";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingAllMemberTypes()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/AllMemberTypes.grm|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "AllMemberTypes.grm";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingRuleWithMultipleRightHands()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/RuleWithMultipleRightHands.grm|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "RuleWithMultipleRightHands.grm";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 // TODO:
 private test bool tryParsingRuleWithNestedSymbol()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/RuleWithNestedSymbol.grm|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "RuleWithNestedSymbol.grm";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingSimpleRule()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/SimpleRule.grm|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "SimpleRule.grm";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }

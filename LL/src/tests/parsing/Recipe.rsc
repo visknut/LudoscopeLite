@@ -12,6 +12,9 @@ module tests::parsing::Recipe
 import parsing::Parser;
 import tests::parsing::Utility;
 
+loc fileLocation = |project://LL/src/tests/correctTestData/isolatedRecipes/notSet.txt|;
+SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), []);
+
 public bool runAllTests()
 {
 	return tryParsingComment()
@@ -27,43 +30,73 @@ public bool runAllTests()
 
 private test bool tryParsingComment()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/Comment.rcp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "Comment.rcp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingSingleInstruction()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/SingleInstruction.rcp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "SingleInstruction.rcp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 // TODO:
 private test bool tryParsingDiceNotation()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/DiceNotation.rcp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "DiceNotation.rcp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingBasicInstructions()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/BasicInstructions.rcp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "BasicInstructions.rcp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingAdvancedInstructions()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/AdvancedInstructions.rcp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "AdvancedInstructions.rcp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingAllInstructions()
 {
-	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/AllInstructions.rcp|, 
-		syntaxTree([], (), (), (), []));
+	/* Arrange */
+	fileLocation.file = "AllInstructions.rcp";
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
 	return checkErrors(syntaxTree);
 }

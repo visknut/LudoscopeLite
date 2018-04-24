@@ -17,19 +17,25 @@ import parsing::Parser;
 import errors::Parsing;
 
 alias AbstractGrammar = parsing::languages::grammar::AST::Grammar;
+alias AbstractProject = parsing::languages::project::AST::Project;
 
 public SyntaxTree checkVersion(SyntaxTree syntaxTree)
 {
-	if (syntaxTree.project[0].version != "0.6f")
+	for (AbstractProject abstractProject <- syntaxTree.project)
 	{
-			SyntaxTree.errors += [version(abstractGrammar.version)];
-	}
-	
-	for (AbstractGrammar abstractGrammar <- syntaxTree.grammars)
-	{
-		if (abstractGrammar.version != "0.6f")
+		if (abstractProject.version != "0.6f")
 		{
-			SyntaxTree.errors += [version(abstractGrammar.version)];
+				syntaxTree.errors += [version(abstractProject.version)];
 		}
 	}
+
+	for (str grammarName <- syntaxTree.grammars)
+	{
+		AbstractGrammar abstractGrammar = syntaxTree.grammars[grammarName];
+		if (abstractGrammar.version != "0.6f")
+		{
+			syntaxTree.errors += [version(abstractGrammar.version)];
+		}
+	}
+	return syntaxTree;
 }
