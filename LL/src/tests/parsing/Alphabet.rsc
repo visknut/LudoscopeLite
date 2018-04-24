@@ -9,10 +9,8 @@
 
 module tests::parsing::Alphabet
 
-import IO;
-import ParseTree;
-import parsing::languages::alphabet::Syntax;
-import parsing::languages::alphabet::AST;
+import parsing::Parser;
+import tests::parsing::Utility;
 
 public bool runAllTests()
 {
@@ -26,58 +24,37 @@ public bool runAllTests()
 // Tests for pasrser.
 //////////////////////////////////////////////////////////////////////////////
 
-private bool alphabetParsingTest(loc fileToParse)
-{
-	Tree tree;
-	/* First try parsing to a parse tree. */
-	try {
-		tree = parseAlphabet(fileToParse);
-	}
-	catch ParseError(loc errorLocation):
-	{
-		print("Error: could not parse the file. \n@");
-		println(errorLocation);
-		return false;
-	}
-	catch Ambiguity(loc errorLocation, str usedSyntax, str parsedText):
-	{
-		print("Error: ambiguity found during parsing. \n@");
-		println(errorLocation);
-		return false;
-	}
-	/* Then try to implode the parse tree to an AST. */
-	try {
-		implodeAlphabet(tree);
-	}
-	catch IllegalArgument(value v, str message):
-	{
-		println("Error: could not implode the parse tree to an AST");
-		return false;
-	}
-	return true;
-}
-
 private test bool tryParsingOnlyColors()
 {
-	return alphabetParsingTest(|project://LL/src/tests/testData/isolatedAlphabets/OnlyColors.alp|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedAlphabets/OnlyColors.alp|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingColorsAndAbbreviation()
 {
-	return alphabetParsingTest(|project://LL/src/tests/testData/isolatedAlphabets/ColorsAndAbbreviation.alp|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedAlphabets/ColorsAndAbbreviation.alp|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingCompleteSymbol()
 {
-	return alphabetParsingTest(|project://LL/src/tests/testData/isolatedAlphabets/CompleteSymbol.alp|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedAlphabets/CompleteSymbol.alp|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingMixedSymbols()
 {
-	return alphabetParsingTest(|project://LL/src/tests/testData/isolatedAlphabets/MixedSymbols.alp|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedAlphabets/MixedSymbols.alp|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingSymbolWithWildCard()
 {
-	return alphabetParsingTest(|project://LL/src/tests/testData/isolatedAlphabets/SymbolWithWildCard.alp|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedAlphabets/SymbolWithWildCard.alp|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }

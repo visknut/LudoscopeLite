@@ -9,16 +9,13 @@
 
 module tests::parsing::Recipe
 
-import IO;
-import ParseTree;
-import parsing::languages::recipe::Syntax;
-import parsing::languages::recipe::AST;
+import parsing::Parser;
+import tests::parsing::Utility;
 
 public bool runAllTests()
 {
 	return tryParsingComment()
 	&& tryParsingSingleInstruction()
-	&& tryParsingDiceNotation()
 	&& tryParsingBasicInstructions()
 	&& tryParsingAdvancedInstructions()
 	&& tryParsingAllInstructions();
@@ -28,63 +25,45 @@ public bool runAllTests()
 // Tests for parser.
 //////////////////////////////////////////////////////////////////////////////
 
-private bool recipeParsingTest(loc fileToParse)
-{
-	Tree tree;
-	/* First try parsing to a parse tree. */
-	try {
-		tree = parseRecipe(fileToParse);
-	}
-	catch ParseError(loc errorLocation):
-	{
-		print("Error: could not parse the file. \n@");
-		println(errorLocation);
-		return false;
-	}
-	catch Ambiguity(loc errorLocation, str usedSyntax, str parsedText):
-	{
-		print("Error: ambiguity found during parsing. \n@");
-		println(errorLocation);
-		return false;
-	}
-	/* Then try to implode the parse tree to an AST. */
-	try {
-		implodeRecipe(tree);
-	}
-	catch IllegalArgument(value v, str message):
-	{
-		println("Error: could not implode the parse tree to an AST");
-		return false;
-	}
-	return true;
-}
-
 private test bool tryParsingComment()
 {
-	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/Comment.rcp|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/Comment.rcp|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingSingleInstruction()
 {
-	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/SingleInstruction.rcp|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/SingleInstruction.rcp|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
+// TODO:
 private test bool tryParsingDiceNotation()
 {
-	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/DiceNotation.rcp|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/DiceNotation.rcp|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingBasicInstructions()
 {
-	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/BasicInstructions.rcp|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/BasicInstructions.rcp|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingAdvancedInstructions()
 {
-	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/AdvancedInstructions.rcp|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/AdvancedInstructions.rcp|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingAllInstructions()
 {
-	return recipeParsingTest(|project://LL/src/tests/testData/isolatedRecipes/AllInstructions.rcp|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedRecipes/AllInstructions.rcp|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }

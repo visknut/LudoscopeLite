@@ -9,10 +9,8 @@
 
 module tests::parsing::Grammar
 
-import IO;
-import ParseTree;
-import parsing::languages::grammar::AST;
-import parsing::languages::grammar::Syntax;
+import parsing::Parser;
+import tests::parsing::Utility;
 
 public bool runAllTests()
 {
@@ -21,7 +19,6 @@ public bool runAllTests()
 	&& tryParsingOnlyStart()
 	&& tryParsingAllMemberTypes()
 	&& tryParsingRuleWithMultipleRightHands()
-	&& tryParsingRuleWithNestedSymbol()
 	&& tryParsingSimpleRule();
 }
 
@@ -29,68 +26,52 @@ public bool runAllTests()
 // Tests for parser.
 //////////////////////////////////////////////////////////////////////////////
 
-private bool grammarParsingTest(loc fileToParse)
-{
-	Tree tree;
-	/* First try parsing to a parse tree. */
-	try {
-		tree = parseGrammar(fileToParse);
-	}
-	catch ParseError(loc errorLocation):
-	{
-		print("Error: could not parse the file. \n@");
-		println(errorLocation);
-		return false;
-	}
-	catch Ambiguity(loc errorLocation, str usedSyntax, str parsedText):
-	{
-		print("Error: ambiguity found during parsing. \n@");
-		println(errorLocation);
-		return false;
-	}
-	/* Then try to implode the parse tree to an AST. */
-	try {
-		implodeGrammar(tree);
-	}
-	catch IllegalArgument(value v, str message):
-	{
-		println("Error: could not implode the parse tree to an AST");
-		return false;
-	}
-	return true;
-}
-
 private test bool tryParsingAllOptions()
 {
-	return grammarParsingTest(|project://LL/src/tests/testData/isolatedGrammars/AllOptions.grm|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/AllOptions.grm|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingAllRuleSettings()
 {
-	return grammarParsingTest(|project://LL/src/tests/testData/isolatedGrammars/AllRuleSettings.grm|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/AllRuleSettings.grm|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingOnlyStart()
 {
-	return grammarParsingTest(|project://LL/src/tests/testData/isolatedGrammars/OnlyStart.grm|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/OnlyStart.grm|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingAllMemberTypes()
 {
-	return grammarParsingTest(|project://LL/src/tests/testData/isolatedGrammars/AllMemberTypes.grm|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/AllMemberTypes.grm|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingRuleWithMultipleRightHands()
 {
-	return grammarParsingTest(|project://LL/src/tests/testData/isolatedGrammars/RuleWithMultipleRightHands.grm|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/RuleWithMultipleRightHands.grm|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
+// TODO:
 private test bool tryParsingRuleWithNestedSymbol()
 {
-	return grammarParsingTest(|project://LL/src/tests/testData/isolatedGrammars/RuleWithNestedSymbol.grm|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/RuleWithNestedSymbol.grm|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }
 
 private test bool tryParsingSimpleRule()
 {
-	return grammarParsingTest(|project://LL/src/tests/testData/isolatedGrammars/SimpleRule.grm|);
+	SyntaxTree syntaxTree = parseFile(|project://LL/src/tests/testData/isolatedGrammars/SimpleRule.grm|, 
+		syntaxTree([], (), (), (), []));
+	return checkErrors(syntaxTree);
 }

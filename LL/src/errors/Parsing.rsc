@@ -24,23 +24,23 @@ data ParsingError
 str errorToString(parsing(loc fileLocation))
 {
 	return "Parsing error:
-		\n File: <fileLocation.path>
-		\n Line: <fileLocation.begin.line>";
+		File: <fileLocation.path>
+		Line: <fileLocation.begin.line>";
 }
 
 str errorToString(ambiguity(loc fileLocation, str usedSyntax))
 {
 	return "Parsing error: ambiguity found while parsing.
-		\n Syntax: <usedSyntax>
-		\n File: <fileLocation.path>
-		\n Line: <fileLocation.begin.line>";
+		Syntax: <usedSyntax>
+		File: <fileLocation.path>
+		Line: <fileLocation.begin.line>";
 }
 
 str errorToString(imploding(loc location))
 {
 	return "Parsing error: could not implode the parsing tree to
 		the AST.
-		\n File: <location.path>";
+		File: <location.path>";
 }
 
 str errorToString(version(str version))
@@ -64,16 +64,16 @@ str errorToString(extension(loc fileLocation))
 str errorToString(mapType(str mapType, loc fileLocation))
 {
 	return "Type error: \'<mapType>\' maps are not supported by LL
-		\n File: <fileLocation.path>
-		\n Line: <fileLocation.begin.line>";
+		File: <fileLocation.path>
+		Line: <fileLocation.begin.line>";
 }
 
 str errorToString(mapSize(int size, int symbols, loc fileLocation))
 {
 	return "Error: the declared size of the map (<size>) does not match with
 		the amount of symbols that follow (<symbols>).
-		\n File: <fileLocation.path>
-		\n Line: <fileLocation.begin.line>";
+		File: <fileLocation.path>
+		Line: <fileLocation.begin.line>";
 }
 
 str errorToString(rightAndLeftHandSize(int leftWidth, int leftHeight, 
@@ -81,6 +81,6 @@ str errorToString(rightAndLeftHandSize(int leftWidth, int leftHeight,
 {
 	return "Error: the dimensions of the left hand (<leftWidth>, <leftHeight>) 
 	do not match with	the dimensions of the right hand (<rightWidth>, <rightHeight>).
-		\n File: <fileLocation.path>
-		\n Line: <fileLocation.begin.line>";
+		File: <fileLocation.path>
+		Line: <fileLocation.begin.line>";
 }
