@@ -9,12 +9,24 @@
 
 module parsing::Interface
 
+import List;
 import parsing::Parser;
 import parsing::DataStructures;
 import parsing::transformations::TransformSyntaxTree;
 
 public TransformationArtifact parseAndTransform(loc projectFile)
 {
+	TransformationArtifact artifact = transformationArtifact(undefinedProject(), []);
 	SyntaxTree syntaxTree = parseCompleteProject(projectFile);
-	return transformSyntaxTree(syntaxTree);
+	
+	if (size(syntaxTree.errors) == 0)
+	{
+		artifact = transformSyntaxTree(syntaxTree);
+	}
+	else
+	{
+		artifact.errors = syntaxTree.errors;
+	}
+
+	return artifact;
 }

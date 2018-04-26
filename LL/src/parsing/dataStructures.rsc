@@ -25,7 +25,8 @@ data TransformationArtifact
 
 data LudoscopeProject
 	= ludoscopeProject(list[LudoscopeModule] modules, 
-		AlphabetMap alphabets);
+		AlphabetMap alphabets)
+	| undefinedProject();
 	
 data LudoscopeModule
 	= ludoscopeModule(str name,

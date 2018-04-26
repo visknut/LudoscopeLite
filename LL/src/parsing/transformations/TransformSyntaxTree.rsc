@@ -55,9 +55,10 @@ private TransformationArtifact transformProject(TransformationArtifact artifact,
 			str match, list[str] inputs, str maxIterations,	str moduleFilter,	str grammar,
 			str executionType, str recipe, str showMembers, str alwaysStartWithToken) :
 		{
+			list[str] cleanInputs = [removeQuotes(input) | str input <- inputs];
 			artifact.project.modules +=
 				[ludoscopeModule(cleanGrammarName(name), 
-												inputs, 
+												cleanInputs, 
 												cleanAlphabetName(alphabet), 
 												[[]], 
 												(), 

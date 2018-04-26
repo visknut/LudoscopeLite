@@ -14,6 +14,7 @@ import IO;
 import List;
 import errors::Parsing;
 import parsing::Parser;
+import parsing::DataStructures;
 
 public bool checkErrors(SyntaxTree syntaxTree)
 {
@@ -22,4 +23,13 @@ public bool checkErrors(SyntaxTree syntaxTree)
 		println(errorToString(error));
 	}
 	return (size(syntaxTree.errors) == 0);
+}
+
+public bool checkErrors(TransformationArtifact artifact)
+{
+	for (ParsingError error <- artifact.errors)
+	{
+		println(errorToString(error));
+	}
+	return (size(artifact.errors) == 0);
 }
