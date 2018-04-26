@@ -9,7 +9,7 @@
 
 module tests::instructions::Matching
 
-import instructions::util::Matching;
+import instructions::Matching;
 import parsing::DataStructures;
 
 public bool runAllTests()

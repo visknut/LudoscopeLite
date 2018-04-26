@@ -8,24 +8,25 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-module instructions::Rules
+module instructions::Instructions
 
-import instructions::util::Matching;
+import instructions::Matching;
 import parsing::DataStructures;
 import List;
 
 // TODO: replace itterateRule with something that stops when tileMap doesn't change.
-public TileMap executeRule(Rule rule, int itterations, TileMap tileMap)
+public TileMap executeInstruction(TileMap tileMap, RuleMap rules, executeRule(str ruleName, int itterations))
 {
 	for (int i <- [0 .. itterations])
 	{
-		tileMap = itterateRule(rule, tileMap);
+		tileMap = executeInstruction(tileMap, rules, itterateRule(ruleName));
 	}
 	return tileMap;
 }
 
-public TileMap itterateRule(Rule rule, TileMap tileMap)
+public TileMap executeInstruction(TileMap tileMap, RuleMap rules, itterateRule(str ruleName))
 {
+	Rule rule = rules[ruleName];
 	list[Coordinates] matches = findPatternInGrid(tileMap, rule.leftHand);
 	if (size(matches) > 0)
 	{

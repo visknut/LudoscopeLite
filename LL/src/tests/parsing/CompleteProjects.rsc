@@ -1,7 +1,9 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// Tests for parsing complete projects
-// @brief        Tests for parsing complete projects.
+// Tests for parsing & transforming complete projects
+// @brief        Tests for parsing and transforming projects. If the parsing
+//							 fails, the transformation tests will also fail, because they
+//							 test the entire parsing pipeline (parsing + tranforming).
 // @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
 // @date         24-04-2018
 //

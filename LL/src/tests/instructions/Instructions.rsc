@@ -7,9 +7,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-module tests::instructions::Rules
+module tests::instructions::Instructions
 
-import instructions::Rules;
+import instructions::Instructions;
 import parsing::DataStructures;
 import IO;
 
@@ -25,12 +25,12 @@ public bool runAllTests()
 private test bool itterateRuleSingleResult()
 {
 	/* Arrange */
-	Rule rule = rule(reflections(false,false,false),[[1]],[[[2]]]);
+	RuleMap rules = ("rule" : rule(reflections(false,false,false),[[1]],[[[2]]]));
 	TileMap startingMap = [[0, 0], [1, 0]];
 	TileMap expectedResult = [[0, 0], [2, 0]];
 	
 	/* Act */
-	TileMap result = itterateRule(rule, startingMap);
+	TileMap result = executeInstruction(startingMap, rules, itterateRule("rule"));
 	
 	/* Assert */
 	return expectedResult == result;
@@ -39,13 +39,13 @@ private test bool itterateRuleSingleResult()
 private test bool itterateRuleMultipleResults()
 {
 	/* Arrange */
-	Rule rule = rule(reflections(false,false,false),[[1]],[[[2]]]);
+	RuleMap rules = ("rule" : rule(reflections(false,false,false),[[1]],[[[2]]]));
 	TileMap startingMap = [[1, 0], [1, 0]];
 	list[TileMap] expectedResults = [[[1, 0], [2, 0]],
 																	 [[2, 0], [1, 0]]];
 	
 	/* Act */
-	TileMap result = itterateRule(rule, startingMap);
+	TileMap result = executeInstruction(startingMap, rules, itterateRule("rule"));
 
 	/* Assert */
 	return result in expectedResults;
@@ -54,13 +54,14 @@ private test bool itterateRuleMultipleResults()
 private test bool executeRuleSingleResult()
 {
 	/* Arrange */
-	Rule rule = rule(reflections(false,false,false),[[1]],[[[2]]]);
+	RuleMap rules = ("rule" : rule(reflections(false,false,false),[[1]],[[[2]]]));
 	TileMap startingMap = [[1, 1], [1, 1]];
 	TileMap expectedResult = [[2, 2], [2, 2]];
 	int itterations = 4;
 	
 	/* Act */
-	TileMap result = executeRule(rule, itterations, startingMap);
+	TileMap result = 
+		executeInstruction(startingMap, rules, executeRule("rule", itterations));
 	
 	/* Assert */
 	return expectedResult == result;
@@ -69,7 +70,7 @@ private test bool executeRuleSingleResult()
 private test bool executeRuleMultipleResults()
 {
 	/* Arrange */
-	Rule rule = rule(reflections(false,false,false),[[1]],[[[2]]]);
+	RuleMap rules = ("rule" : rule(reflections(false,false,false),[[1]],[[[2]]]));
 	TileMap startingMap = [[1, 1], [1, 1]];
 	list[TileMap] expectedResults = [[[1, 2], [2, 2]],
 																	 [[2, 1], [2, 2]],
@@ -78,7 +79,8 @@ private test bool executeRuleMultipleResults()
 	int itterations = 3;
 	
 	/* Act */
-	TileMap result = executeRule(rule, itterations, startingMap);
+	TileMap result = 
+		executeInstruction(startingMap, rules, executeRule("rule", itterations));
 
 	/* Assert */
 	return result in expectedResults;
