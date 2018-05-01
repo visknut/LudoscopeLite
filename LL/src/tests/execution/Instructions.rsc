@@ -7,9 +7,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-module tests::instructions::Instructions
+module tests::execution::Instructions
 
-import instructions::Instructions;
+import execution::instructions::Instructions;
 import parsing::DataStructures;
 import IO;
 

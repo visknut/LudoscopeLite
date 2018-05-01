@@ -7,9 +7,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-module tests::instructions::Matching
+module tests::execution::Matching
 
-import instructions::Matching;
+import execution::instructions::Matching;
 import parsing::DataStructures;
 
 public bool runAllTests()

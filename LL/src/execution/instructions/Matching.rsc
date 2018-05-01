@@ -8,7 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-module instructions::Matching
+module execution::instructions::Matching
 
 import IO;
 import List;

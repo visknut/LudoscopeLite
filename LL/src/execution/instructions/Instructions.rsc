@@ -8,9 +8,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-module instructions::Instructions
+module execution::instructions::Instructions
 
-import instructions::Matching;
+import execution::instructions::Matching;
 import parsing::DataStructures;
 import List;
 

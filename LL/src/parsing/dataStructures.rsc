@@ -34,7 +34,8 @@ data LudoscopeModule
 		str alphabetName,
 		TileMap startingState, 
 		RuleMap rules, 
-		Recipe recipe);
+		Recipe recipe)
+	| undefinedModule();
 	
 data Rule
 	= rule(Reflections reflections, 
