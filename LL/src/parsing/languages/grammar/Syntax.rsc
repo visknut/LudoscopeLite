@@ -75,7 +75,7 @@ syntax Value
 	| listValue: "[" Value* "]";
 
 syntax String
-  = "\"" STRING "\"";
+  = @category="String" "\"" STRING "\"";
   
 syntax Vector
 	= vector2d: "(" INTEGER INTEGER ")"
@@ -90,10 +90,10 @@ lexical BOOLEAN
 	= "true" | "false";
 
 lexical NAME
-  = ([a-zA-Z_$.] [a-zA-Z0-9_$.]* !>> [a-zA-Z0-9_$.]) \ Keyword;
+  = @category="Name" ([a-zA-Z_$.] [a-zA-Z0-9_$.]* !>> [a-zA-Z0-9_$.]) \ Keyword;
 
 lexical COLORCODE
-	= "#" [0-9A-Z]*;
+	= @category="ColorCode" "#" [0-9A-Z]*;
  
 lexical INTEGER
   = ("-"?[0-9]+);
@@ -139,3 +139,8 @@ keyword Keyword
   
 public start[Grammar] parseGrammar(loc file) = 
   parse(#start[Grammar], file);
+  
+public start[Grammar] parseGrammar(str input, loc location) 
+{ 
+	return parse(#start[Grammar], input, location); 
+}

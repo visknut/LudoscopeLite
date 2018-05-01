@@ -1,6 +1,6 @@
-module tests::execution::Controller
+module tests::execution::Execution
 
-import execution::Controller;
+import execution::Execution;
 import execution::DataStructures;
 import parsing::DataStructures;
 import List;
@@ -9,8 +9,7 @@ public bool runAllTests()
 {
 	return executeSimpleProject()
 	&& executeComplexProject()
-	&& executeIncorrectProject()
-	&& testExecuteModule();
+	&& executeIncorrectProject();
 }
 
 private test bool executeSimpleProject()
@@ -64,14 +63,4 @@ private test bool executeIncorrectProject()
 	
 	/* Assert */
 	return size(artifact.errors) == 1	&& artifact.output == expectedOutput;
-}
-
-private test bool testExecuteModule()
-{
-	/* Arrange */
-	
-	/* Act */
-	
-	/* Assert */
-	return true;
 }

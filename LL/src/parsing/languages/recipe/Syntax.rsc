@@ -37,7 +37,7 @@ syntax Commands
   | transformSymbols:						COMMENTED? "TransformSymbols" "(" String String ")";
 
 syntax String
-  = "\"" STRING "\"";
+  = @category="String" "\"" STRING "\"";
   
 syntax Expression
 	= expression: INTEGER; // TODO: what is allowed to be in registers?
@@ -49,7 +49,7 @@ syntax Expression
 //////////////////////////////////////////////////////////////////////////////
 
 lexical NAME
-  = ([a-zA-Z_$*] [a-zA-Z0-9_$*]* !>> [a-zA-Z0-9_$*]) \ Keyword;
+  = @category="Name" ([a-zA-Z_$*] [a-zA-Z0-9_$*]* !>> [a-zA-Z0-9_$*]) \ Keyword;
 
 lexical INTEGER
   = ("-"?[0-9]+);
@@ -68,7 +68,11 @@ layout LAYOUTLIST
   = LAYOUT* !>> [\t-\n \r \ : ,];
 
 lexical LAYOUT
-  =  [\t-\n \r \ : ,];
+  = [\t-\n \r \ : ,];
+ 
+// TODO: refactor comments.
+//lexical Comment
+//  = @category="Comment" "//" ![\n]* [\n];
   
 keyword Keyword
   = "SetRegister"
@@ -92,3 +96,8 @@ keyword Keyword
   
 public start[Recipe] parseRecipe(loc file) = 
   parse(#start[Recipe], file);
+  
+public start[Recipe] parseRecipe(str input, loc location) 
+{ 
+	return parse(#start[Recipe], input, location); 
+}

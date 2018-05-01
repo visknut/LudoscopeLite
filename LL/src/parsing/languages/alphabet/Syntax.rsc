@@ -34,14 +34,14 @@ syntax Symbol
 	")";
 	
 syntax String
-  = "\"" STRING "\"";
+  = @category="String" "\"" STRING "\"";
 
 lexical NAME
-  = ([a-zA-Z_$] [a-zA-Z0-9_$]* !>> [a-zA-Z0-9_$]) \ Keyword
-  | "*";
+  = @category="Name" ([a-zA-Z_$] [a-zA-Z0-9_$]* !>> [a-zA-Z0-9_$]) \ Keyword
+  | @category="Name" "*";
 
 lexical COLORCODE
-	= "#" [0-9A-F] [0-9A-F] [0-9A-F] [0-9A-F] [0-9A-F] [0-9A-F];
+	= @category="ColorCode" "#" [0-9A-F] [0-9A-F] [0-9A-F] [0-9A-F] [0-9A-F] [0-9A-F];
  
 lexical INTEGER
   = "-"?[0-9]+;
@@ -71,3 +71,8 @@ keyword Keyword
 
 public start[Alphabet] parseAlphabet(loc file) = 
   parse(#start[Alphabet], file);
+  
+public start[Alphabet] parseAlphabet(str input, loc location) 
+{ 
+	return parse(#start[Alphabet], input, location); 
+}

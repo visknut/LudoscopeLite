@@ -1,4 +1,4 @@
-module execution::Controller
+module execution::Execution
 
 import List;
 
@@ -7,7 +7,7 @@ import errors::Execution;
 import parsing::Interface;
 import parsing::DataStructures;
 
-import execution::instructions::Recipe;
+import execution::instructions::Instructions;
 import execution::DataStructures;
 
 public ExecutionArtifact executeProject(LudoscopeProject project)
@@ -38,9 +38,29 @@ public ExecutionArtifact executeProject(LudoscopeProject project)
 	return artifact;
 }
 
-public TileMap executeModule(LudoscopeModule modulez, OutputMap input)
+public TileMap executeModule(LudoscopeModule ludoscopeModule, OutputMap input)
 {
-	return [[]];
+	switch (size(ludoscopeModule.inputs))
+	{
+		case 0 : return executeRecipe(ludoscopeModule.startingState, 
+			ludoscopeModule.rules, 
+			ludoscopeModule.recipe);
+		case 1 : return executeRecipe(input[head(ludoscopeModule.inputs)], 
+			ludoscopeModule.rules, 
+			ludoscopeModule.recipe);
+		default :
+			// TODO: add merge functions.
+			return [[]];
+	}
+}
+
+public TileMap executeRecipe(TileMap tileMap, RuleMap rules, Recipe recipe)
+{
+	for (Instruction instruction <- recipe)
+	{
+		tileMap = executeInstruction(tileMap, rules, instruction);
+	}
+	return tileMap;
 }
 
 //////////////////////////////////////////////////////////////////////////////

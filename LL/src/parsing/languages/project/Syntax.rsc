@@ -27,8 +27,8 @@ syntax Declaration
 	| declaredRegister:	Register;
 
 syntax Alphabet
-	= alphabet: "alphabet" 
-	"name:" String 
+	= alphabet: "alphabet"
+	"name:" String
 	"position:" Position;
 
 syntax Module
@@ -65,7 +65,7 @@ syntax Variable
   | variableNull:   	NAME "null"; 
   
 syntax String
-  = "\"" STRING "\"";
+  = @category="String" "\"" STRING "\"";
     
 syntax Position
   = position: "(" INTEGER INTEGER ")";
@@ -84,7 +84,7 @@ lexical INTEGER
   = ("-"?[0-9]+);
 
 lexical NAME
-  = ([a-zA-Z_$] [a-zA-Z0-9_$]* !>> [a-zA-Z0-9_$]) \ Keyword;
+  = @category="Name" ([a-zA-Z_$] [a-zA-Z0-9_$]* !>> [a-zA-Z0-9_$]) \ Keyword;
   
 lexical STRING
   = ![\"]*;
@@ -107,7 +107,21 @@ keyword Keyword
 	| "option" 
 	| "true" 
 	| "false" 
-	| "null" ;
+	| "null" 
+	| "name"
+	| "alphabet"
+	| "position"
+	| "type"
+	| "fileName"
+	| "match"
+	| "inputs"
+	| "maxIterations"
+	| "filter"
+	| "grammar"
+	| "executionType"
+	| "recipe"
+	| "showMembers"
+	| "alwaysStartWithToken";
   
 //////////////////////////////////////////////////////////////////////////////
 // API
@@ -115,3 +129,8 @@ keyword Keyword
   
 public start[Project] parseProject(loc file) = 
   parse(#start[Project], file);
+  
+public start[Project] parseProject(str input, loc location) 
+{ 
+	return parse(#start[Project], input, location); 
+}

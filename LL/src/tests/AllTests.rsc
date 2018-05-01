@@ -20,7 +20,7 @@ import tests::parsing::CompleteProjects;
 
 import tests::execution::Matching;
 import tests::execution::Instructions;
-import tests::execution::Controller;
+import tests::execution::Execution;
 
 public test bool runAllParsingTests()
 {
@@ -32,5 +32,5 @@ public test bool runAllParsingTests()
 	&& tests::parsing::CompleteProjects::runAllTests()
 	&& tests::execution::Matching::runAllTests()
 	&& tests::execution::Instructions::runAllTests()
-	&& tests::execution::Controller::runAllTests();
+	&& tests::execution::Execution::runAllTests();
 }

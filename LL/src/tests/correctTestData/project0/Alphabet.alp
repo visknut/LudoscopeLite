@@ -1,1 +1,4 @@
-TILEMAP 1 1 *(color=#B0B0B0, fill=#404040) undefined(color=#404040, fill=#B0B0B0, abbreviation="u") defined(color=#404040, fill=#B0B0B0, abbreviation="d")
+TILEMAP 1 1 
+*(color=#B0B0B0, fill=#404040)
+undefined(color=#404040, fill=#B0B0B0, abbreviation="u")
+defined(color=#404040, fill=#B0B0B0, abbreviation="d")
