@@ -72,10 +72,22 @@ public void addMenuItems()
 	    (
 	      menu
 	      (
-	        "Ludoscope Lite",
+	        "LL: basic functions",
 	        [
 	          action("Parse and transform", parseAndTransform),
 	          action("Execute Project", executeProject)
+	        ]
+	       )
+	      ),
+	    popup
+	    (
+	       menu
+	       (
+	       	"LL: Timed execution",
+	        [
+	          action("1x", timeExecution1x),
+	          action("100x", timeExecution100x),
+	          action("10000x", timeExecution10000x)
 	        ]
 	      )
 	    )
