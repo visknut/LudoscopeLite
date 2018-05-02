@@ -1,1 +1,11 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// Merge inputs
+// @brief        This file contains functions that help merge mutliple module
+//							 inputs.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         01-05-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
 module execution::MergeFunctions

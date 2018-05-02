@@ -87,7 +87,7 @@ syntax Vector
 //////////////////////////////////////////////////////////////////////////////
 
 lexical BOOLEAN
-	= "true" | "false";
+	= @category="Boolean" "true" | "false";
 
 lexical NAME
   = @category="Name" ([a-zA-Z_$.] [a-zA-Z0-9_$.]* !>> [a-zA-Z0-9_$.]) \ Keyword;

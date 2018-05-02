@@ -1,3 +1,12 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// Project execution
+// @brief        This file contains functions that execute a parsed LL project.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         01-05-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
 module execution::Execution
 
 import List;

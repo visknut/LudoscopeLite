@@ -28,8 +28,8 @@ syntax Declaration
 
 syntax Alphabet
 	= alphabet: "alphabet"
-	"name:" String
-	"position:" Position;
+	"name" String
+	"position" Position;
 
 syntax Module
   = lspmodule: "module" 
@@ -75,7 +75,7 @@ syntax Position
 //////////////////////////////////////////////////////////////////////////////
 
 lexical BOOLEAN
-  = "true" | "false";
+  = @category="Boolean" "true" | "false";
 
 lexical FLOAT
 	= INTEGER ([.][0-9]+?)? "f";

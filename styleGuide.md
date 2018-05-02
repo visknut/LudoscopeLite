@@ -1,4 +1,5 @@
-Naming
+NAMING
+--------------------------------------------------------------------------------
 	- In general:
 		+ Use CamelCase
 		+ Do not abreviate
@@ -8,9 +9,10 @@ Naming
 	- functions: lowerCamelCase
 	- data strucutres: UpperCammelCase
 	- folders: lowerCamelCase
-	
+--------------------------------------------------------------------------------
 
-Layout
+LAYOUT
+--------------------------------------------------------------------------------
 	- Try not to extend past 80 characters per line (allows to use multiple windows)
 	- Use // comments for TODO's
 	- Use /* for actual comments
@@ -23,10 +25,10 @@ Layout
 //
 // *Name of the file*
 // @brief        *brief description of the content*
-// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @contributor  Name - email - company
 // @date         dd-mm-yyyy
 //
 //////////////////////////////////////////////////////////////////////////////
 	- Tabs are 2 spaces
 	- Braces require a new line
-	
+	--------------------------------------------------------------------------------
