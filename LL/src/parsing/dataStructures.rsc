@@ -52,4 +52,5 @@ data Coordinates
 
 data Instruction
 	= itterateRule(str ruleName)
-	| executeRule(str ruleName, int itterations);
+	| executeRule(str ruleName, int itterations)
+	| executeGrammar();

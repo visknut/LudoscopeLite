@@ -22,7 +22,8 @@ public bool runAllTests()
 	return parseProject0()
 	&& parseProject1()
 	&& parseAndTransfromProject0()
-	&& parseAndTransfromProject1();
+	&& parseAndTransfromProject1()
+	&& parseAndTransfromProject2();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -117,6 +118,31 @@ private test bool parseAndTransfromProject1()
 		
 	/* Act */
 	TransformationArtifact artifact = parseAndTransform(projectLocation);
+	
+	/* Assert */	
+	return checkErrors(artifact) && (\expectedProject := artifact.project);
+}
+
+private test bool parseAndTransfromProject2()
+{
+	/* Arrange */
+	loc projectLocation = |project://LL/src/tests/correctTestData/project2/Project.lsp|;
+	AlphabetMap expectedAlphabetMap = ("Alphabet":("defined":2,"*":0,"undefined":1));
+	LudoscopeModule expectedModule = 
+		ludoscopeModule("Module",[],"Alphabet",
+		[[1,1,1,1,1],
+		 [1,1,1,1,1],
+		 [1,1,1,1,1],
+		 [1,1,1,1,1],
+		 [1,1,1,1,1]],
+		("ruleName":rule(reflections(false,false,false),[[1]],[[[2]]])),
+		[executeGrammar()]);
+	LudoscopeProject expectedProject = ludoscopeProject([expectedModule], 
+		expectedAlphabetMap);
+	
+	/* Act */
+	TransformationArtifact artifact = parseAndTransform(projectLocation);
+	println(artifact);
 	
 	/* Assert */	
 	return checkErrors(artifact) && (\expectedProject := artifact.project);

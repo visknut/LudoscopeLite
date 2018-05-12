@@ -18,30 +18,29 @@ import parsing::DataStructures;
 
 import execution::instructions::Instructions;
 import execution::DataStructures;
+import execution::ModuleHierarchy;
 
 public ExecutionArtifact executeProject(LudoscopeProject project)
 {
 	list[LudoscopeModule] modules = project.modules;
-	 ExecutionArtifact artifact = executionArtifact((), []);
+	ExecutionArtifact artifact = executionArtifact((), []);
+	PreparationArtifact preparationArtifact = 
+		extractModuleHierarchy(project);
+		
+	if (preparationArtifact.errors != [])
+	{
+		artifact.errors = preparationArtifact.errors;
+		return artifact;
+	}
 	
 	/* Execute all modules. */
-	while (modules != [])
+	for (set[LudoscopeModule] moduleGroup <- preparationArtifact.hierarchy)
 	{
-		list[LudoscopeModule] readyModules = 
-			findReadyModules(modules, artifact.output);
-			
-		if (readyModules == [])
+		for (LudoscopeModule currentModule <- moduleGroup)
 		{
-			list[str] moduleNames = [m.name | m <- modules];
-			artifact.errors += [moduleConnection(moduleNames)];
-			return artifact;
+			artifact.output += 
+				(currentModule.name : executeModule(currentModule, artifact.output));
 		}
-		
-		LudoscopeModule currentModule = head(readyModules);
-		modules -= currentModule;
-		
-		artifact.output += 
-			(currentModule.name : executeModule(currentModule, artifact.output));
 	}
 	
 	return artifact;

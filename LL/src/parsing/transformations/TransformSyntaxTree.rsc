@@ -38,6 +38,8 @@ public TransformationArtifact transformSyntaxTree(SyntaxTree syntaxTree)
 	artifact = transformGrammars(artifact, syntaxTree);
 	artifact = transformRecipes(artifact, syntaxTree);
 	
+	artifact = addEmptyRecipes(artifact);
+	
 	return artifact;
 }
 
@@ -99,16 +101,30 @@ private TransformationArtifact transformRecipes(TransformationArtifact artifact,
 {
 	for (str recipeName <- syntaxTree.recipes)
 	{
-		int moduleIndex = findModuleIndex(recipeName, artifact);				
+		int moduleIndex = findModuleIndex(recipeName, artifact);
+		
 		for (AbstractInstruction instruction 
 			<- syntaxTree.recipes[recipeName].instructions)
+		{
+			if (!instruction.commented)
 			{
-				if (!instruction.commented)
-				{
-					artifact.project.modules[moduleIndex].recipe += 
-						[parseInstruction(instruction)];
-				}
+				artifact.project.modules[moduleIndex].recipe += 
+					[parseInstruction(instruction)];
 			}
+		}
+	}
+	return artifact;
+}
+
+private TransformationArtifact addEmptyRecipes(TransformationArtifact artifact)
+{
+	visit(artifact)
+	{
+		case ludoscopeModule(name, inputs,	alphabetName,	startingState, rules, []) : 
+		{
+			int moduleIndex = findModuleIndex(name, artifact);
+			artifact.project.modules[moduleIndex].recipe += [executeGrammar()];
+		}
 	}
 	return artifact;
 }

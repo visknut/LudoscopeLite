@@ -92,7 +92,7 @@ private void timeExecution(Tree tree, loc projectFile, int executions)
 	println("Average time: " + averageTime);
 }
 
-private TransformationArtifact parseAndCheckForErrors(loc projectFile)
+public TransformationArtifact parseAndCheckForErrors(loc projectFile)
 {
 	TransformationArtifact artifact = parseAndTransform(toLocation(projectFile.uri));
 	if (artifact.errors != [])

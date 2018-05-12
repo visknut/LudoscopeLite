@@ -13,6 +13,7 @@ module execution::instructions::Instructions
 import execution::instructions::Matching;
 import parsing::DataStructures;
 import List;
+import Map;
 
 // TODO: replace itterateRule with something that stops when tileMap doesn't change.
 public TileMap executeInstruction(TileMap tileMap, RuleMap rules, executeRule(str ruleName, int itterations))
@@ -42,7 +43,32 @@ public TileMap executeInstruction(TileMap tileMap, RuleMap rules, itterateRule(s
 				tileMap[j + match.y][i + match.x] = replacement[j][i];
 			}
 		}
-			
+	}
+	return tileMap;
+}
+
+public TileMap executeInstruction(TileMap tileMap, RuleMap rules, executeGrammar())
+{
+	RuleMap currentRules = rules;
+	while (true)
+	{
+		str ruleName = getOneFrom(currentRules);
+		TileMap newTileMap = executeInstruction(tileMap, rules, itterateRule(ruleName));
+		
+		if (newTileMap == tileMap)
+		{
+			currentRules = delete(currentRules, ruleName);
+		}
+		else
+		{
+			tileMap = newTileMap;
+			currentRules = rules;
+		}
+		
+		if (currentRules == ())
+		{
+			break;
+		}
 	}
 	return tileMap;
 }

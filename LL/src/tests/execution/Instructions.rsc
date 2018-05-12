@@ -18,7 +18,9 @@ public bool runAllTests()
 	return itterateRuleSingleResult()
 	&& itterateRuleMultipleResults()
 	&& executeRuleSingleResult()
-	&& executeRuleMultipleResults();
+	&& executeRuleMultipleResults()
+	&& executeGrammarOneRule()
+	&& executeGrammarMultipleRules();
 }
 
 
@@ -84,4 +86,33 @@ private test bool executeRuleMultipleResults()
 
 	/* Assert */
 	return result in expectedResults;
+}
+
+private test bool executeGrammarOneRule()
+{
+	/* Arrange */
+	RuleMap rules = ("rule" : rule(reflections(false,false,false),[[1]],[[[2]]]));
+	TileMap startingMap = [[1, 1], [1, 1]];
+	TileMap expectedResult = [[2, 2], [2, 2]];
+	
+	/* Act */
+	TileMap result = executeInstruction(startingMap, rules, executeGrammar());
+	
+	/* Assert */
+	return expectedResult == result;
+}
+
+private test bool executeGrammarMultipleRules()
+{
+	/* Arrange */
+	RuleMap rules = ("rule1" : rule(reflections(false,false,false),[[1]],[[[2]]]),
+		"rule2" : rule(reflections(false,false,false),[[2]],[[[3]]]));
+	TileMap startingMap = [[1, 1], [1, 1]];
+	TileMap expectedResult = [[3, 3], [3, 3]];
+	
+	/* Act */
+	TileMap result = executeInstruction(startingMap, rules, executeGrammar());
+	
+	/* Assert */
+	return expectedResult == result;
 }
