@@ -1,0 +1,1 @@
+ExecuteRule("addEastDoor", 1) ExecuteRule("addNorthDoor", 1)

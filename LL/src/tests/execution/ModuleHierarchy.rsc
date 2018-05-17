@@ -1,3 +1,13 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// Tests for extracting module hierarchy
+// @brief        This file contains test functions to check if the module
+//							 hierarchy if extracted correctly.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         17-05-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
 module tests::execution::ModuleHierarchy
 
 import List;

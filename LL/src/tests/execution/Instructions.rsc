@@ -11,7 +11,6 @@ module tests::execution::Instructions
 
 import execution::instructions::Instructions;
 import parsing::DataStructures;
-import IO;
 
 public bool runAllTests()
 {
