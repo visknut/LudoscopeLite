@@ -13,3 +13,7 @@ How to use
 The IDE can be loaded by running 'LoadIDE.rsc' in eclipse. Once the IDE is
 loaded, Ludoscope project files (.lsp) can be executed from the impluse editor
 in the right click menu.
+
+Dependencies
+-------------------------------------------------------------------------------
+- MAD metric (GitHub link will be added here).

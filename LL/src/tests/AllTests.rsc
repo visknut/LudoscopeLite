@@ -22,6 +22,8 @@ import tests::execution::Matching;
 import tests::execution::Instructions;
 import tests::execution::ModuleHierarchy;
 
+import tests::metrics::MAD;
+
 public test bool runAllParsingTests()
 {
 	return tests::parsing::Grammar::runAllTests()
@@ -32,5 +34,6 @@ public test bool runAllParsingTests()
 	&& tests::parsing::CompleteProjects::runAllTests()
 	&& tests::execution::Matching::runAllTests()
 	&& tests::execution::Instructions::runAllTests()
-	&& tests::execution::ModuleHierarchy::runAllTests();
+	&& tests::execution::ModuleHierarchy::runAllTests()
+	&& tests::metrics::MAD::runAllTests();
 }
