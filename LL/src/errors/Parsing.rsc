@@ -19,7 +19,9 @@ data ParsingError
 	| mapType(str mapType, loc fileLocation)
 	| mapSize(int size, int symbols, loc fileLocation)
 	| rightAndLeftHandSize(int leftWidth, int leftHeight, 
-		int rightWidth, int rightHeight, loc fileLocation);
+		int rightWidth, int rightHeight, loc fileLocation)
+	| propertyName(str propertyName, loc fileLocation)
+	| structureType(str propertyName, str structureType, loc fileLocation);
 	
 str errorToString(parsing(loc fileLocation))
 {
@@ -84,3 +86,21 @@ str errorToString(rightAndLeftHandSize(int leftWidth, int leftHeight,
 		File: <fileLocation.path>
 		Line: <fileLocation.begin.line>";
 }
+
+str errorToString(propertyName(str propertyName, loc fileLocation))
+{
+	return "Error: the identifier \"<propertyName>\" used in defining a property 
+	cannot be located in the syntax Tree.
+		File: <fileLocation.path>
+		Line: <fileLocation.begin.line>";
+}
+
+str errorToString(structureType(str propertyName, str structureType, 
+	loc fileLocation))
+{
+	return "Error: the identifier \"<propertyName>\" of type <structureType>
+	cannot be located in the syntax Tree.
+		File: <fileLocation.path>
+		Line: <fileLocation.begin.line>";
+}
+

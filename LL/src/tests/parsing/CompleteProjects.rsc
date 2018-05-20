@@ -11,7 +11,6 @@
 
 module tests::parsing::CompleteProjects
 
-import IO;
 import parsing::Parser;
 import parsing::DataStructures;
 import tests::parsing::Utility;
@@ -73,7 +72,7 @@ private test bool parseAndTransfromProject0()
 		("ruleName":rule(reflections(false,false,false),[[1]],[[[2]]])),
 		[executeRule("ruleName",100)]);
 	LudoscopeProject expectedProject = ludoscopeProject([expectedModule], 
-		expectedAlphabetMap);
+		expectedAlphabetMap, []);
 	
 	/* Act */
 	TransformationArtifact artifact = parseAndTransform(projectLocation);
@@ -114,7 +113,7 @@ private test bool parseAndTransfromProject1()
 		("ruleName":rule(reflections(false,false,false),[[1]],[[[2]]])),
 		[itterateRule("ruleName")]);
 	LudoscopeProject expectedProject = ludoscopeProject([expectedModule1, expectedModule2], 
-		expectedAlphabetMap);
+		expectedAlphabetMap, []);
 		
 	/* Act */
 	TransformationArtifact artifact = parseAndTransform(projectLocation);
@@ -138,11 +137,10 @@ private test bool parseAndTransfromProject2()
 		("ruleName":rule(reflections(false,false,false),[[1]],[[[2]]])),
 		[executeGrammar()]);
 	LudoscopeProject expectedProject = ludoscopeProject([expectedModule], 
-		expectedAlphabetMap);
+		expectedAlphabetMap, []);
 	
 	/* Act */
 	TransformationArtifact artifact = parseAndTransform(projectLocation);
-	println(artifact);
 	
 	/* Assert */	
 	return checkErrors(artifact) && (\expectedProject := artifact.project);

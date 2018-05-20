@@ -13,7 +13,7 @@ import parsing::Parser;
 import tests::parsing::Utility;
 
 loc fileLocation = |project://LL/src/tests/correctTestData/isolatedProjects/notSet.txt|;
-SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), []);
+SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), [], []);
 
 public bool runAllTests()
 {
@@ -33,7 +33,7 @@ public bool runAllTests()
 private test bool tryParsingOnlyAlphabet()
 {
 	/* Arrange */
-	fileLocation.file = "OnlyAlphabet.lsp";
+	fileLocation.file = "onlyAlphabet.lsp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -45,7 +45,7 @@ private test bool tryParsingOnlyAlphabet()
 private test bool tryParsingOptions()
 {
 	/* Arrange */
-	fileLocation.file = "Options.lsp";
+	fileLocation.file = "options.lsp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -57,7 +57,7 @@ private test bool tryParsingOptions()
 private test bool tryParsingRegisters()
 {
 	/* Arrange */
-	fileLocation.file = "Registers.lsp";
+	fileLocation.file = "registers.lsp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -69,7 +69,7 @@ private test bool tryParsingRegisters()
 private test bool tryParsingSingleModule()
 {
 	/* Arrange */
-	fileLocation.file = "SingleModule.lsp";
+	fileLocation.file = "singleModule.lsp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -81,7 +81,7 @@ private test bool tryParsingSingleModule()
 private test bool tryParsingMultipleModulesWithAlphabet()
 {
 	/* Arrange */
-	fileLocation.file = "MultipleModulesWithAlphabet.lsp";
+	fileLocation.file = "multipleModulesWithAlphabet.lsp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -93,7 +93,7 @@ private test bool tryParsingMultipleModulesWithAlphabet()
 private test bool tryParsingCompleteModule()
 {
 	/* Arrange */
-	fileLocation.file = "CompleteModule.lsp";
+	fileLocation.file = "completeModule.lsp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -105,7 +105,7 @@ private test bool tryParsingCompleteModule()
 private test bool tryParsingComplexProject()
 {
 	/* Arrange */
-	fileLocation.file = "ComplexProject.lsp";
+	fileLocation.file = "complexProject.lsp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);

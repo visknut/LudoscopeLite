@@ -25,7 +25,8 @@ data TransformationArtifact
 
 data LudoscopeProject
 	= ludoscopeProject(list[LudoscopeModule] modules, 
-		AlphabetMap alphabets)
+		AlphabetMap alphabets,
+		list[Property] properties)
 	| undefinedProject();
 	
 data LudoscopeModule
@@ -54,3 +55,19 @@ data Instruction
 	= itterateRule(str ruleName)
 	| executeRule(str ruleName, int itterations)
 	| executeGrammar();
+
+///////////////////////////////////////////////////////////////////////////////
+// Lpl data.
+///////////////////////////////////////////////////////////////////////////////
+
+data Property
+	= containment(Structure containedStructure, Structure container)
+	| containment(Symbol containedSybmol, Structure container);
+	
+data Structure
+	= moduleStrucutre(str moduleName)
+	| ruleStructure(str ruleName)
+	| undefinedStructure();
+	
+data Symbol
+	= symbol(str symbolName);

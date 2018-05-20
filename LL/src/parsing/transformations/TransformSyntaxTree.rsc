@@ -21,6 +21,8 @@ import parsing::languages::grammar::AST;
 import parsing::languages::alphabet::AST;
 import parsing::languages::recipe::AST;
 
+import errors::Parsing;
+
 import util::string;
 
 alias AbstractAlphabet = parsing::languages::alphabet::AST::Alphabet;
@@ -28,15 +30,22 @@ alias AbstractInstruction = parsing::languages::recipe::AST::Instruction;
 alias AbstractGrammar = parsing::languages::grammar::AST::Grammar;
 alias AbstractRule = parsing::languages::grammar::AST::Rule;
 
+data ContainerType
+ = moduleName(str name)
+ | ruleName(str name)
+ | symbolName(str name)
+ | undefinedName(str name);	
+
 public TransformationArtifact transformSyntaxTree(SyntaxTree syntaxTree)
 {
-	LudoscopeProject project = ludoscopeProject([], ());
+	LudoscopeProject project = ludoscopeProject([], (), []);
 	TransformationArtifact artifact = transformationArtifact(project, []);
 	
 	artifact = transformProject(artifact, syntaxTree);
 	artifact = transformAplhabets(artifact, syntaxTree);
 	artifact = transformGrammars(artifact, syntaxTree);
 	artifact = transformRecipes(artifact, syntaxTree);
+	artifact = transformProperties(artifact, syntaxTree);
 	
 	artifact = addEmptyRecipes(artifact);
 	
@@ -250,6 +259,126 @@ private TileMap parseExpression(TransformationArtifact artifact,
 	}
 	
 	return newTileMap;
+}
+
+//////////////////////////////////////////////////////////////////////////////
+// Transform Properties
+//////////////////////////////////////////////////////////////////////////////
+
+private TransformationArtifact transformProperties
+(
+	TransformationArtifact artifact, 
+	SyntaxTree syntaxTree
+)
+{
+	visit(syntaxTree)
+	{
+		case Property property:
+		{
+			artifact += 
+				transformProperty(artifact, syntaxTree, property, property@location);
+		}
+	}
+	return artifact;
+}
+
+public TransformationArtifact transformProperty
+(
+	TransformationArtifact artifact,
+	SyntaxTree syntaxTree,
+	containment(str containedName, str containerName),
+	loc propertyLocation
+)
+{
+	Property property = 
+		parsing::DataStructures::containment(undefinedStructure(), 
+		undefinedStructure());
+
+	ContainerType containedType = findName(syntaxTree, containedName);
+	switch (containedType)
+	{
+		case moduleName(str name) :
+		{
+			property.containedStructure = 
+				parsing::DataStructures::moduleStrucutre(name);
+		}
+ 		case ruleName(str name) :
+ 		{
+ 			property.containedStructure =
+ 				parsing::DataStructures::ruleStructure(name);
+ 		}
+ 		case symbolName(str name) :
+ 		{
+ 			property = 
+ 				containment(parsing::DataStructures::symbol(name), 
+ 				undefinedStructure());
+ 		}
+ 		case undefinedName(str name) :
+ 		{
+ 			artifact.errors += [propertyName(name, propertyLocation)];
+ 			return artifact;
+ 		}
+	}
+	
+	ContainerType containerType = findName(syntaxTree, containerName);
+	switch (containerType)
+	{
+		case moduleName(str name) :
+		{
+			property.container = 
+				parsing::DataStructures::moduleStrucutre(name);
+		}
+ 		case ruleName(str name) :
+ 		{
+ 			property.container = 
+ 				parsing::DataStructures::ruleStructure(name);
+ 		}
+ 		case symbolName(str name) :
+ 		{
+ 			artifact.errors += [structureType(name, "symbol", propertyLocation)];
+ 			return artifact;
+ 		}
+ 		case undefinedName(str name) :
+ 		{
+ 			artifact.errors += [propertyName(name, propertyLocation)];
+ 			return artifact;
+ 		}
+	}
+	artifact.project.properties += [property];
+	return artifact;
+}
+
+public ContainerType findName(SyntaxTree syntaxTree, str structureName)
+{
+	visit (syntaxTree)
+	{
+		case symbol(str name, str color, str fill, str abbreviation, str shape) :
+		{
+			if (name == structureName)
+			{
+				return symbolName(structureName);
+			}
+		}
+		case lspmodule(str name, str alphabet, str position, str moduleType,
+			str fileName,	str match, list[str] inputs, str maxIterations,	
+			str moduleFilter,	str grammar, str executionType,	str recipe,	
+			str showMembers, str alwaysStartWithToken):
+		{
+			if (name == structureName)
+			{
+				return moduleName(structureName);
+			}
+		}
+		case rule(str name, list[RuleSetting] settings, LeftHandExpression leftHand, 
+			list[RightHandExpression] rightHands):
+		{
+			if (name == structureName)
+			{
+				return ruleName(structureName);
+			}
+		}
+	}
+	return undefinedName(structureName);
 }
 
 //////////////////////////////////////////////////////////////////////////////

@@ -16,7 +16,7 @@ import parsing::check::Maps;
 
 loc projectLocation = |project://LL/src/tests/incorrectTestData/isolatedProjects/notSet.txt|;
 loc grammarLocation = |project://LL/src/tests/incorrectTestData/isolatedGrammars/notSet.txt|;
-SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), []);
+SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), [], []);
 
 public bool runAllTests()
 {

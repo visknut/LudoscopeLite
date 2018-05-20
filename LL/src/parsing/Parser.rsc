@@ -18,6 +18,7 @@ import parsing::languages::project::AST;
 import parsing::languages::alphabet::AST;
 import parsing::languages::recipe::AST;
 import parsing::languages::grammar::AST;
+import parsing::languages::lpl::AST;
 
 import parsing::DataStructures;
 import errors::Parsing;
@@ -27,12 +28,14 @@ alias AbstractProjectList = list[parsing::languages::project::AST::Project];
 alias AbstractGrammarMap = map[str, parsing::languages::grammar::AST::Grammar] ;
 alias AbstractAlphabetMap = map[str, parsing::languages::alphabet::AST::Alphabet];
 alias AbstractRecipeMap = map[str, parsing::languages::recipe::AST::Recipe];
+alias AbstractPropertyList = list[parsing::languages::lpl::AST::Properties];
 
 data SyntaxTree
-	= syntaxTree(AbstractProjectList project, 
+	= syntaxTree(AbstractProjectList project,
 	AbstractGrammarMap grammars, 
 	AbstractAlphabetMap alphabets, 
 	AbstractRecipeMap recipes,
+	AbstractPropertyList properties,
 	list[ParsingError] errors);
 
 public SyntaxTree parseFile(loc file, SyntaxTree syntaxTree)
@@ -47,6 +50,7 @@ public SyntaxTree parseFile(loc file, SyntaxTree syntaxTree)
 				case "grm" : syntaxTree.grammars += (fileName(file) : parseGrammarToAST(file));
 				case "alp" : syntaxTree.alphabets += (fileName(file) : parseAlphabetToAST(file));
 				case "rcp" : syntaxTree.recipes += (fileName(file) : parseRecipeToAST(file));
+				case "lpl" : syntaxTree.properties += [parseLplToAST(file)];
 				default : syntaxTree.errors += [errors::Parsing::extension(file)];
 			}
 		}
@@ -72,7 +76,7 @@ public SyntaxTree parseFile(loc file, SyntaxTree syntaxTree)
 
 public SyntaxTree parseCompleteProject(loc projectFile)
 {
-	SyntaxTree syntaxTree = syntaxTree([], (), (), (), []);
+	SyntaxTree syntaxTree = syntaxTree([], (), (), (), [], []);
 	
 	syntaxTree = parseFile(projectFile, syntaxTree);
 	
@@ -90,6 +94,12 @@ public SyntaxTree parseCompleteProject(loc projectFile)
 private list[loc] gatherFileLocations(SyntaxTree syntaxTree, loc projectFile)
 {
 	list[loc] fileLocations = [];
+	
+	loc propertiesFile = fileLocation(projectFile, fileName(projectFile), ".lpl");
+	if (exists(propertiesFile))
+	{
+			fileLocations += [propertiesFile];
+	}
 
 	visit(syntaxTree)
 	{

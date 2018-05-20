@@ -13,7 +13,7 @@ import parsing::Parser;
 import tests::parsing::Utility;
 
 loc fileLocation = |project://LL/src/tests/correctTestData/isolatedGrammars/notSet.txt|;
-SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), []);
+SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), [], []);
 
 public bool runAllTests()
 {
@@ -32,7 +32,7 @@ public bool runAllTests()
 private test bool tryParsingAllOptions()
 {
 	/* Arrange */
-	fileLocation.file = "AllOptions.grm";
+	fileLocation.file = "allOptions.grm";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -44,7 +44,7 @@ private test bool tryParsingAllOptions()
 private test bool tryParsingAllRuleSettings()
 {
 	/* Arrange */
-	fileLocation.file = "AllRuleSettings.grm";
+	fileLocation.file = "allRuleSettings.grm";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -56,7 +56,7 @@ private test bool tryParsingAllRuleSettings()
 private test bool tryParsingOnlyStart()
 {
 	/* Arrange */
-	fileLocation.file = "OnlyStart.grm";
+	fileLocation.file = "onlyStart.grm";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -68,7 +68,7 @@ private test bool tryParsingOnlyStart()
 private test bool tryParsingAllMemberTypes()
 {
 	/* Arrange */
-	fileLocation.file = "AllMemberTypes.grm";
+	fileLocation.file = "allMemberTypes.grm";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -80,7 +80,7 @@ private test bool tryParsingAllMemberTypes()
 private test bool tryParsingRuleWithMultipleRightHands()
 {
 	/* Arrange */
-	fileLocation.file = "RuleWithMultipleRightHands.grm";
+	fileLocation.file = "ruleWithMultipleRightHands.grm";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -93,7 +93,7 @@ private test bool tryParsingRuleWithMultipleRightHands()
 private test bool tryParsingRuleWithNestedSymbol()
 {
 	/* Arrange */
-	fileLocation.file = "RuleWithNestedSymbol.grm";
+	fileLocation.file = "ruleWithNestedSymbol.grm";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -105,7 +105,7 @@ private test bool tryParsingRuleWithNestedSymbol()
 private test bool tryParsingSimpleRule()
 {
 	/* Arrange */
-	fileLocation.file = "SimpleRule.grm";
+	fileLocation.file = "simpleRule.grm";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);

@@ -32,7 +32,7 @@ anno loc Symbol@location;
 //////////////////////////////////////////////////////////////////////////////
 		
 data Alphabet
-	= alphabet(str mapType, list[Symbol] symbols);
+	= alphabet(MapType mapType, list[Symbol] symbols);
 	
 data MapType
 	= tileMap(int width, int height)

@@ -100,7 +100,7 @@ public test bool MADFramework()
 	LudoscopeModule module1 = ludoscopeModule("module1", [], "", [[1]], ("rule1" : rule1), []);
 	LudoscopeModule module2 = ludoscopeModule("module2", ["module1"], "", [[]], ("rule2" : rule2), []);
 	LudoscopeModule module3 = ludoscopeModule("module3", ["module2"], "", [[]], ("rule3" : rule3), []);
-	LudoscopeProject project = ludoscopeProject([module1, module2, module3], ());
+	LudoscopeProject project = ludoscopeProject([module1, module2, module3], (), []);
 	
 	ProjectScore expectedResult = ("module1":("rule1":[<1,[[1]]>]),
 																 "module2":("rule2":[<1,[[1]]>]),

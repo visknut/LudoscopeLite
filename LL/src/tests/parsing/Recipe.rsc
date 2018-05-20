@@ -13,7 +13,7 @@ import parsing::Parser;
 import tests::parsing::Utility;
 
 loc fileLocation = |project://LL/src/tests/correctTestData/isolatedRecipes/notSet.txt|;
-SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), []);
+SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), [], []);
 
 public bool runAllTests()
 {
@@ -31,7 +31,7 @@ public bool runAllTests()
 private test bool tryParsingComment()
 {
 	/* Arrange */
-	fileLocation.file = "Comment.rcp";
+	fileLocation.file = "comment.rcp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -43,7 +43,7 @@ private test bool tryParsingComment()
 private test bool tryParsingSingleInstruction()
 {
 	/* Arrange */
-	fileLocation.file = "SingleInstruction.rcp";
+	fileLocation.file = "singleInstruction.rcp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -56,7 +56,7 @@ private test bool tryParsingSingleInstruction()
 private test bool tryParsingDiceNotation()
 {
 	/* Arrange */
-	fileLocation.file = "DiceNotation.rcp";
+	fileLocation.file = "diceNotation.rcp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -68,7 +68,7 @@ private test bool tryParsingDiceNotation()
 private test bool tryParsingBasicInstructions()
 {
 	/* Arrange */
-	fileLocation.file = "BasicInstructions.rcp";
+	fileLocation.file = "basicInstructions.rcp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -80,7 +80,7 @@ private test bool tryParsingBasicInstructions()
 private test bool tryParsingAdvancedInstructions()
 {
 	/* Arrange */
-	fileLocation.file = "AdvancedInstructions.rcp";
+	fileLocation.file = "advancedInstructions.rcp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -92,7 +92,7 @@ private test bool tryParsingAdvancedInstructions()
 private test bool tryParsingAllInstructions()
 {
 	/* Arrange */
-	fileLocation.file = "AllInstructions.rcp";
+	fileLocation.file = "allInstructions.rcp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);

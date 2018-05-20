@@ -13,7 +13,7 @@ import parsing::Parser;
 import tests::parsing::Utility;
 
 loc fileLocation = |project://LL/src/tests/correctTestData/isolatedAlphabets/notSet.txt|;
-SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), []);
+SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), [], []);
 
 public bool runAllTests()
 {
@@ -30,7 +30,7 @@ public bool runAllTests()
 private test bool tryParsingOnlyColors()
 {
 	/* Arrange */
-	fileLocation.file = "OnlyColors.alp";
+	fileLocation.file = "onlyColors.alp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -42,7 +42,7 @@ private test bool tryParsingOnlyColors()
 private test bool tryParsingColorsAndAbbreviation()
 {
 	/* Arrange */
-	fileLocation.file = "ColorsAndAbbreviation.alp";
+	fileLocation.file = "colorsAndAbbreviation.alp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -54,7 +54,7 @@ private test bool tryParsingColorsAndAbbreviation()
 private test bool tryParsingCompleteSymbol()
 {
 	/* Arrange */
-	fileLocation.file = "CompleteSymbol.alp";
+	fileLocation.file = "completeSymbol.alp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -66,7 +66,7 @@ private test bool tryParsingCompleteSymbol()
 private test bool tryParsingMixedSymbols()
 {
 	/* Arrange */
-	fileLocation.file = "MixedSymbols.alp";
+	fileLocation.file = "mixedSymbols.alp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -78,7 +78,7 @@ private test bool tryParsingMixedSymbols()
 private test bool tryParsingSymbolWithWildCard()
 {
 	/* Arrange */
-	fileLocation.file = "SymbolWithWildCard.alp";
+	fileLocation.file = "symbolWithWildCard.alp";
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);

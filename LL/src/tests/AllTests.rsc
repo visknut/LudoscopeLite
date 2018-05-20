@@ -17,6 +17,7 @@ import tests::parsing::Recipe;
 import tests::parsing::Project;
 import tests::parsing::Checking;
 import tests::parsing::CompleteProjects;
+import tests::parsing::Properties;
 
 import tests::execution::Matching;
 import tests::execution::Instructions;
@@ -35,5 +36,6 @@ public test bool runAllParsingTests()
 	&& tests::execution::Matching::runAllTests()
 	&& tests::execution::Instructions::runAllTests()
 	&& tests::execution::ModuleHierarchy::runAllTests()
-	&& tests::metrics::MAD::runAllTests();
+	&& tests::metrics::MAD::runAllTests()
+	&& tests::parsing::Properties::runAllTests();
 }
