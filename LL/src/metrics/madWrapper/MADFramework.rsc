@@ -22,8 +22,8 @@ import execution::ModuleHierarchy;
 import metrics::madWrapper::SymbolHierarchy;
 import metrics::madWrapper::DataTransformation;
 
-alias ProjectScore = map[str, ModuleScore];
-alias ModuleScore = map[str, list[RightHandScore]];
+alias ProjectScore = map[int, ModuleScore];
+alias ModuleScore = map[int, list[RightHandScore]];
 alias RightHandScore = tuple[int, TileMap];
 
 public ProjectScore calculateMAD(LudoscopeProject project)
@@ -36,7 +36,7 @@ public ProjectScore calculateMAD(LudoscopeProject project)
 	for (LudoscopeModule ludoscopeModule <- project.modules)
 	{
 		projectScore += 
-			(ludoscopeModule.name : calculateModuleScore(ludoscopeModule, symbolHierarchy));
+			(ludoscopeModule.nameIndex : calculateModuleScore(ludoscopeModule, symbolHierarchy));
 	}
 	
 	return projectScore;
@@ -48,8 +48,8 @@ private ModuleScore calculateModuleScore
 	SymbolHierarchy symbolHierarchy
 )
 {
-	return (rule : calculateRuleScore(symbolHierarchy, ludoscopeModule.rules[rule]) 
-		| str rule <- ludoscopeModule.rules);
+	return (ruleIndex : calculateRuleScore(symbolHierarchy, ludoscopeModule.rules[ruleIndex]) 
+		| int ruleIndex <- ludoscopeModule.rules);
 }
 
 private list[RightHandScore] calculateRuleScore

@@ -31,14 +31,14 @@ alias AbstractGrammar = parsing::languages::grammar::AST::Grammar;
 alias AbstractRule = parsing::languages::grammar::AST::Rule;
 
 data ContainerType
- = moduleName(str name)
- | ruleName(str name)
- | symbolName(str name)
+ = moduleName(int nameIndex)
+ | ruleName(int nameIndex)
+ | symbolName(int nameIndex)
  | undefinedName(str name);	
 
 public TransformationArtifact transformSyntaxTree(SyntaxTree syntaxTree)
 {
-	LudoscopeProject project = ludoscopeProject([], (), []);
+	LudoscopeProject project = ludoscopeProject([], (), [], [], []);
 	TransformationArtifact artifact = transformationArtifact(project, []);
 	
 	artifact = transformProject(artifact, syntaxTree);
@@ -67,16 +67,42 @@ private TransformationArtifact transformProject(TransformationArtifact artifact,
 			str executionType, str recipe, str showMembers, str alwaysStartWithToken) :
 		{
 			list[str] cleanInputs = [removeQuotes(input) | str input <- inputs];
+			int moduleNameIndex = size(artifact.project.moduleNames);
+			artifact.project.moduleNames += [cleanGrammarName(name)];
 			artifact.project.modules +=
-				[ludoscopeModule(cleanGrammarName(name), 
-												cleanInputs, 
+				[unfinishedLudoscopeModule(moduleNameIndex, 
+												cleanInputs,
 												cleanAlphabetName(alphabet), 
 												[[]], 
 												(), 
 												[])];
 		}
 	}
+	
+	artifact = replaceInputStrings(artifact);
 	return artifact;
+}
+
+private TransformationArtifact replaceInputStrings
+(
+	TransformationArtifact artifact
+)
+{
+	return visit (artifact)
+	{
+		case unfinishedLudoscopeModule(int nameIndex,
+		list[str] inputStrings,
+		str alphabetName,
+		TileMap startingState, 
+		RuleMap rules, 
+		Recipe recipe) => 
+		ludoscopeModule(nameIndex,
+		[indexOf(artifact.project.moduleNames, inputName) | str inputName <- inputStrings],
+		alphabetName,
+		startingState, 
+		rules, 
+		recipe)
+	};
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -88,13 +114,11 @@ private TransformationArtifact transformAplhabets(TransformationArtifact artifac
 {
 	for (str fileName <- syntaxTree.alphabets)
 	{
-		Alphabet transformendAlphabet = ();
-		int i = 0;
+		SymbolNameList transformendAlphabet = [];
 		AbstractAlphabet abstractAlphabet = syntaxTree.alphabets[fileName];
 		for (Symbol symbol <- abstractAlphabet.symbols)
 		{
-			transformendAlphabet += (symbol.name : i);
-			i += 1;
+			transformendAlphabet += [symbol.name];
 		}
 		artifact.project.alphabets += (fileName : transformendAlphabet);
 	}
@@ -118,7 +142,7 @@ private TransformationArtifact transformRecipes(TransformationArtifact artifact,
 			if (!instruction.commented)
 			{
 				artifact.project.modules[moduleIndex].recipe += 
-					[parseInstruction(instruction)];
+					[parseInstruction(artifact, instruction)];
 			}
 		}
 	}
@@ -129,8 +153,9 @@ private TransformationArtifact addEmptyRecipes(TransformationArtifact artifact)
 {
 	visit(artifact)
 	{
-		case ludoscopeModule(name, inputs,	alphabetName,	startingState, rules, []) : 
+		case ludoscopeModule(nameIndex, inputs,	alphabetName,	startingState, rules, []) : 
 		{
+			str name = artifact.project.moduleNames[nameIndex];
 			int moduleIndex = findModuleIndex(name, artifact);
 			artifact.project.modules[moduleIndex].recipe += [executeGrammar()];
 		}
@@ -155,14 +180,14 @@ private TransformationArtifact transformGrammars(TransformationArtifact artifact
 			abstractGrammar.startInput.expression.mapType,
 			moduleIndex);
 		
-		artifact.project.modules[moduleIndex].rules = 
+		artifact = 
 			parseRules(artifact, syntaxTree.grammars[grammarName].rules, moduleIndex);
 	}
 	
 	return artifact;
 }
 
-private RuleMap parseRules(TransformationArtifact artifact, 
+private TransformationArtifact parseRules(TransformationArtifact artifact, 
 	list[AbstractRule] rules, int moduleIndex)
 {
 	RuleMap transformedRules = ();
@@ -180,9 +205,12 @@ private RuleMap parseRules(TransformationArtifact artifact,
 			
 		Rule newRule = parsing::DataStructures::rule(reflections, leftHand, rightHands);
 		
-		transformedRules += (abstractRule.name : newRule);
+		int ruleNameIndex = size(artifact.project.ruleNames);
+		artifact.project.ruleNames += [abstractRule.name];
+		transformedRules += (ruleNameIndex : newRule);
 	}
-	return transformedRules;
+	artifact.project.modules[moduleIndex].rules = transformedRules;
+	return artifact;
 }
 
 private list[TileMap] parseRightHands(TransformationArtifact artifact,
@@ -218,13 +246,13 @@ private TileMap parseExpression(TransformationArtifact artifact,
 {
 	TileMap newTileMap = [];
 	str alphabetName = artifact.project.modules[moduleIndex].alphabetName;
-	Alphabet alphabet = artifact.project.alphabets[alphabetName];
+	SymbolNameList alphabet = artifact.project.alphabets[alphabetName];
 	
 	int i = 0;
 	list[Tile] row = [];
 	for (Symbol symbol <- symbols)
 	{
-		row += [alphabet[symbol.name]];
+		row += [indexOf(alphabet, symbol.name)];
 		i += 1;
 		if (i == width)
 		{
@@ -237,18 +265,19 @@ private TileMap parseExpression(TransformationArtifact artifact,
 	return newTileMap;
 }
 
+// TODO: remove duplicate function.
 private TileMap parseExpression(TransformationArtifact artifact,
 			list[LeftHandSymbol] symbols, tileMap(int width, int height), int moduleIndex)
 {
 	TileMap newTileMap = [];
 	str alphabetName = artifact.project.modules[moduleIndex].alphabetName;
-	Alphabet alphabet = artifact.project.alphabets[alphabetName];
+	SymbolNameList alphabet = artifact.project.alphabets[alphabetName];
 	
 	int i = 0;
 	list[Tile] row = [];
 	for (LeftHandSymbol symbol <- symbols)
 	{
-		row += [alphabet[symbol.name]];
+		row += [indexOf(alphabet, symbol.name)];
 		i += 1;
 		if (i == width)
 		{
@@ -276,7 +305,7 @@ private TransformationArtifact transformProperties
 		case Property property:
 		{
 			artifact += 
-				transformProperty(artifact, syntaxTree, property, property@location);
+				transformProperty(artifact, property, property@location);
 		}
 	}
 	return artifact;
@@ -285,7 +314,6 @@ private TransformationArtifact transformProperties
 public TransformationArtifact transformProperty
 (
 	TransformationArtifact artifact,
-	SyntaxTree syntaxTree,
 	containment(str containedName, str containerName),
 	loc propertyLocation
 )
@@ -294,23 +322,23 @@ public TransformationArtifact transformProperty
 		parsing::DataStructures::containment(undefinedStructure(), 
 		undefinedStructure());
 
-	ContainerType containedType = findName(syntaxTree, containedName);
+	ContainerType containedType = findName(artifact, containedName);
 	switch (containedType)
 	{
-		case moduleName(str name) :
+		case moduleName(int nameIndex) :
 		{
 			property.containedStructure = 
-				parsing::DataStructures::moduleStrucutre(name);
+				parsing::DataStructures::moduleStrucutre(nameIndex);
 		}
- 		case ruleName(str name) :
+ 		case ruleName(int nameIndex) :
  		{
  			property.containedStructure =
- 				parsing::DataStructures::ruleStructure(name);
+ 				parsing::DataStructures::ruleStructure(nameIndex);
  		}
- 		case symbolName(str name) :
+ 		case symbolName(int nameIndex) :
  		{
  			property = 
- 				containment(parsing::DataStructures::symbol(name), 
+ 				containment(parsing::DataStructures::symbol(nameIndex), 
  				undefinedStructure());
  		}
  		case undefinedName(str name) :
@@ -320,22 +348,22 @@ public TransformationArtifact transformProperty
  		}
 	}
 	
-	ContainerType containerType = findName(syntaxTree, containerName);
+	ContainerType containerType = findName(artifact, containerName);
 	switch (containerType)
 	{
-		case moduleName(str name) :
+		case moduleName(int nameIndex) :
 		{
 			property.container = 
-				parsing::DataStructures::moduleStrucutre(name);
+				parsing::DataStructures::moduleStrucutre(nameIndex);
 		}
- 		case ruleName(str name) :
+ 		case ruleName(int nameIndex) :
  		{
  			property.container = 
- 				parsing::DataStructures::ruleStructure(name);
+ 				parsing::DataStructures::ruleStructure(nameIndex);
  		}
- 		case symbolName(str name) :
+ 		case symbolName(int nameIndex) :
  		{
- 			artifact.errors += [structureType(name, "symbol", propertyLocation)];
+ 			artifact.errors += [structureType("symbol", propertyLocation)];
  			return artifact;
  		}
  		case undefinedName(str name) :
@@ -348,35 +376,27 @@ public TransformationArtifact transformProperty
 	return artifact;
 }
 
-public ContainerType findName(SyntaxTree syntaxTree, str structureName)
+public ContainerType findName
+(
+	TransformationArtifact artifact,
+	str structureName
+)
 {
-	visit (syntaxTree)
+	for (str alphabetName <- artifact.project.alphabets)
 	{
-		case symbol(str name, str color, str fill, str abbreviation, str shape) :
+		SymbolNameList symbolNames = artifact.project.alphabets[alphabetName];
+		if (structureName in symbolNames)
 		{
-			if (name == structureName)
-			{
-				return symbolName(structureName);
-			}
+			return symbolName(indexOf(symbolNames, structureName));
 		}
-		case lspmodule(str name, str alphabet, str position, str moduleType,
-			str fileName,	str match, list[str] inputs, str maxIterations,	
-			str moduleFilter,	str grammar, str executionType,	str recipe,	
-			str showMembers, str alwaysStartWithToken):
-		{
-			if (name == structureName)
-			{
-				return moduleName(structureName);
-			}
-		}
-		case rule(str name, list[RuleSetting] settings, LeftHandExpression leftHand, 
-			list[RightHandExpression] rightHands):
-		{
-			if (name == structureName)
-			{
-				return ruleName(structureName);
-			}
-		}
+	}
+	if (structureName in artifact.project.moduleNames)
+	{
+		return moduleName(indexOf(artifact.project.moduleNames, structureName));
+	}
+	else if (structureName in artifact.project.ruleNames)
+	{
+		return ruleName(indexOf(artifact.project.ruleNames, structureName));
 	}
 	return undefinedName(structureName);
 }
@@ -387,9 +407,10 @@ public ContainerType findName(SyntaxTree syntaxTree, str structureName)
 
 private int findModuleIndex(str moduleName, TransformationArtifact artifact)
 {
+	int moduleNameIndex = indexOf(artifact.project.moduleNames, moduleName);
 	for (int i <- [0 .. size(artifact.project.modules)])
 	{
-		if (artifact.project.modules[i].name == moduleName)
+		if (artifact.project.modules[i].nameIndex == moduleNameIndex)
 		{
 			return i;
 		}

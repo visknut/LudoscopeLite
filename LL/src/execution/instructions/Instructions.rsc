@@ -25,11 +25,11 @@ public ExecutionArtifact executeInstruction
 (
 	ExecutionArtifact artifact,
 	RuleMap rules, 
-	executeRule(str ruleName, int itterations))
+	executeRule(int ruleNameIndex, int itterations))
 {
 	for (int i <- [0 .. itterations])
 	{
-		artifact = executeInstruction(artifact, rules, itterateRule(ruleName));
+		artifact = executeInstruction(artifact, rules, itterateRule(ruleNameIndex));
 	}
 	return artifact;
 }
@@ -38,10 +38,10 @@ public ExecutionArtifact executeInstruction
 (
 	ExecutionArtifact artifact,
 	RuleMap rules, 
-	itterateRule(str ruleName)
+	itterateRule(int ruleNameIndex)
 )
 {
-	Rule rule = rules[ruleName];
+	Rule rule = rules[ruleNameIndex];
 	list[Coordinates] matches = 
 		findPatternInGrid(artifact.currentState, rule.leftHand);
 		
@@ -51,7 +51,7 @@ public ExecutionArtifact executeInstruction
 		TileMap replacement = getOneFrom(rule.rightHands);
 		
 		RuleExecution ruleExecution = 
-			ruleExecution(ruleName, indexOf(rule.rightHands, replacement), match);
+			ruleExecution(ruleNameIndex, indexOf(rule.rightHands, replacement), match);
 		artifact.history[0].instructions[0].rules = 
 			push(ruleExecution, artifact.history[0].instructions[0].rules);
 
@@ -81,12 +81,12 @@ public ExecutionArtifact executeInstruction
 	RuleMap currentRules = rules;
 	while (true)
 	{
-		str ruleName = getOneFrom(currentRules);
+		int ruleNameIndex = getOneFrom(currentRules);
 		TileMap oldTileMap = artifact.currentState;
-		artifact = executeInstruction(artifact, rules, itterateRule(ruleName));
+		artifact = executeInstruction(artifact, rules, itterateRule(ruleNameIndex));
 		if (oldTileMap == artifact.currentState)
 		{
-			currentRules = delete(currentRules, ruleName);
+			currentRules = delete(currentRules, ruleNameIndex);
 		}
 		else
 		{

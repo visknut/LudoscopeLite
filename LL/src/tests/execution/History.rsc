@@ -25,23 +25,23 @@ public bool runAllTests()
 private test bool checkHistorySingleModule()
 {
 	/* Arrange */
-	RuleMap rules = ("rule1" : rule(reflections(false,false,false),[[1]],[[[2]]]),
-		"rule2" : rule(reflections(false,false,false),[[2]],[[[3]]]));
+	RuleMap rules = (1 : rule(reflections(false,false,false),[[1]],[[[2]]]),
+		2 : rule(reflections(false,false,false),[[2]],[[[3]]]));
 	TileMap startingMap = [[1]];
 	LudoscopeModule module1 = 
-		ludoscopeModule("module1", [], "alphabet", startingMap, rules, [executeGrammar()]);
-	LudoscopeProject project = ludoscopeProject([module1], (), []);
+		ludoscopeModule(1, [], "alphabet", startingMap, rules, [executeGrammar()]);
+	LudoscopeProject project = ludoscopeProject([module1], (), [], [], []);
 	
 	ExecutionHistory expectedResult = 
 		[moduleExecution(
-      "module1",
+      1,
       [instructionExecution([
             ruleExecution(
-              "rule1",
+              1,
               0,
               coordinates(0,0)),
             ruleExecution(
-              "rule2",
+              2,
               0,
               coordinates(0,0))
           ])])];
@@ -53,42 +53,42 @@ private test bool checkHistorySingleModule()
 	return expectedResult == result.history;
 }
 
-private test bool checkHistoryMultipleModules()
+public test bool checkHistoryMultipleModules()
 {
 	/* Arrange */
-	RuleMap rules1 = ("rule1" : rule(reflections(false,false,false),[[1]],[[[2]]]),
-		"rule2" : rule(reflections(false,false,false),[[2]],[[[3]]]));
-	RuleMap rules2 = ("rule1" : rule(reflections(false,false,false),[[3]],[[[2]]]),
-		"rule2" : rule(reflections(false,false,false),[[2]],[[[1]]]));
+	RuleMap rules1 = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]),
+		1 : rule(reflections(false,false,false),[[2]],[[[3]]]));
+	RuleMap rules2 = (2 : rule(reflections(false,false,false),[[3]],[[[2]]]),
+		3 : rule(reflections(false,false,false),[[2]],[[[1]]]));
 	TileMap startingMap = [[1]];
 	LudoscopeModule module1 = 
-		ludoscopeModule("module1", [], "alphabet", startingMap, rules1, [executeGrammar()]);
+		ludoscopeModule(0, [], "alphabet", startingMap, rules1, [executeGrammar()]);
 	LudoscopeModule module2 = 
-		ludoscopeModule("module2", ["module1"], "alphabet", startingMap, rules2, [executeGrammar()]);
-	LudoscopeProject project = ludoscopeProject([module1, module2], (), []);
+		ludoscopeModule(1, [0], "alphabet", startingMap, rules2, [executeGrammar()]);
+	LudoscopeProject project = ludoscopeProject([module1, module2], (), [], [], []);
 	
 	ExecutionHistory expectedResult = 
 		[moduleExecution(
-      "module1",
+      0,
       [instructionExecution([
             ruleExecution(
-              "rule1",
+              0,
               0,
               coordinates(0,0)),
             ruleExecution(
-              "rule2",
+              1,
               0,
               coordinates(0,0))
           ])]),
     moduleExecution(
-      "module2",
+      1,
       [instructionExecution([
             ruleExecution(
-              "rule1",
+              2,
               0,
               coordinates(0,0)),
             ruleExecution(
-              "rule2",
+              3,
               0,
               coordinates(0,0))
           ])])];

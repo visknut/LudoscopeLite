@@ -1,3 +1,12 @@
+//////////////////////////////////////////////////////////////////////////////
+//
+// Functions for testing LL with differen map sizes.
+// @brief        Functions for testing LL with differen map sizes.
+// @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
+// @date         17-05-2018
+//
+//////////////////////////////////////////////////////////////////////////////
+
 module expreriments::MapSize
 
 import List;
@@ -13,8 +22,8 @@ import execution::DataStructures;
 int EXECUTIONS = 100;
 int MINSIZE = 2;
 int MAXSIZE = 10;
-RuleMap RULES = ("rule" : rule(reflections(false,false,false),[[0]],[[[1]]]));
-LudoscopeModule MODULE = ludoscopeModule("module", [], "", [[]], RULES, [executeGrammar()]);
+RuleMap RULES = (0 : rule(reflections(false,false,false),[[0]],[[[1]]]));
+LudoscopeModule MODULE = ludoscopeModule(0, [], "", [[]], RULES, [executeGrammar()]);
 
 public void runAllExperiments()
 {

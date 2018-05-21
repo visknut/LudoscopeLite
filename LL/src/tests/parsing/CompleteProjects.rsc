@@ -11,6 +11,7 @@
 
 module tests::parsing::CompleteProjects
 
+import IO;
 import parsing::Parser;
 import parsing::DataStructures;
 import tests::parsing::Utility;
@@ -22,7 +23,8 @@ public bool runAllTests()
 	&& parseProject1()
 	&& parseAndTransfromProject0()
 	&& parseAndTransfromProject1()
-	&& parseAndTransfromProject2();
+	&& parseAndTransfromProject2()
+	&& parseAndTransfromProject3();
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -57,22 +59,22 @@ private test bool parseProject1()
 // Tests for transformer.
 //////////////////////////////////////////////////////////////////////////////
 
-private test bool parseAndTransfromProject0()
+public test bool parseAndTransfromProject0()
 {
 	/* Arrange */
 	loc projectLocation = |project://LL/src/tests/correctTestData/project0/Project.lsp|;
-	AlphabetMap expectedAlphabetMap = ("Alphabet":("defined":2,"*":0,"undefined":1));
+	AlphabetMap expectedAlphabetMap = ("Alphabet":["*", "undefined", "defined"]);
 	LudoscopeModule expectedModule = 
-		ludoscopeModule("Module",[],"Alphabet",
+		ludoscopeModule(0,[],"Alphabet",
 		[[1,1,1,1,1],
 		 [1,1,1,1,1],
 		 [1,1,1,1,1],
 		 [1,1,1,1,1],
 		 [1,1,1,1,1]],
-		("ruleName":rule(reflections(false,false,false),[[1]],[[[2]]])),
-		[executeRule("ruleName",100)]);
+		(0 : rule(reflections(false,false,false),[[1]],[[[2]]])),
+		[executeRule(0, 100)]);
 	LudoscopeProject expectedProject = ludoscopeProject([expectedModule], 
-		expectedAlphabetMap, []);
+		expectedAlphabetMap, ["Module"], ["ruleName"], []);
 	
 	/* Act */
 	TransformationArtifact artifact = parseAndTransform(projectLocation);
@@ -85,9 +87,9 @@ private test bool parseAndTransfromProject1()
 {
 	/* Arrange */
 	loc projectLocation = |project://LL/src/tests/correctTestData/project1/Project.lsp|;
-	AlphabetMap expectedAlphabetMap = ("Alphabet":("defined":2,"*":0,"undefined":1));
+	AlphabetMap expectedAlphabetMap = ("Alphabet":["*","undefined","defined"]);
 	LudoscopeModule expectedModule1 = 
-		ludoscopeModule("Module1",[],"Alphabet",
+		ludoscopeModule(0 ,[],"Alphabet",
 		[[1,1,1,1,1,1,1,1,1,1],
 		[1,1,1,1,1,1,1,1,1,1],
 		[1,1,1,1,1,1,1,1,1,1],
@@ -96,12 +98,12 @@ private test bool parseAndTransfromProject1()
 		[1,1,1,1,1,1,1,1,1,1],
 		[1,1,1,1,1,1,1,1,1,1],
 		[1,1,1,1,1,1,1,1,1,1]],
-		("rule1":rule(reflections(false,false,false),[[1]],[[[2]]]),
-		"rule2":rule(reflections(false,false,false),[[2]],[[[1]]])),
-		[executeRule("rule1",100),
-		itterateRule("rule2")]);
+		(0 : rule(reflections(false,false,false),[[1]],[[[2]]]),
+		1 : rule(reflections(false,false,false),[[2]],[[[1]]])),
+		[executeRule(0, 100),
+		itterateRule(1)]);
 	LudoscopeModule expectedModule2 = 
-		ludoscopeModule("Module2",["Module1"],"Alphabet",
+		ludoscopeModule(1, [0],"Alphabet",
 		[[1,1,1,1,1,1,1,1,1,1],
 		 [1,1,1,1,1,1,1,1,1,1],
 		 [1,1,1,1,1,1,1,1,1,1],
@@ -110,10 +112,10 @@ private test bool parseAndTransfromProject1()
 		 [1,1,1,1,1,1,1,1,1,1],
 		 [1,1,1,1,1,1,1,1,1,1],
 		 [1,1,1,1,1,1,1,1,1,1]],
-		("ruleName":rule(reflections(false,false,false),[[1]],[[[2]]])),
-		[itterateRule("ruleName")]);
+		(2 : rule(reflections(false,false,false),[[1]],[[[2]]])),
+		[itterateRule(2)]);
 	LudoscopeProject expectedProject = ludoscopeProject([expectedModule1, expectedModule2], 
-		expectedAlphabetMap, []);
+		expectedAlphabetMap, ["Module1", "Module2"], ["rule1", "rule2", "ruleName"], []);
 		
 	/* Act */
 	TransformationArtifact artifact = parseAndTransform(projectLocation);
@@ -126,22 +128,33 @@ private test bool parseAndTransfromProject2()
 {
 	/* Arrange */
 	loc projectLocation = |project://LL/src/tests/correctTestData/project2/Project.lsp|;
-	AlphabetMap expectedAlphabetMap = ("Alphabet":("defined":2,"*":0,"undefined":1));
+	AlphabetMap expectedAlphabetMap = ("Alphabet":["*","undefined","defined"]);
 	LudoscopeModule expectedModule = 
-		ludoscopeModule("Module",[],"Alphabet",
+		ludoscopeModule(0,[],"Alphabet",
 		[[1,1,1,1,1],
 		 [1,1,1,1,1],
 		 [1,1,1,1,1],
 		 [1,1,1,1,1],
 		 [1,1,1,1,1]],
-		("ruleName":rule(reflections(false,false,false),[[1]],[[[2]]])),
+		(0 : rule(reflections(false,false,false),[[1]],[[[2]]])),
 		[executeGrammar()]);
 	LudoscopeProject expectedProject = ludoscopeProject([expectedModule], 
-		expectedAlphabetMap, []);
+		expectedAlphabetMap, ["Module"], ["ruleName"], []);
 	
 	/* Act */
 	TransformationArtifact artifact = parseAndTransform(projectLocation);
 	
 	/* Assert */	
 	return checkErrors(artifact) && (\expectedProject := artifact.project);
+}
+
+// TODO: Add project with lpl.
+private test bool parseAndTransfromProject3()
+{
+	/* Arrange */
+	
+	/* Act */
+	
+	/* Assert */	
+	return true;
 }

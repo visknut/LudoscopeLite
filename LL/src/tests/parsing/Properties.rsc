@@ -54,9 +54,11 @@ private test bool nameNotFound()
 	/* Arrange */
 	str structureName = "structureName";
 	ContainerType expectedResult = undefinedName(structureName);
+	TransformationArtifact emptyArtifact = 
+		transformationArtifact(ludoscopeProject([], (), [], [], []), []);
 	
 	/* Act */
-	ContainerType result  = findName(emptySyntaxTree, structureName);
+	ContainerType result  = findName(emptyArtifact, structureName);
 	
 	/* Assert */
 	return expectedResult == result;
@@ -66,15 +68,13 @@ private test bool symbolNameFound()
 {
 	/* Arrange */
 	str structureName = "symbolName";
-	 parsing::languages::alphabet::AST::Alphabet alphabet = 
-		alphabet(tileMap(1, 1), [symbol(structureName, "", "", "", "")]);
-	SyntaxTree syntaxTree = 
-		syntaxTree([], (), ("alphabet" : alphabet), (), [],	[]);
+	TransformationArtifact artifact = 
+		transformationArtifact(ludoscopeProject([], ("alphabet" : ["symbolName"]),	[], [],[]), []);
 
-	ContainerType expectedResult = symbolName(structureName);
+	ContainerType expectedResult = symbolName(0);
 	
 	/* Act */
-	ContainerType result  = findName(syntaxTree, structureName);
+	ContainerType result  = findName(artifact, structureName);
 	
 	/* Assert */
 	return expectedResult == result;
@@ -83,20 +83,19 @@ private test bool symbolNameFound()
 private test bool transformContainment()
 {
 	/* Arrange */
-	TransformationArtifact emptyArtifact = 
-		transformationArtifact(ludoscopeProject([], (),	[]), []);
-	loc fileLocation = 
-		|project://LL/src/tests/correctTestData/project0/Project.lsp|;
-	SyntaxTree syntaxTree = parseCompleteProject(fileLocation);
+	TransformationArtifact artifact = 
+		transformationArtifact(ludoscopeProject([], ("alphabet" : ["defined"]),	[], ["ruleName"], []), []);
+	loc fileLocation =  
+    |project://LL/src/tests/correctTestData/project0/Project.lsp|; 
 	Property property = 
 		parsing::languages::lpl::AST::containment("defined", "ruleName");
-
+	
 	parsing::DataStructures::Property expectedResult = 
-		containment(symbol("defined"), ruleStructure("ruleName"));
+		containment(symbol(0), ruleStructure(0));
 
 	/* Act */
 	TransformationArtifact result = 
-		transformProperty(emptyArtifact, syntaxTree, property, fileLocation);
+		transformProperty(artifact, property, fileLocation);
 	
 	/* Assert */
 	return expectedResult == head(result.project.properties);
@@ -105,17 +104,16 @@ private test bool transformContainment()
 private test bool transformContainmentIncorrectType()
 {
 	/* Arrange */
-	TransformationArtifact emptyArtifact = 
-		transformationArtifact(ludoscopeProject([], (),	[]), []);
-	loc fileLocation = 
-		|project://LL/src/tests/correctTestData/project0/Project.lsp|;
-	SyntaxTree syntaxTree = parseCompleteProject(fileLocation);
+	TransformationArtifact artifact = 
+		transformationArtifact(ludoscopeProject([], ("alphabet" : ["defined"]),	[], ["ruleName"], []), []);
+	loc fileLocation =  
+    |project://LL/src/tests/correctTestData/project0/Project.lsp|; 
 	Property property = 
 		parsing::languages::lpl::AST::containment("defined", "defined");
 
 	/* Act */
 	TransformationArtifact result = 
-		transformProperty(emptyArtifact, syntaxTree, property, fileLocation);
+		transformProperty(artifact, property, fileLocation);
 	
 	/* Assert */
 	return size(result.errors) == 1;

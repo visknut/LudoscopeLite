@@ -15,10 +15,10 @@ import parsing::DataStructures;
 alias ExecutionHistory = list[ModuleExecution];
 
 data ModuleExecution 
-	= moduleExecution(str name, list[InstructionExecution] instructions);
+	= moduleExecution(int nameIndex, list[InstructionExecution] instructions);
 	
 data InstructionExecution
 	= instructionExecution(list[RuleExecution] rules);
 	
 data RuleExecution 
-	= ruleExecution(str name, int rightHandIndex, Coordinates location);
+	= ruleExecution(int nameIndex, int rightHandIndex, Coordinates location);

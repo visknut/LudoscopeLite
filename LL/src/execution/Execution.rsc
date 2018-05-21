@@ -54,7 +54,7 @@ public ExecutionArtifact executeModule
 )
 {
 	artifact.history = 
-		push(moduleExecution(ludoscopeModule.name, []), artifact.history);
+		push(moduleExecution(ludoscopeModule.nameIndex, []), artifact.history);
 	switch (size(ludoscopeModule.inputs))
 	{
 		case 0 : 
@@ -78,7 +78,7 @@ public ExecutionArtifact executeModule
 		}
 
 	}
-	artifact.output = (ludoscopeModule.name : artifact.currentState);
+	artifact.output = (ludoscopeModule.nameIndex : artifact.currentState);
 	return artifact;
 }
 
@@ -101,20 +101,6 @@ public ExecutionArtifact executeRecipe
 //////////////////////////////////////////////////////////////////////////////
 // Utility functions.
 ////////////////////////////////////////////////////////////////////////////// 
-
-private bool inputReady(LudoscopeModule ludoscopeModule, OutputMap output)
-{
-	list[str] inputsRemaining = [n | n <- ludoscopeModule.inputs, n notin output];
-	return inputsRemaining == [];
-}
-
-private list[LudoscopeModule] findReadyModules(list[LudoscopeModule] modules,
-	OutputMap output)
-{
-	list[LudoscopeModule] readyModules = 
-		[m | LudoscopeModule m <- modules, inputReady(m, output)];
-	return readyModules;
-}
 
 private ExecutionHistory reverseHistory(ExecutionHistory history)
 {

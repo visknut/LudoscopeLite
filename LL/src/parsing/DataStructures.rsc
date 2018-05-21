@@ -14,9 +14,11 @@ import errors::Parsing;
 
 alias Tile = int;
 alias TileMap = list[list[Tile]];
-alias Alphabet = map[str, int];
-alias AlphabetMap = map[str, Alphabet];
-alias RuleMap	= map[str, Rule];
+alias SymbolNameList = list[str];
+alias AlphabetMap = map[str, SymbolNameList];
+alias ModuleNameList = list[str];
+alias RuleNameList = list[str];
+alias RuleMap	= map[int, Rule];
 alias Recipe = list[Instruction];
 
 data TransformationArtifact
@@ -26,12 +28,20 @@ data TransformationArtifact
 data LudoscopeProject
 	= ludoscopeProject(list[LudoscopeModule] modules, 
 		AlphabetMap alphabets,
+		ModuleNameList moduleNames,
+		RuleNameList ruleNames,
 		list[Property] properties)
 	| undefinedProject();
 	
 data LudoscopeModule
-	= ludoscopeModule(str name,
-		list[str] inputs,
+	= ludoscopeModule(int nameIndex,
+		list[int] inputs,
+		str alphabetName,
+		TileMap startingState, 
+		RuleMap rules, 
+		Recipe recipe)
+	| unfinishedLudoscopeModule(int nameIndex,
+		list[str] inputStrings,
 		str alphabetName,
 		TileMap startingState, 
 		RuleMap rules, 
@@ -52,8 +62,8 @@ data Coordinates
 	= coordinates(int x, int y);
 
 data Instruction
-	= itterateRule(str ruleName)
-	| executeRule(str ruleName, int itterations)
+	= itterateRule(int ruleNameIndex)
+	| executeRule(int ruleNameIndex, int itterations)
 	| executeGrammar();
 
 ///////////////////////////////////////////////////////////////////////////////
@@ -65,9 +75,9 @@ data Property
 	| containment(Symbol containedSybmol, Structure container);
 	
 data Structure
-	= moduleStrucutre(str moduleName)
-	| ruleStructure(str ruleName)
+	= moduleStrucutre(int moduleNameIndex)
+	| ruleStructure(int ruleNameIndex)
 	| undefinedStructure();
 	
 data Symbol
-	= symbol(str symbolName);
+	= symbol(int symbolIndex);

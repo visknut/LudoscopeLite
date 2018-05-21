@@ -14,7 +14,7 @@ import execution::history::DataStructures;
 import parsing::DataStructures;
 import errors::Execution;
 
-alias OutputMap = map[str, TileMap];
+alias OutputMap = map[int, TileMap];
 alias ModuleHierarchy = list[set[LudoscopeModule]];
 
 data ExecutionArtifact =

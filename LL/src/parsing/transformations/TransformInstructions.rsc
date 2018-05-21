@@ -10,16 +10,27 @@
 
 module parsing::transformations::TransformInstructions
 
+import List;
 import parsing::DataStructures;
 import parsing::languages::recipe::AST;
 import util::string;
 
-public Instruction parseInstruction(iterateRule(bool commented, str ruleName))
+public Instruction parseInstruction
+(
+	TransformationArtifact artifact,
+	iterateRule(bool commented, str ruleName)
+)
 {
-	return itterateRule(removeQuotes(ruleName));
+	int ruleIndex = indexOf(artifact.project.ruleNames, removeQuotes(ruleName));
+	return itterateRule(ruleIndex);
 }
 
-public Instruction parseInstruction(executeRule(bool commented, str ruleName, int executions))
+public Instruction parseInstruction
+(
+	TransformationArtifact artifact,
+	executeRule(bool commented, str ruleName, int executions)
+)
 {
-	return executeRule(removeQuotes(ruleName), executions);
+	int ruleIndex = indexOf(artifact.project.ruleNames, removeQuotes(ruleName));
+	return executeRule(ruleIndex, executions);
 }

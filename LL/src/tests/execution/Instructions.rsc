@@ -25,12 +25,12 @@ public bool runAllTests()
 }
 
 
-private test bool itterateRuleSingleResult()
+public test bool itterateRuleSingleResult()
 {
 	/* Arrange */
-	RuleMap rules = ("rule" : rule(reflections(false,false,false),[[1]],[[[2]]]));
+	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]));
 	ExecutionHistory history = 
-		[moduleExecution("module", [instructionExecution([])])];
+		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[0, 0], [1, 0]];
 	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
 	
@@ -38,7 +38,7 @@ private test bool itterateRuleSingleResult()
 	
 	/* Act */
 	ExecutionArtifact result = 
-		executeInstruction(artifact, rules, itterateRule("rule"));
+		executeInstruction(artifact, rules, itterateRule(0));
 	
 	/* Assert */
 	return expectedResult == result.currentState;
@@ -47,9 +47,9 @@ private test bool itterateRuleSingleResult()
 private test bool itterateRuleMultipleResults()
 {
 	/* Arrange */
-	RuleMap rules = ("rule" : rule(reflections(false,false,false),[[1]],[[[2]]]));
+	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]));
 	ExecutionHistory history = 
-		[moduleExecution("module", [instructionExecution([])])];
+		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[1, 0], [1, 0]];
 	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
 	
@@ -58,7 +58,7 @@ private test bool itterateRuleMultipleResults()
 	
 	/* Act */
 	ExecutionArtifact result 
-		= executeInstruction(artifact, rules, itterateRule("rule"));
+		= executeInstruction(artifact, rules, itterateRule(0));
 
 	/* Assert */
 	return result.currentState in expectedResults;
@@ -67,9 +67,9 @@ private test bool itterateRuleMultipleResults()
 private test bool executeRuleSingleResult()
 {
 	/* Arrange */
-	RuleMap rules = ("rule" : rule(reflections(false,false,false),[[1]],[[[2]]]));
+	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]));
 	ExecutionHistory history = 
-		[moduleExecution("module", [instructionExecution([])])];
+		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[1, 1], [1, 1]];
 	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
 	
@@ -78,7 +78,7 @@ private test bool executeRuleSingleResult()
 	
 	/* Act */
 	ExecutionArtifact result = 
-		executeInstruction(artifact, rules, executeRule("rule", itterations));
+		executeInstruction(artifact, rules, executeRule(0, itterations));
 	
 	/* Assert */
 	return expectedResult == result.currentState;
@@ -87,9 +87,9 @@ private test bool executeRuleSingleResult()
 private test bool executeRuleMultipleResults()
 {
 	/* Arrange */
-	RuleMap rules = ("rule" : rule(reflections(false,false,false),[[1]],[[[2]]]));
+	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]));
 	ExecutionHistory history = 
-		[moduleExecution("module", [instructionExecution([])])];
+		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[1, 1], [1, 1]];
 	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
 	
@@ -101,7 +101,7 @@ private test bool executeRuleMultipleResults()
 	
 	/* Act */
 	ExecutionArtifact result = 
-		executeInstruction(artifact, rules, executeRule("rule", itterations));
+		executeInstruction(artifact, rules, executeRule(0, itterations));
 
 	/* Assert */
 	return result.currentState in expectedResults;
@@ -110,9 +110,9 @@ private test bool executeRuleMultipleResults()
 private test bool executeGrammarOneRule()
 {
 	/* Arrange */
-	RuleMap rules = ("rule" : rule(reflections(false,false,false),[[1]],[[[2]]]));
+	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]));
 	ExecutionHistory history = 
-		[moduleExecution("module", [instructionExecution([])])];
+		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[1, 1], [1, 1]];
 	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
 	
@@ -128,10 +128,10 @@ private test bool executeGrammarOneRule()
 public test bool executeGrammarMultipleRules()
 {
 	/* Arrange */
-	RuleMap rules = ("rule1" : rule(reflections(false,false,false),[[1]],[[[2]]]),
-		"rule2" : rule(reflections(false,false,false),[[2]],[[[3]]]));
+	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]),
+		1 : rule(reflections(false,false,false),[[2]],[[[3]]]));
 	ExecutionHistory history = 
-		[moduleExecution("module", [instructionExecution([])])];
+		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[1, 1], [1, 1]];
 	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
 	
