@@ -10,29 +10,51 @@
 
 module execution::instructions::Instructions
 
-import execution::instructions::Matching;
-import parsing::DataStructures;
+import IO;
 import List;
 import Map;
 
+import parsing::DataStructures;
+
+import execution::history::DataStructures;
+import execution::DataStructures;
+import execution::instructions::Matching;
+
 // TODO: replace itterateRule with something that stops when tileMap doesn't change.
-public TileMap executeInstruction(TileMap tileMap, RuleMap rules, executeRule(str ruleName, int itterations))
+public ExecutionArtifact executeInstruction
+(
+	ExecutionArtifact artifact,
+	RuleMap rules, 
+	executeRule(str ruleName, int itterations))
 {
 	for (int i <- [0 .. itterations])
 	{
-		tileMap = executeInstruction(tileMap, rules, itterateRule(ruleName));
+		artifact = executeInstruction(artifact, rules, itterateRule(ruleName));
 	}
-	return tileMap;
+	return artifact;
 }
 
-public TileMap executeInstruction(TileMap tileMap, RuleMap rules, itterateRule(str ruleName))
+public ExecutionArtifact executeInstruction
+(
+	ExecutionArtifact artifact,
+	RuleMap rules, 
+	itterateRule(str ruleName)
+)
 {
 	Rule rule = rules[ruleName];
-	list[Coordinates] matches = findPatternInGrid(tileMap, rule.leftHand);
+	list[Coordinates] matches = 
+		findPatternInGrid(artifact.currentState, rule.leftHand);
+		
 	if (size(matches) > 0)
 	{
 		Coordinates match = getOneFrom(matches);
 		TileMap replacement = getOneFrom(rule.rightHands);
+		
+		RuleExecution ruleExecution = 
+			ruleExecution(ruleName, indexOf(rule.rightHands, replacement), match);
+		artifact.history[0].instructions[0].rules = 
+			push(ruleExecution, artifact.history[0].instructions[0].rules);
+
 		int patternWidth = size(rule.leftHand[0]);
 		int patternHeight = size(rule.leftHand);
 		
@@ -40,28 +62,34 @@ public TileMap executeInstruction(TileMap tileMap, RuleMap rules, itterateRule(s
 		{
 			for (int j <- [0 .. patternHeight])
 			{
-				tileMap[j + match.y][i + match.x] = replacement[j][i];
+				artifact.currentState[j + match.y][i + match.x] = 
+					replacement[j][i];
 			}
 		}
 	}
-	return tileMap;
+	
+	return artifact;
 }
 
-public TileMap executeInstruction(TileMap tileMap, RuleMap rules, executeGrammar())
+public ExecutionArtifact executeInstruction
+(
+	ExecutionArtifact artifact,
+	RuleMap rules, 
+	executeGrammar()
+)
 {
 	RuleMap currentRules = rules;
 	while (true)
 	{
 		str ruleName = getOneFrom(currentRules);
-		TileMap newTileMap = executeInstruction(tileMap, rules, itterateRule(ruleName));
-		
-		if (newTileMap == tileMap)
+		TileMap oldTileMap = artifact.currentState;
+		artifact = executeInstruction(artifact, rules, itterateRule(ruleName));
+		if (oldTileMap == artifact.currentState)
 		{
 			currentRules = delete(currentRules, ruleName);
 		}
 		else
 		{
-			tileMap = newTileMap;
 			currentRules = rules;
 		}
 		
@@ -70,6 +98,6 @@ public TileMap executeInstruction(TileMap tileMap, RuleMap rules, executeGrammar
 			break;
 		}
 	}
-	return tileMap;
+	return artifact;
 }
 

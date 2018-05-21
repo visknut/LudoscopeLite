@@ -10,6 +10,7 @@
 
 module execution::DataStructures
 
+import execution::history::DataStructures;
 import parsing::DataStructures;
 import errors::Execution;
 
@@ -17,7 +18,10 @@ alias OutputMap = map[str, TileMap];
 alias ModuleHierarchy = list[set[LudoscopeModule]];
 
 data ExecutionArtifact =
-	executionArtifact(OutputMap output, list[ExecutionError] errors);
+	executionArtifact(OutputMap output,
+										TileMap currentState,
+										ExecutionHistory history, 
+										list[ExecutionError] errors);
 	
 data PreparationArtifact =
 	preparationArtifact(ModuleHierarchy hierarchy, list[ExecutionError] errors);

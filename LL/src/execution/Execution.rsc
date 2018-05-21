@@ -9,6 +9,7 @@
 
 module execution::Execution
 
+import IO;
 import List;
 
 import errors::Execution;
@@ -19,11 +20,12 @@ import parsing::DataStructures;
 import execution::instructions::Instructions;
 import execution::DataStructures;
 import execution::ModuleHierarchy;
+import execution::history::DataStructures;
 
 public ExecutionArtifact executeProject(LudoscopeProject project)
 {
 	list[LudoscopeModule] modules = project.modules;
-	ExecutionArtifact artifact = executionArtifact((), []);
+	ExecutionArtifact artifact = executionArtifact((), [], [], []);
 	PreparationArtifact preparationArtifact = 
 		extractModuleHierarchy(project);
 		
@@ -38,37 +40,62 @@ public ExecutionArtifact executeProject(LudoscopeProject project)
 	{
 		for (LudoscopeModule currentModule <- moduleGroup)
 		{
-			artifact.output += 
-				(currentModule.name : executeModule(currentModule, artifact.output));
+			artifact = executeModule(artifact, currentModule);
 		}
 	}
-	
+	artifact.history = reverseHistory(artifact.history);
 	return artifact;
 }
 
-public TileMap executeModule(LudoscopeModule ludoscopeModule, OutputMap input)
+public ExecutionArtifact executeModule
+(
+	ExecutionArtifact artifact, 
+	LudoscopeModule ludoscopeModule
+)
 {
+	artifact.history = 
+		push(moduleExecution(ludoscopeModule.name, []), artifact.history);
 	switch (size(ludoscopeModule.inputs))
 	{
-		case 0 : return executeRecipe(ludoscopeModule.startingState, 
-			ludoscopeModule.rules, 
-			ludoscopeModule.recipe);
-		case 1 : return executeRecipe(input[head(ludoscopeModule.inputs)], 
-			ludoscopeModule.rules, 
-			ludoscopeModule.recipe);
+		case 0 : 
+		{
+			artifact.currentState = ludoscopeModule.startingState;
+			artifact = executeRecipe(artifact,
+				ludoscopeModule.rules, 
+				ludoscopeModule.recipe);
+		}
+		case 1 : 
+		{
+			artifact.currentState = artifact.output[head(ludoscopeModule.inputs)];
+			artifact = executeRecipe(artifact,
+				ludoscopeModule.rules,
+				ludoscopeModule.recipe);
+		}
 		default :
+		{
+			break;
 			// TODO: add merge functions.
-			return [[]];
+		}
+
 	}
+	artifact.output = (ludoscopeModule.name : artifact.currentState);
+	return artifact;
 }
 
-public TileMap executeRecipe(TileMap tileMap, RuleMap rules, Recipe recipe)
+public ExecutionArtifact executeRecipe
+(
+	ExecutionArtifact artifact,
+	RuleMap rules,
+	Recipe recipe
+)
 {
 	for (Instruction instruction <- recipe)
 	{
-		tileMap = executeInstruction(tileMap, rules, instruction);
+		artifact.history[0].instructions = 
+			push(instructionExecution([]), artifact.history[0].instructions);
+		artifact = executeInstruction(artifact, rules, instruction);
 	}
-	return tileMap;
+	return artifact;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -87,4 +114,15 @@ private list[LudoscopeModule] findReadyModules(list[LudoscopeModule] modules,
 	list[LudoscopeModule] readyModules = 
 		[m | LudoscopeModule m <- modules, inputReady(m, output)];
 	return readyModules;
+}
+
+private ExecutionHistory reverseHistory(ExecutionHistory history)
+{
+	history = visit (history)
+	{
+		case list[ModuleExecution] timeline => reverse(timeline)
+		case list[InstructionExecution] timeline => reverse(timeline)
+		case list[RuleExecution] timeline => reverse(timeline)
+	};
+	return history;
 }
