@@ -10,6 +10,7 @@
 
 module execution::DataStructures
 
+import execution::lpl::PropertyHistory;
 import execution::history::DataStructures;
 import parsing::DataStructures;
 import errors::Execution;
@@ -20,8 +21,32 @@ alias ModuleHierarchy = list[set[LudoscopeModule]];
 data ExecutionArtifact =
 	executionArtifact(OutputMap output,
 										TileMap currentState,
-										ExecutionHistory history, 
+										ExecutionHistory history,
+										PropertyReport propertyReport,
 										list[ExecutionError] errors);
 	
 data PreparationArtifact =
 	preparationArtifact(ModuleHierarchy hierarchy, list[ExecutionError] errors);
+
+//////////////////////////////////////////////////////////////////////////////
+// LPL.
+//////////////////////////////////////////////////////////////////////////////
+
+data PropertyReport 
+	= propertyReport(list[Property] properties, PropertyHistory history);
+
+alias PropertyHistory = lrel[StepInfo stepInfo, 
+													 ExtendedTileMaps mapState, 
+													 list[bool] propteryStates];
+													 
+data StepInfo =
+	stepInfo(int moduleIndex, 
+					 int recipeStep,
+					 int ruleIndex,
+					 Coordinates matchLocation, 
+					 int rightHandIndex);
+
+data ExtendedTileMaps
+	=	extendedTileMaps(TileMap moduleIndex, 
+						 TileMap ruleIndex, 
+						 TileMap tileIndex);

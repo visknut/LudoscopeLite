@@ -24,7 +24,6 @@ public bool runAllTests()
 	&& executeGrammarMultipleRules();
 }
 
-
 public test bool itterateRuleSingleResult()
 {
 	/* Arrange */
@@ -32,7 +31,8 @@ public test bool itterateRuleSingleResult()
 	ExecutionHistory history = 
 		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[0, 0], [1, 0]];
-	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
+	ExecutionArtifact artifact = 
+		executionArtifact((), startingMap, history, propertyReport([], []), []);
 	
 	TileMap expectedResult = [[0, 0], [2, 0]];
 	
@@ -51,7 +51,8 @@ private test bool itterateRuleMultipleResults()
 	ExecutionHistory history = 
 		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[1, 0], [1, 0]];
-	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
+	ExecutionArtifact artifact = 
+		executionArtifact((), startingMap, history, propertyReport([], []), []);
 	
 	list[TileMap] expectedResults = [[[1, 0], [2, 0]],
 																	 [[2, 0], [1, 0]]];
@@ -71,7 +72,8 @@ private test bool executeRuleSingleResult()
 	ExecutionHistory history = 
 		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[1, 1], [1, 1]];
-	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
+	ExecutionArtifact artifact 
+		= executionArtifact((), startingMap, history, propertyReport([], []), []);
 	
 	TileMap expectedResult = [[2, 2], [2, 2]];
 	int itterations = 4;
@@ -91,7 +93,8 @@ private test bool executeRuleMultipleResults()
 	ExecutionHistory history = 
 		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[1, 1], [1, 1]];
-	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
+	ExecutionArtifact artifact 
+		= executionArtifact((), startingMap, history, propertyReport([], []), []);
 	
 	list[TileMap] expectedResults = [[[1, 2], [2, 2]],
 																	 [[2, 1], [2, 2]],
@@ -114,7 +117,8 @@ private test bool executeGrammarOneRule()
 	ExecutionHistory history = 
 		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[1, 1], [1, 1]];
-	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
+	ExecutionArtifact artifact 
+		= executionArtifact((), startingMap, history, propertyReport([], []), []);
 	
 	TileMap expectedResult = [[2, 2], [2, 2]];
 	
@@ -133,7 +137,8 @@ public test bool executeGrammarMultipleRules()
 	ExecutionHistory history = 
 		[moduleExecution(0, [instructionExecution([])])];
 	TileMap startingMap = [[1, 1], [1, 1]];
-	ExecutionArtifact artifact = executionArtifact((), startingMap, history, []);
+	ExecutionArtifact artifact 
+		= executionArtifact((), startingMap, history, propertyReport([], []), []);
 	
 	TileMap expectedResult = [[3, 3], [3, 3]];
 	

@@ -35,6 +35,7 @@ public void runAllExperiments()
 	iprintln(averageTime);
 }
 
+// TODO: use util version
 private list[list[int]] createTileMap(int width, int height)
 {
 	return [[0 | int i <- [0 .. width]] | int j <- [0 .. height]];

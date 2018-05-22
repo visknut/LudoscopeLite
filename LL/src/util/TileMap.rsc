@@ -3,6 +3,11 @@ module util::TileMap
 import List;
 import parsing::DataStructures;
 
+public list[list[int]] createTileMap(int symbol, int width, int height)
+{
+	return [[symbol | int i <- [0 .. width]] | int j <- [0 .. height]];
+}
+
 public list[TileMap] gatherLeftHands(Reflections reflections, TileMap leftHand)
 {
 	list[TileMap] leftHands = [leftHand];

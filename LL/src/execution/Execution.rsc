@@ -21,11 +21,13 @@ import execution::instructions::Instructions;
 import execution::DataStructures;
 import execution::ModuleHierarchy;
 import execution::history::DataStructures;
+import execution::lpl::PropertyHistory;
 
 public ExecutionArtifact executeProject(LudoscopeProject project)
 {
 	list[LudoscopeModule] modules = project.modules;
-	ExecutionArtifact artifact = executionArtifact((), [], [], []);
+	PropertyReport propertyReport = propertyReport(project.properties, []);
+	ExecutionArtifact artifact = executionArtifact((), [], [], propertyReport, []);
 	PreparationArtifact preparationArtifact = 
 		extractModuleHierarchy(project);
 		

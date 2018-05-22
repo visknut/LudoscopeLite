@@ -19,6 +19,7 @@ import parsing::DataStructures;
 import execution::history::DataStructures;
 import execution::DataStructures;
 import execution::instructions::Matching;
+import execution::lpl::PropertyHistory;
 
 // TODO: replace itterateRule with something that stops when tileMap doesn't change.
 public ExecutionArtifact executeInstruction
@@ -44,7 +45,7 @@ public ExecutionArtifact executeInstruction
 	Rule rule = rules[ruleNameIndex];
 	list[Coordinates] matches = 
 		findPatternInGrid(artifact.currentState, rule.leftHand);
-		
+
 	if (size(matches) > 0)
 	{
 		Coordinates match = getOneFrom(matches);
@@ -67,6 +68,8 @@ public ExecutionArtifact executeInstruction
 			}
 		}
 	}
+	
+	artifact.propertyReport.history = getPropertyState(artifact);
 	
 	return artifact;
 }
