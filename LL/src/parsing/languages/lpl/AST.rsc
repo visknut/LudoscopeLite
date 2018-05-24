@@ -33,4 +33,5 @@ data Properties
 	= properties(list[Property]);
 	
 data Property
-	= containment(str containted, str container);
+	= occurrence(int count, str containted, str container)
+	| adjecent(str tile, str adjecentTile);

@@ -20,7 +20,8 @@ start syntax Properties
 	= properties: Property*;
 	
 syntax Property
-	= containment: NAME "in" NAME;
+	= occurrence: INTEGER "x" NAME ("in" NAME)?
+	| adjecent:	NAME "adjecent to" NAME;
 	
 //////////////////////////////////////////////////////////////////////////////
 // Lexer Rules
@@ -33,7 +34,7 @@ lexical NAME
   = @category="Name" ([a-zA-Z_$.] [a-zA-Z0-9_$.]* !>> [a-zA-Z0-9_$.]) \ Keyword;
  
 lexical INTEGER
-  = ("-"?[0-9]+);
+  = [0-9]+;
     
 lexical STRING
   = ![\"]*;
@@ -55,7 +56,8 @@ keyword Keyword
   | "is adjecend to"
   | "stays connected to"
   | "stay intact"
-  | "in";
+  | "in"
+  | "x";
   
 //////////////////////////////////////////////////////////////////////////////
 // API

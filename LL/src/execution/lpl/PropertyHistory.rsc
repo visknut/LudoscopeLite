@@ -16,7 +16,8 @@ public PropertyHistory getPropertyState(ExecutionArtifact artifact)
 	StepInfo stepInfo = extractStepInfo(artifact.history[0]);
 	ExtendedTileMaps maps = extractExtendedTileMaps(stepInfo, artifact);
 	PropertyStates propertyStates = 
-		[checkProperty(property) | Property property <- artifact.propertyReport.properties];
+		[checkProperty(property, artifact.propertyReport.history, maps) 
+		| Property property <- artifact.propertyReport.properties];
 	
 	artifact.propertyReport.history += [<stepInfo, maps, propertyStates>];
 	return artifact.propertyReport.history;
@@ -52,11 +53,6 @@ public ExtendedTileMaps extractExtendedTileMaps
 		TileMap currentRuleMap = createTileMap(currentStep.ruleIndex, width, height);
 		return extendedTileMaps(currentModuleMap, currentRuleMap, currentSymbolMap);
 	}
-}
-
-private bool checkProperty(Property property)
-{
-	return true;
 }
 
 private TileMap updateMap

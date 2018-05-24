@@ -22,21 +22,50 @@ SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), [], []);
 
 public bool runAllTests()
 {
-	return tryParsingContainment()
+	return tryParsingAdjecency()
+	&& tryParsingOccurrence()
+	&& tryParsingOccurrenceAndContainment()
 	&& nameNotFound()
 	&& symbolNameFound()
-	&& transformContainmentIncorrectType();
+	&& transformAdjecency()
+	&& transformAdjecencyIncorrectType();
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Tests for parser.
 //////////////////////////////////////////////////////////////////////////////
 
-private test bool tryParsingContainment()
+private test bool tryParsingAdjecency()
 {
 	/* Arrange */
 	loc fileLocation = 
-		|project://LL/src/tests/correctTestData/isolatedProperties/contaiment.lpl|;
+		|project://LL/src/tests/correctTestData/isolatedProperties/adjecent.lpl|;
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
+	return checkErrors(syntaxTree);
+}
+
+private test bool tryParsingOccurrence()
+{
+	/* Arrange */
+	loc fileLocation = 
+		|project://LL/src/tests/correctTestData/isolatedProperties/occurrence.lpl|;
+		
+	/* Act */
+	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
+	
+	/* Assert */
+	return checkErrors(syntaxTree);
+}
+
+private test bool tryParsingOccurrenceAndContainment()
+{
+	/* Arrange */
+	loc fileLocation = 
+		|project://LL/src/tests/correctTestData/isolatedProperties/occurrenceAndContainment.lpl|;
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -53,12 +82,12 @@ private test bool nameNotFound()
 {
 	/* Arrange */
 	str structureName = "structureName";
-	ContainerType expectedResult = undefinedName(structureName);
+	Name expectedResult = undefinedName(structureName);
 	TransformationArtifact emptyArtifact = 
 		transformationArtifact(ludoscopeProject([], (), [], [], []), []);
 	
 	/* Act */
-	ContainerType result  = findName(emptyArtifact, structureName);
+	Name result  = findName(emptyArtifact, structureName);
 	
 	/* Assert */
 	return expectedResult == result;
@@ -71,27 +100,27 @@ private test bool symbolNameFound()
 	TransformationArtifact artifact = 
 		transformationArtifact(ludoscopeProject([], ("alphabet" : ["symbolName"]),	[], [],[]), []);
 
-	ContainerType expectedResult = symbolName(0);
+	Name expectedResult = symbolName(0);
 	
 	/* Act */
-	ContainerType result  = findName(artifact, structureName);
+	Name result  = findName(artifact, structureName);
 	
 	/* Assert */
 	return expectedResult == result;
 }
 
-private test bool transformContainment()
+private test bool transformOccurrence()
 {
 	/* Arrange */
 	TransformationArtifact artifact = 
-		transformationArtifact(ludoscopeProject([], ("alphabet" : ["defined"]),	[], ["ruleName"], []), []);
+		transformationArtifact(ludoscopeProject([], ("alphabet" : ["defined"]),	[], [], []), []);
 	loc fileLocation =  
     |project://LL/src/tests/correctTestData/project0/Project.lsp|; 
 	Property property = 
-		parsing::languages::lpl::AST::containment("defined", "ruleName");
+		parsing::languages::lpl::AST::occurrence(1, "defined", "");
 	
 	parsing::DataStructures::Property expectedResult = 
-		containment(symbol(0), ruleStructure(0));
+		occurrence(1, symbolIndex(0));
 
 	/* Act */
 	TransformationArtifact result = 
@@ -101,7 +130,7 @@ private test bool transformContainment()
 	return expectedResult == head(result.project.properties);
 }
 
-private test bool transformContainmentIncorrectType()
+private test bool transformOccurrenceAndContainment()
 {
 	/* Arrange */
 	TransformationArtifact artifact = 
@@ -109,7 +138,49 @@ private test bool transformContainmentIncorrectType()
 	loc fileLocation =  
     |project://LL/src/tests/correctTestData/project0/Project.lsp|; 
 	Property property = 
-		parsing::languages::lpl::AST::containment("defined", "defined");
+		parsing::languages::lpl::AST::occurrence(1, "defined", "ruleName");
+	
+	parsing::DataStructures::Property expectedResult = 
+		occurrence(1, symbolIndex(0), ruleIndex(0));
+
+	/* Act */
+	TransformationArtifact result = 
+		transformProperty(artifact, property, fileLocation);
+	
+	/* Assert */
+	return expectedResult == head(result.project.properties);
+}
+
+private test bool transformAdjecency()
+{
+	/* Arrange */
+	TransformationArtifact artifact = 
+		transformationArtifact(ludoscopeProject([], ("alphabet" : ["defined", "undefined"]),	[], ["ruleName"], []), []);
+	loc fileLocation =  
+    |project://LL/src/tests/correctTestData/project0/Project.lsp|; 
+	Property property = 
+		parsing::languages::lpl::AST::adjecent("defined", "undefined");
+	
+	parsing::DataStructures::Property expectedResult = 
+		adjecent(symbolIndex(0), symbolIndex(1));
+
+	/* Act */
+	TransformationArtifact result = 
+		transformProperty(artifact, property, fileLocation);
+	
+	/* Assert */
+	return expectedResult == head(result.project.properties);
+}
+
+private test bool transformAdjecencyIncorrectType()
+{
+	/* Arrange */
+	TransformationArtifact artifact = 
+		transformationArtifact(ludoscopeProject([], ("alphabet" : ["defined"]),	[], ["ruleName"], []), []);
+	loc fileLocation =  
+    |project://LL/src/tests/correctTestData/project0/Project.lsp|; 
+	Property property = 
+		parsing::languages::lpl::AST::adjecent("defined", "ruleName");
 
 	/* Act */
 	TransformationArtifact result = 

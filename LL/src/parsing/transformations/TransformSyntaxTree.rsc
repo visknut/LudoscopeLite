@@ -8,6 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
+// TODO: put transformations in seprate files.
 module parsing::transformations::TransformSyntaxTree
 
 import IO;
@@ -30,11 +31,11 @@ alias AbstractInstruction = parsing::languages::recipe::AST::Instruction;
 alias AbstractGrammar = parsing::languages::grammar::AST::Grammar;
 alias AbstractRule = parsing::languages::grammar::AST::Rule;
 
-data ContainerType
+data Name
  = moduleName(int nameIndex)
  | ruleName(int nameIndex)
  | symbolName(int nameIndex)
- | undefinedName(str name);	
+ | undefinedName(str name);
 
 public TransformationArtifact transformSyntaxTree(SyntaxTree syntaxTree)
 {
@@ -314,32 +315,29 @@ private TransformationArtifact transformProperties
 public TransformationArtifact transformProperty
 (
 	TransformationArtifact artifact,
-	containment(str containedName, str containerName),
+	adjecent(str tile, str adjecentTile),
 	loc propertyLocation
 )
 {
-	Property property = 
-		parsing::DataStructures::containment(undefinedStructure(), 
-		undefinedStructure());
-
-	ContainerType containedType = findName(artifact, containedName);
-	switch (containedType)
+	Property property =
+		parsing::DataStructures::adjecent(symbolIndex(-1), symbolIndex(-1));
+		
+	Name tileType = findName(artifact, tile);
+	switch (tileType)
 	{
-		case moduleName(int nameIndex) :
+		case symbolName(int nameIndex) :
 		{
-			property.containedStructure = 
-				parsing::DataStructures::moduleStrucutre(nameIndex);
+			property.tile.index = nameIndex;
 		}
  		case ruleName(int nameIndex) :
  		{
- 			property.containedStructure =
- 				parsing::DataStructures::ruleStructure(nameIndex);
+ 			artifact.errors += [structureType("rule", propertyLocation)];
+ 			return artifact;
  		}
- 		case symbolName(int nameIndex) :
+ 		case moduleName(int nameIndex) :
  		{
- 			property = 
- 				containment(parsing::DataStructures::symbol(nameIndex), 
- 				undefinedStructure());
+ 			artifact.errors = [structureType("module", propertyLocation)];
+ 			return artifact;
  		}
  		case undefinedName(str name) :
  		{
@@ -348,22 +346,21 @@ public TransformationArtifact transformProperty
  		}
 	}
 	
-	ContainerType containerType = findName(artifact, containerName);
-	switch (containerType)
+	Name adjecentType = findName(artifact, adjecentTile);
+	switch (adjecentType)
 	{
-		case moduleName(int nameIndex) :
+		case symbolName(int nameIndex) :
 		{
-			property.container = 
-				parsing::DataStructures::moduleStrucutre(nameIndex);
+			property.adjecentTile.index = nameIndex;
 		}
  		case ruleName(int nameIndex) :
  		{
- 			property.container = 
- 				parsing::DataStructures::ruleStructure(nameIndex);
+ 			artifact.errors += [structureType("rule", propertyLocation)];
+ 			return artifact;
  		}
- 		case symbolName(int nameIndex) :
+ 		case moduleName(int nameIndex) :
  		{
- 			artifact.errors += [structureType("symbol", propertyLocation)];
+ 			artifact.errors = [structureType("module", propertyLocation)];
  			return artifact;
  		}
  		case undefinedName(str name) :
@@ -372,11 +369,86 @@ public TransformationArtifact transformProperty
  			return artifact;
  		}
 	}
+	
 	artifact.project.properties += [property];
 	return artifact;
 }
 
-public ContainerType findName
+public TransformationArtifact transformProperty
+(
+	TransformationArtifact artifact,
+	occurrence(int count, str containted, str container),
+	loc propertyLocation
+)
+{
+	Property property;
+	if (container == "")
+	{
+		property = 
+			parsing::DataStructures::occurrence(count, symbolIndex(-1));
+	}
+	else
+	{
+		property = 
+			parsing::DataStructures::occurrence(count, symbolIndex(-1), ruleIndex(-1));
+	}
+	
+	Name containedType = findName(artifact, containted);
+	switch (containedType)
+	{
+		case symbolName(int nameIndex) :
+		{
+			property.tile.index = nameIndex;
+		}
+ 		case ruleName(int nameIndex) :
+ 		{
+ 			artifact.errors += [structureType("rule", propertyLocation)];
+ 			return artifact;
+ 		}
+ 		case moduleName(int nameIndex) :
+ 		{
+ 			artifact.errors = [structureType("module", propertyLocation)];
+ 			return artifact;
+ 		}
+ 		case undefinedName(str name) :
+ 		{
+ 			artifact.errors += [propertyName(name, propertyLocation)];
+ 			return artifact;
+ 		}
+	}
+	
+	if (container != "")
+	{
+		Name containerType = findName(artifact, container);
+		switch (containerType)
+		{
+			case symbolName(int nameIndex) :
+			{
+				artifact.errors += [structureType("symbol", propertyLocation)];
+				return artifact;
+			}
+	 		case ruleName(int nameIndex) :
+	 		{
+				property.rule.index = nameIndex;
+	 		}
+	 		case moduleName(int nameIndex) :
+	 		{
+	 			artifact.errors = [structureType("module", propertyLocation)];
+	 			return artifact;
+	 		}
+	 		case undefinedName(str name) :
+	 		{
+	 			artifact.errors += [propertyName(name, propertyLocation)];
+	 			return artifact;
+	 		}
+		}
+	}
+	
+	artifact.project.properties += [property];
+	return artifact;
+}
+
+public Name findName
 (
 	TransformationArtifact artifact,
 	str structureName

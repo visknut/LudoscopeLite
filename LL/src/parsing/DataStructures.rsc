@@ -71,13 +71,15 @@ data Instruction
 ///////////////////////////////////////////////////////////////////////////////
 
 data Property
-	= containment(Structure containedStructure, Structure container)
-	| containment(Symbol containedSybmol, Structure container);
+	= occurrence(int count, SymbolIndex tile)
+	| occurrence(int count, SymbolIndex tile, RuleIndex rule)
+	| adjecent(SymbolIndex tile, SymbolIndex adjecentTile);
 	
-data Structure
-	= moduleStrucutre(int moduleNameIndex)
-	| ruleStructure(int ruleNameIndex)
-	| undefinedStructure();
+data SymbolIndex
+	= symbolIndex(int index);
+
+data RuleIndex
+	= ruleIndex(int index);
 	
-data Symbol
-	= symbol(int symbolIndex);
+data ModuleIndex
+	= moduleIndex(int index);

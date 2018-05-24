@@ -67,9 +67,8 @@ public ExecutionArtifact executeInstruction
 					replacement[j][i];
 			}
 		}
+		artifact.propertyReport.history = getPropertyState(artifact);
 	}
-	
-	artifact.propertyReport.history = getPropertyState(artifact);
 	
 	return artifact;
 }
