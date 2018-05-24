@@ -22,22 +22,24 @@ import tests::parsing::Properties;
 import tests::execution::Matching;
 import tests::execution::Instructions;
 import tests::execution::ModuleHierarchy;
+import tests::execution::CompleteProjects;
 
 import tests::metrics::MAD;
 
 public bool runAllTests()
 {
-	return tests::parsing::Grammar::runAllTests()
-	&& tests::parsing::Alphabet::runAllTests()
-	&& tests::parsing::Recipe::runAllTests()
-	&& tests::parsing::Project::runAllTests()
-	&& tests::parsing::Checking::runAllTests()
-	&& tests::parsing::CompleteProjects::runAllTests()
-	&& tests::execution::Matching::runAllTests()
-	&& tests::execution::Instructions::runAllTests()
-	&& tests::execution::ModuleHierarchy::runAllTests()
-	&& tests::metrics::MAD::runAllTests()
-	&& tests::parsing::Properties::runAllTests();
+	return grammarTests()
+	&& alphabetTests()
+	&& recipeTests()
+	&& projectTests()
+	&& checkingTests()
+	&& completeProjectParsingTests()
+	&& matchingTests()
+	&& instructionsTests()
+	&& moduleHierarchyTests()
+	&& metricsTests()
+	&& propertiesTests()
+	&& completeProjectsExecutionTests;
 }
 
 private test bool grammarTests()
@@ -65,7 +67,7 @@ private test bool checkingTests()
 	return tests::parsing::Checking::runAllTests();
 }
 
-private test bool completeProjectTests()
+private test bool completeProjectParsingTests()
 {
 	return tests::parsing::CompleteProjects::runAllTests();
 }
@@ -93,4 +95,9 @@ private test bool metricsTests()
 private test bool propertiesTests()
 {
 	return tests::parsing::Properties::runAllTests();
+}
+
+private test bool completeProjectsExecutionTests()
+{
+	return tests::execution::CompleteProjects::runAllTests();
 }
