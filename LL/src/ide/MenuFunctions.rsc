@@ -32,6 +32,7 @@ public void parseAndTransform(Tree tree, loc projectFile)
 	}
 }
 
+// TODO: extract funtion and use as wrapper.
 public void executeProject(Tree tree, loc projectFile)
 {
 	TransformationArtifact artifact = parseAndCheckForErrors(projectFile);
@@ -51,6 +52,7 @@ public void executeProject(Tree tree, loc projectFile)
 			iprintln(newArtifact.output);
 		}
 	}
+	iprintln(newArtifact);
 }
 
 public void timeExecution1x(Tree tree, loc projectFile)

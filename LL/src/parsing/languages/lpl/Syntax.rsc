@@ -21,14 +21,14 @@ start syntax Properties
 	
 syntax Property
 	= occurrence: INTEGER "x" NAME ("in" NAME)?
-	| adjecent:	NAME "adjecent to" NAME;
+	| adjecent:	NEGATION? NAME "adjacent to" NAME;
 	
 //////////////////////////////////////////////////////////////////////////////
 // Lexer Rules
 //////////////////////////////////////////////////////////////////////////////
 
 lexical NEGATION
-	= @category="Negation" "!";
+	= "no";
 
 lexical NAME
   = @category="Name" ([a-zA-Z_$.] [a-zA-Z0-9_$.]* !>> [a-zA-Z0-9_$.]) \ Keyword;
@@ -50,14 +50,10 @@ lexical LAYOUT
   =  [\t-\n \r \ ];
   
 keyword Keyword
-  = "size of"
-  | "is"
-  | "occurences of"
-  | "is adjecend to"
-  | "stays connected to"
-  | "stay intact"
+  = "adjacent to"
   | "in"
-  | "x";
+  | "x"
+  | "no";
   
 //////////////////////////////////////////////////////////////////////////////
 // API

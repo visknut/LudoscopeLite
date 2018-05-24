@@ -11,12 +11,14 @@
 module execution::DataStructures
 
 import execution::lpl::PropertyHistory;
+import execution::lpl::PropertyValidation;
 import execution::history::DataStructures;
 import parsing::DataStructures;
 import errors::Execution;
 
 alias OutputMap = map[int, TileMap];
 alias ModuleHierarchy = list[set[LudoscopeModule]];
+alias Location =  tuple[int x, int y];
 
 data ExecutionArtifact =
 	executionArtifact(OutputMap output,
@@ -37,13 +39,13 @@ data PropertyReport
 
 alias PropertyHistory = lrel[StepInfo stepInfo, 
 													 ExtendedTileMaps mapState, 
-													 list[bool] propteryStates];
+													 list[bool] propertyStates];
 													 
 data StepInfo =
 	stepInfo(int moduleIndex, 
 					 int recipeStep,
 					 int ruleIndex,
-					 Coordinates matchLocation, 
+					 Location matchLocation, 
 					 int rightHandIndex);
 
 data ExtendedTileMaps

@@ -21,6 +21,7 @@ import parsing::transformations::TransformInstructions;
 import parsing::languages::grammar::AST;
 import parsing::languages::alphabet::AST;
 import parsing::languages::recipe::AST;
+import parsing::languages::lpl::AST;
 
 import errors::Parsing;
 
@@ -305,7 +306,7 @@ private TransformationArtifact transformProperties
 	{
 		case Property property:
 		{
-			artifact += 
+			artifact = 
 				transformProperty(artifact, property, property@location);
 		}
 	}
@@ -315,12 +316,12 @@ private TransformationArtifact transformProperties
 public TransformationArtifact transformProperty
 (
 	TransformationArtifact artifact,
-	adjecent(str tile, str adjecentTile),
+	adjecent(bool negation, str tile, str adjecentTile),
 	loc propertyLocation
 )
 {
 	Property property =
-		parsing::DataStructures::adjecent(symbolIndex(-1), symbolIndex(-1));
+		parsing::DataStructures::adjecent(negation, symbolIndex(-1), symbolIndex(-1));
 		
 	Name tileType = findName(artifact, tile);
 	switch (tileType)
@@ -419,7 +420,7 @@ public TransformationArtifact transformProperty
 	
 	if (container != "")
 	{
-		Name containerType = findName(artifact, container);
+		Name containerType = findName(artifact, cleanContainerName(container));
 		switch (containerType)
 		{
 			case symbolName(int nameIndex) :
@@ -451,26 +452,26 @@ public TransformationArtifact transformProperty
 public Name findName
 (
 	TransformationArtifact artifact,
-	str structureName
+	str name
 )
 {
 	for (str alphabetName <- artifact.project.alphabets)
 	{
 		SymbolNameList symbolNames = artifact.project.alphabets[alphabetName];
-		if (structureName in symbolNames)
+		if (name in symbolNames)
 		{
-			return symbolName(indexOf(symbolNames, structureName));
+			return symbolName(indexOf(symbolNames, name));
 		}
 	}
-	if (structureName in artifact.project.moduleNames)
+	if (name in artifact.project.moduleNames)
 	{
-		return moduleName(indexOf(artifact.project.moduleNames, structureName));
+		return moduleName(indexOf(artifact.project.moduleNames, name));
 	}
-	else if (structureName in artifact.project.ruleNames)
+	else if (name in artifact.project.ruleNames)
 	{
-		return ruleName(indexOf(artifact.project.ruleNames, structureName));
+		return ruleName(indexOf(artifact.project.ruleNames, name));
 	}
-	return undefinedName(structureName);
+	return undefinedName(name);
 }
 
 //////////////////////////////////////////////////////////////////////////////

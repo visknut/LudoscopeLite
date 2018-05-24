@@ -94,12 +94,6 @@ public SyntaxTree parseCompleteProject(loc projectFile)
 private list[loc] gatherFileLocations(SyntaxTree syntaxTree, loc projectFile)
 {
 	list[loc] fileLocations = [];
-	
-	loc propertiesFile = fileLocation(projectFile, fileName(projectFile), ".lpl");
-	if (exists(propertiesFile))
-	{
-			fileLocations += [propertiesFile];
-	}
 
 	visit(syntaxTree)
 	{
@@ -118,5 +112,12 @@ private list[loc] gatherFileLocations(SyntaxTree syntaxTree, loc projectFile)
 			fileLocations += [fileLocation(projectFile, removeQuotes(name), ".alp")];
 		}
 	}
+	
+	loc propertiesFile = fileLocation(projectFile, fileName(projectFile), ".lpl");
+	if (exists(propertiesFile))
+	{
+			fileLocations += [propertiesFile];
+	}
+	
 	return fileLocations;
 }

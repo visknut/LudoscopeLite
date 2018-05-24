@@ -1,1 +1,0 @@
-TILEMAP 1 1 *(fill=#404040, color=#B0B0B0) undefined(color=#404040, fill=#B0B0B0, abbreviation="u") floor(color=#000000, fill=#D8AE6E, abbreviation="F") wall(color=#FFFFFF, fill=#444444, abbreviation="W") door(color=#FFFFFF, fill=#222222, abbreviation="D") tower(color=#FFFFFF, fill=#000000, abbreviation="T")

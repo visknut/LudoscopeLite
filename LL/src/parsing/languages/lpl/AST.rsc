@@ -34,4 +34,4 @@ data Properties
 	
 data Property
 	= occurrence(int count, str containted, str container)
-	| adjecent(str tile, str adjecentTile);
+	| adjecent(bool negation, str tile, str adjecentTile);

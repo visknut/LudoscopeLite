@@ -11,6 +11,7 @@ module execution::Execution
 
 import IO;
 import List;
+import Set;
 
 import errors::Execution;
 
@@ -36,6 +37,13 @@ public ExecutionArtifact executeProject(LudoscopeProject project)
 		artifact.errors = preparationArtifact.errors;
 		return artifact;
 	}
+	
+	LudoscopeModule ludoscopeModule = getOneFrom(preparationArtifact.hierarchy[0]);
+	int width = size(ludoscopeModule.startingState[0]);
+	int height = size(ludoscopeModule.startingState);
+
+	artifact.propertyReport.history = 
+		addStartingState(width, height, project.properties);
 	
 	/* Execute all modules. */
 	for (set[LudoscopeModule] moduleGroup <- preparationArtifact.hierarchy)

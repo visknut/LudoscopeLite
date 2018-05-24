@@ -12,6 +12,11 @@ public str cleanGrammarName(str name)
 	return removeQuotes(name[6..]);
 }
 
+public str cleanContainerName(str name)
+{
+	return name[3..];
+}
+
 public str cleanAlphabetName(str name)
 {
 	return removeQuotes(name[10..]);

@@ -73,7 +73,7 @@ data Instruction
 data Property
 	= occurrence(int count, SymbolIndex tile)
 	| occurrence(int count, SymbolIndex tile, RuleIndex rule)
-	| adjecent(SymbolIndex tile, SymbolIndex adjecentTile);
+	| adjecent(bool negation, SymbolIndex tile, SymbolIndex adjecentTile);
 	
 data SymbolIndex
 	= symbolIndex(int index);

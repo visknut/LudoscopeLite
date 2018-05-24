@@ -1,15 +1,42 @@
 module execution::lpl::PropertyHistory
 
+import IO;
 import List;
 import util::TileMap;
 import parsing::DataStructures;
 import execution::DataStructures;
 import execution::history::DataStructures;
+import execution::lpl::PropertyValidation;
 	
 alias PropertyStates = list[bool];
 
-// Generate a PropertyMap for each step in the history.
-// Check every property for each propertyMap.
+public PropertyHistory addStartingState
+(
+	int width,
+	int height,
+	list[Property] properties
+)
+{
+	StepInfo stepInfo = stepInfo(-1, -1, -1, <-1, -1>, -1);
+	ExtendedTileMaps maps =	generateSartingMaps(width, height);
+	PropertyStates propertyStates = 
+		[false | Property property <- properties];
+	
+	return [<stepInfo, maps, propertyStates>];
+}
+
+
+public ExtendedTileMaps generateSartingMaps
+(
+	int width,
+	int height
+)
+{
+	TileMap currentSymbolMap = createTileMap(-1, width, height);
+	TileMap currentModuleMap = createTileMap(-1, width, height);
+	TileMap currentRuleMap = createTileMap(-1, width, height);
+	return extendedTileMaps(currentModuleMap, currentRuleMap, currentSymbolMap);
+}
 
 public PropertyHistory getPropertyState(ExecutionArtifact artifact)
 {
@@ -19,8 +46,7 @@ public PropertyHistory getPropertyState(ExecutionArtifact artifact)
 		[checkProperty(property, artifact.propertyReport.history, maps) 
 		| Property property <- artifact.propertyReport.properties];
 	
-	artifact.propertyReport.history += [<stepInfo, maps, propertyStates>];
-	return artifact.propertyReport.history;
+	return [<stepInfo, maps, propertyStates>];
 }
 
 public ExtendedTileMaps extractExtendedTileMaps
@@ -30,29 +56,18 @@ public ExtendedTileMaps extractExtendedTileMaps
 )
 {
 	TileMap currentSymbolMap = artifact.currentState;
-	if (size(artifact.propertyReport.history) > 0)
-	{
-		PropertyHistory previousState = [last(artifact.propertyReport.history)];
-			
-		TileMap previousSymbolMap = previousState[0].mapState.tileIndex;
-		TileMap currentModuleMap = updateMap(previousState[0].mapState.moduleIndex,
-																				previousSymbolMap,
-																				currentSymbolMap,
-																				currentStep.moduleIndex);
-		TileMap currentRuleMap = updateMap(previousState[0].mapState.ruleIndex,
+	PropertyHistory previousState = [last(artifact.propertyReport.history)];
+		
+	TileMap previousSymbolMap = previousState[0].mapState.tileIndex;
+	TileMap currentModuleMap = updateMap(previousState[0].mapState.moduleIndex,
 																			previousSymbolMap,
 																			currentSymbolMap,
-																			currentStep.ruleIndex);
-		return extendedTileMaps(currentModuleMap, currentRuleMap, currentSymbolMap);
-	}
-	else
-	{
-		int width = size(currentSymbolMap[0]);
-		int height = size(currentSymbolMap);
-		TileMap currentModuleMap = createTileMap(currentStep.moduleIndex, width, height);
-		TileMap currentRuleMap = createTileMap(currentStep.ruleIndex, width, height);
-		return extendedTileMaps(currentModuleMap, currentRuleMap, currentSymbolMap);
-	}
+																			currentStep.moduleIndex);
+	TileMap currentRuleMap = updateMap(previousState[0].mapState.ruleIndex,
+																		previousSymbolMap,
+																		currentSymbolMap,
+																		currentStep.ruleIndex);
+	return extendedTileMaps(currentModuleMap, currentRuleMap, currentSymbolMap);
 }
 
 private TileMap updateMap
@@ -76,12 +91,16 @@ private TileMap updateMap
 	return toBeUpdated;
 }
 
-public StepInfo extractStepInfo(ModuleExecution history)
+public StepInfo extractStepInfo
+(
+	ModuleExecution history
+)
 {
 	int moduleIndex = history.nameIndex;
 	int recipeStep = size(history.instructions) - 1;
 	int ruleIndex = history.instructions[0].rules[0].nameIndex;
-	Coordinates matchLocation = history.instructions[0].rules[0].location;
+	Location matchLocation = <history.instructions[0].rules[0].location.x, 
+														history.instructions[0].rules[0].location.y>;
 	int rightHandIndex = history.instructions[0].rules[0].rightHandIndex;
 	StepInfo stepInfo = 
 		stepInfo(moduleIndex, recipeStep,  ruleIndex, matchLocation, rightHandIndex);

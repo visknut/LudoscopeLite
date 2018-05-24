@@ -20,16 +20,19 @@ import parsing::languages::alphabet::Syntax;
 import parsing::languages::project::Syntax;
 import parsing::languages::grammar::Syntax;
 import parsing::languages::recipe::Syntax;
+import parsing::languages::lpl::Syntax;
 
 str ALPHABETNAME = "Ludoscope Alphabet";
 str PROJECTNAME = "Ludoscope Project";
 str GRAMMARNAME = "Ludoscope Grammar";
 str RECIPENAME = "Ludoscope Recipe";
+str PROPERTIESNAME = "Ludoscope Properties";
 
 str ALPHABETABBREVIATION = "alp";
 str PROJECTABBREVIATION = "lsp";
 str GRAMMARABBREVIATION = "grm";
 str RECIPENABBREVIATION = "rcp";
+str PROPERTIESABBREVIATTION = "lpl";
 
 Contribution STYLE =
   categories
@@ -48,6 +51,7 @@ public void registerLanguages()
 	registerLanguage(PROJECTNAME, PROJECTABBREVIATION, parsing::languages::project::Syntax::parseProject);
 	registerLanguage(GRAMMARNAME, GRAMMARABBREVIATION, parseGrammar);
 	registerLanguage(RECIPENAME, RECIPENABBREVIATION, parseRecipe);
+	registerLanguage(PROPERTIESNAME, PROPERTIESABBREVIATTION, parseLpl);
 }
 
 public void addSyntaxHighLights()
@@ -61,6 +65,7 @@ public void addSyntaxHighLights()
   registerContributions(PROJECTNAME, styleContributions);
   registerContributions(GRAMMARNAME, styleContributions);
   registerContributions(RECIPENAME, styleContributions);
+  registerContributions(PROPERTIESNAME, styleContributions);
 }
 
 public void addMenuItems()

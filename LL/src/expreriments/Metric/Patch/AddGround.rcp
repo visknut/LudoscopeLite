@@ -1,1 +1,0 @@
-CreateTileMap(6, 6, "floor") ExecuteRule("addWalls", 1)
