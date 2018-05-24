@@ -8,14 +8,14 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-module metrics::madWrapper::DataTransformation
+module analysis::madWrapper::DataTransformation
 
 import List;
 import util::mad::Metric;
 import util::mad::AST;
 
-import metrics::madWrapper::MADFramework;
-import metrics::madWrapper::SymbolHierarchy;
+import analysis::madWrapper::MADFramework;
+import analysis::madWrapper::SymbolHierarchy;
 
 import parsing::DataStructures;
 

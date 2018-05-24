@@ -18,7 +18,8 @@ import parsing::languages::project::AST;
 import parsing::languages::alphabet::AST;
 import parsing::languages::recipe::AST;
 import parsing::languages::grammar::AST;
-import parsing::languages::lpl::AST;
+
+import lpl::language::AST;
 
 import parsing::DataStructures;
 import errors::Parsing;
@@ -28,7 +29,7 @@ alias AbstractProjectList = list[parsing::languages::project::AST::Project];
 alias AbstractGrammarMap = map[str, parsing::languages::grammar::AST::Grammar] ;
 alias AbstractAlphabetMap = map[str, parsing::languages::alphabet::AST::Alphabet];
 alias AbstractRecipeMap = map[str, parsing::languages::recipe::AST::Recipe];
-alias AbstractPropertyList = list[parsing::languages::lpl::AST::Properties];
+alias AbstractPropertyList = list[lpl::language::AST::Properties];
 
 data SyntaxTree
 	= syntaxTree(AbstractProjectList project,

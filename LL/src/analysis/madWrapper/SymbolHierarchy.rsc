@@ -8,7 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-module metrics::madWrapper::SymbolHierarchy
+module analysis::madWrapper::SymbolHierarchy
 
 import List;
 import parsing::DataStructures;

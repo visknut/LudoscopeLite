@@ -22,7 +22,9 @@ import execution::instructions::Instructions;
 import execution::DataStructures;
 import execution::ModuleHierarchy;
 import execution::history::DataStructures;
-import execution::lpl::PropertyHistory;
+
+import analysis::lplWrapper::PropertyHistory;
+import lpl::DataStructures;
 
 public ExecutionArtifact executeProject(LudoscopeProject project)
 {
@@ -38,12 +40,12 @@ public ExecutionArtifact executeProject(LudoscopeProject project)
 		return artifact;
 	}
 	
+	/* Initiliaze Property Report */
 	LudoscopeModule ludoscopeModule = getOneFrom(preparationArtifact.hierarchy[0]);
 	int width = size(ludoscopeModule.startingState[0]);
 	int height = size(ludoscopeModule.startingState);
-
 	artifact.propertyReport.history = 
-		addStartingState(width, height, project.properties);
+		initializeReport(width, height, project.properties);
 	
 	/* Execute all modules. */
 	for (set[LudoscopeModule] moduleGroup <- preparationArtifact.hierarchy)

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// Language Registration
+// Execution Data Structures
 // @brief        This file contains datastructures needed for execution an LL
 //							 project.
 // @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
@@ -10,11 +10,13 @@
 
 module execution::DataStructures
 
-import execution::lpl::PropertyHistory;
-import execution::lpl::PropertyValidation;
+import analysis::lplWrapper::PropertyHistory;
+import lpl::PropertyValidation;
 import execution::history::DataStructures;
 import parsing::DataStructures;
 import errors::Execution;
+
+import lpl::DataStructures;
 
 alias OutputMap = map[int, TileMap];
 alias ModuleHierarchy = list[set[LudoscopeModule]];
@@ -29,26 +31,14 @@ data ExecutionArtifact =
 	
 data PreparationArtifact =
 	preparationArtifact(ModuleHierarchy hierarchy, list[ExecutionError] errors);
+	
+alias ExecutionHistory = list[ModuleExecution];
 
-//////////////////////////////////////////////////////////////////////////////
-// LPL.
-//////////////////////////////////////////////////////////////////////////////
-
-data PropertyReport 
-	= propertyReport(list[Property] properties, PropertyHistory history);
-
-alias PropertyHistory = lrel[StepInfo stepInfo, 
-													 ExtendedTileMaps mapState, 
-													 list[bool] propertyStates];
-													 
-data StepInfo =
-	stepInfo(int moduleIndex, 
-					 int recipeStep,
-					 int ruleIndex,
-					 Location matchLocation, 
-					 int rightHandIndex);
-
-data ExtendedTileMaps
-	=	extendedTileMaps(TileMap moduleIndex, 
-						 TileMap ruleIndex, 
-						 TileMap tileIndex);
+data ModuleExecution 
+	= moduleExecution(int nameIndex, list[InstructionExecution] instructions);
+	
+data InstructionExecution
+	= instructionExecution(list[RuleExecution] rules);
+	
+data RuleExecution 
+	= ruleExecution(int nameIndex, int rightHandIndex, Coordinates location);

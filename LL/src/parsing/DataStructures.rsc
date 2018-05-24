@@ -11,9 +11,11 @@
 module parsing::DataStructures
 
 import errors::Parsing;
+import lpl::DataStructures;
 
-alias Tile = int;
 alias TileMap = list[list[Tile]];
+alias Tile = int;
+
 alias SymbolNameList = list[str];
 alias AlphabetMap = map[str, SymbolNameList];
 alias ModuleNameList = list[str];
@@ -65,21 +67,3 @@ data Instruction
 	= itterateRule(int ruleNameIndex)
 	| executeRule(int ruleNameIndex, int itterations)
 	| executeGrammar();
-
-///////////////////////////////////////////////////////////////////////////////
-// Lpl data.
-///////////////////////////////////////////////////////////////////////////////
-
-data Property
-	= occurrence(int count, SymbolIndex tile)
-	| occurrence(int count, SymbolIndex tile, RuleIndex rule)
-	| adjecent(bool negation, SymbolIndex tile, SymbolIndex adjecentTile);
-	
-data SymbolIndex
-	= symbolIndex(int index);
-
-data RuleIndex
-	= ruleIndex(int index);
-	
-data ModuleIndex
-	= moduleIndex(int index);

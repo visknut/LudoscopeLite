@@ -15,31 +15,33 @@ import parsing::DataStructures;
 import parsing::Parser;
 import parsing::transformations::TransformSyntaxTree;
 import parsing::languages::alphabet::AST;
-import parsing::languages::lpl::AST;
 import tests::parsing::Utility;
+
+import lpl::language::AST;
+import lpl::DataStructures;
 
 SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), [], []);
 
 public bool runAllTests()
 {
-	return tryParsingAdjecency()
+	return tryParsingAdjacency()
 	&& tryParsingOccurrence()
 	&& tryParsingOccurrenceAndContainment()
 	&& nameNotFound()
 	&& symbolNameFound()
-	&& transformAdjecency()
-	&& transformAdjecencyIncorrectType();
+	&& transformAdjacency()
+	&& transformAdjacencyIncorrectType();
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Tests for parser.
 //////////////////////////////////////////////////////////////////////////////
 
-private test bool tryParsingAdjecency()
+private test bool tryParsingAdjacency()
 {
 	/* Arrange */
 	loc fileLocation = 
-		|project://LL/src/tests/correctTestData/isolatedProperties/adjecent.lpl|;
+		|project://LL/src/tests/correctTestData/isolatedProperties/adjacency.lpl|;
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -116,11 +118,9 @@ private test bool transformOccurrence()
 		transformationArtifact(ludoscopeProject([], ("alphabet" : ["defined"]),	[], [], []), []);
 	loc fileLocation =  
     |project://LL/src/tests/correctTestData/project0/Project.lsp|; 
-	Property property = 
-		parsing::languages::lpl::AST::occurrence(1, "defined", "");
+	Property property = occurrence(1, "defined", "");
 	
-	parsing::DataStructures::Property expectedResult = 
-		occurrence(1, symbolIndex(0));
+	lpl::DataStructures::Property expectedResult = occurrence(1, symbolIndex(0));
 
 	/* Act */
 	TransformationArtifact result = 
@@ -130,17 +130,16 @@ private test bool transformOccurrence()
 	return expectedResult == head(result.project.properties);
 }
 
-private test bool transformOccurrenceAndContainment()
+public test bool transformOccurrenceAndContainment()
 {
 	/* Arrange */
 	TransformationArtifact artifact = 
 		transformationArtifact(ludoscopeProject([], ("alphabet" : ["defined"]),	[], ["ruleName"], []), []);
 	loc fileLocation =  
     |project://LL/src/tests/correctTestData/project0/Project.lsp|; 
-	Property property = 
-		parsing::languages::lpl::AST::occurrence(1, "defined", "ruleName");
+	lpl::language::AST::Property property = occurrence(1, "defined", "in ruleName");
 	
-	parsing::DataStructures::Property expectedResult = 
+	lpl::DataStructures::Property expectedResult = 
 		occurrence(1, symbolIndex(0), ruleIndex(0));
 
 	/* Act */
@@ -151,18 +150,17 @@ private test bool transformOccurrenceAndContainment()
 	return expectedResult == head(result.project.properties);
 }
 
-private test bool transformAdjecency()
+private test bool transformAdjacency()
 {
 	/* Arrange */
 	TransformationArtifact artifact = 
 		transformationArtifact(ludoscopeProject([], ("alphabet" : ["defined", "undefined"]),	[], ["ruleName"], []), []);
 	loc fileLocation =  
     |project://LL/src/tests/correctTestData/project0/Project.lsp|; 
-	Property property = 
-		parsing::languages::lpl::AST::adjecent("defined", "undefined");
+	lpl::language::AST::Property property = adjacency(true, "defined", "undefined");
 	
-	parsing::DataStructures::Property expectedResult = 
-		adjecent(symbolIndex(0), symbolIndex(1));
+	lpl::DataStructures::Property expectedResult = 
+		adjacency(true, symbolIndex(0), symbolIndex(1));
 
 	/* Act */
 	TransformationArtifact result = 
@@ -172,15 +170,14 @@ private test bool transformAdjecency()
 	return expectedResult == head(result.project.properties);
 }
 
-private test bool transformAdjecencyIncorrectType()
+private test bool transformAdjacencyIncorrectType()
 {
 	/* Arrange */
 	TransformationArtifact artifact = 
 		transformationArtifact(ludoscopeProject([], ("alphabet" : ["defined"]),	[], ["ruleName"], []), []);
 	loc fileLocation =  
     |project://LL/src/tests/correctTestData/project0/Project.lsp|; 
-	Property property = 
-		parsing::languages::lpl::AST::adjecent("defined", "ruleName");
+	Property property = adjacency(true, "defined", "ruleName");
 
 	/* Act */
 	TransformationArtifact result = 

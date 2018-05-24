@@ -18,7 +18,7 @@ public bool runAllTests()
 	&& doubleMatchInSmallGrid();
 }
 
-private test bool singleMatchInSmallGrid()
+public test bool singleMatchInSmallGrid()
 {
 	/* Arrange */
 	TileMap pattern = [[1],[1],[1]];

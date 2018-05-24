@@ -21,7 +21,9 @@ import parsing::transformations::TransformInstructions;
 import parsing::languages::grammar::AST;
 import parsing::languages::alphabet::AST;
 import parsing::languages::recipe::AST;
-import parsing::languages::lpl::AST;
+
+import lpl::DataStructures;
+import lpl::language::AST;
 
 import errors::Parsing;
 
@@ -316,12 +318,12 @@ private TransformationArtifact transformProperties
 public TransformationArtifact transformProperty
 (
 	TransformationArtifact artifact,
-	adjecent(bool negation, str tile, str adjecentTile),
+	adjacency(bool negation, str tile, str adjecentTile),
 	loc propertyLocation
 )
 {
 	Property property =
-		parsing::DataStructures::adjecent(negation, symbolIndex(-1), symbolIndex(-1));
+		lpl::DataStructures::adjacency(negation, symbolIndex(-1), symbolIndex(-1));
 		
 	Name tileType = findName(artifact, tile);
 	switch (tileType)

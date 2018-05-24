@@ -4,5 +4,6 @@
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/MAD"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/LPL"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

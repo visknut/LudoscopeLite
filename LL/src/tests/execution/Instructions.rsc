@@ -14,7 +14,10 @@ import execution::DataStructures;
 import execution::history::DataStructures;
 import execution::instructions::Instructions;
 import parsing::DataStructures;
-import execution::lpl::PropertyHistory;
+
+import analysis::lplWrapper::PropertyHistory;
+import lpl::DataStructures;
+
 
 public bool runAllTests()
 {
@@ -35,14 +38,13 @@ public test bool itterateRuleSingleResult()
 	TileMap startingMap = [[0, 0], [1, 0]];
 	ExecutionArtifact artifact = 
 		executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history = addStartingState(2, 2, []);
+	artifact.propertyReport.history = initializeReport(2, 2, []);
 	
 	TileMap expectedResult = [[0, 0], [2, 0]];
 	
 	/* Act */
 	ExecutionArtifact result = 
 		executeInstruction(artifact, rules, itterateRule(0));
-	
 	/* Assert */
 	return expectedResult == result.currentState;
 }
@@ -56,7 +58,7 @@ private test bool itterateRuleMultipleResults()
 	TileMap startingMap = [[1, 0], [1, 0]];
 	ExecutionArtifact artifact = 
 		executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history += addStartingState(2, 2, []);
+	artifact.propertyReport.history += initializeReport(2, 2, []);
 	
 	list[TileMap] expectedResults = [[[1, 0], [2, 0]],
 																	 [[2, 0], [1, 0]]];
@@ -78,7 +80,7 @@ private test bool executeRuleSingleResult()
 	TileMap startingMap = [[1, 1], [1, 1]];
 	ExecutionArtifact artifact 
 		= executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history += addStartingState(2, 2, []);
+	artifact.propertyReport.history += initializeReport(2, 2, []);
 	
 	TileMap expectedResult = [[2, 2], [2, 2]];
 	int itterations = 4;
@@ -100,7 +102,7 @@ private test bool executeRuleMultipleResults()
 	TileMap startingMap = [[1, 1], [1, 1]];
 	ExecutionArtifact artifact 
 		= executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history += addStartingState(2, 2, []);
+	artifact.propertyReport.history += initializeReport(2, 2, []);
 	
 	list[TileMap] expectedResults = [[[1, 2], [2, 2]],
 																	 [[2, 1], [2, 2]],
@@ -125,7 +127,7 @@ private test bool executeGrammarOneRule()
 	TileMap startingMap = [[1, 1], [1, 1]];
 	ExecutionArtifact artifact 
 		= executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history += addStartingState(2, 2, []);
+	artifact.propertyReport.history += initializeReport(2, 2, []);
 	
 	TileMap expectedResult = [[2, 2], [2, 2]];
 	
@@ -146,7 +148,7 @@ public test bool executeGrammarMultipleRules()
 	TileMap startingMap = [[1, 1], [1, 1]];
 	ExecutionArtifact artifact 
 		= executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history += addStartingState(2, 2, []);
+	artifact.propertyReport.history += initializeReport(2, 2, []);
 	
 	TileMap expectedResult = [[3, 3], [3, 3]];
 	

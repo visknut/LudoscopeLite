@@ -9,7 +9,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-module metrics::madWrapper::MADFramework
+module analysis::madWrapper::MADFramework
 
 import List;
 import util::Integer;
@@ -19,8 +19,8 @@ import parsing::DataStructures;
 import execution::DataStructures;
 import execution::ModuleHierarchy;
 
-import metrics::madWrapper::SymbolHierarchy;
-import metrics::madWrapper::DataTransformation;
+import analysis::madWrapper::SymbolHierarchy;
+import analysis::madWrapper::DataTransformation;
 
 alias ProjectScore = map[int, ModuleScore];
 alias ModuleScore = map[int, list[RightHandScore]];

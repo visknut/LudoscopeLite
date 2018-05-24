@@ -11,9 +11,9 @@
 module tests::metrics::MAD
 
 import IO;
-import metrics::madWrapper::MADFramework;
-import metrics::madWrapper::DataTransformation;
-import metrics::madWrapper::SymbolHierarchy;
+import analysis::madWrapper::MADFramework;
+import analysis::madWrapper::DataTransformation;
+import analysis::madWrapper::SymbolHierarchy;
 
 import parsing::DataStructures;
 import execution::DataStructures;
@@ -28,7 +28,7 @@ public bool runAllTests()
 	&& MADFramework();
 }
 
-private test bool extractSymbolHierarchy()
+public test bool extractSymbolHierarchy()
 {
 	/* Arrange */
  	Rule rule1 = rule(reflections(false,false,false),[[1]],[[[2]]]);

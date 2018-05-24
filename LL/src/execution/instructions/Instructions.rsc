@@ -15,11 +15,11 @@ import List;
 import Map;
 
 import parsing::DataStructures;
-
-import execution::history::DataStructures;
 import execution::DataStructures;
 import execution::instructions::Matching;
-import execution::lpl::PropertyHistory;
+
+import analysis::lplWrapper::PropertyHistory;
+import lpl::DataStructures;
 
 // TODO: replace itterateRule with something that stops when tileMap doesn't change.
 public ExecutionArtifact executeInstruction
@@ -67,9 +67,10 @@ public ExecutionArtifact executeInstruction
 					replacement[j][i];
 			}
 		}
-		artifact.propertyReport.history += getPropertyState(artifact);
+		
+		/* Update property report. */ //#NULL
+		artifact.propertyReport.history += updatePropertyReport(artifact);
 	}
-	
 	return artifact;
 }
 
