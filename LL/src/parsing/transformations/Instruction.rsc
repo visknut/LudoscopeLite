@@ -8,12 +8,14 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-module parsing::transformations::TransformInstructions
+module parsing::transformations::Instruction
 
 import List;
 import parsing::DataStructures;
 import parsing::languages::recipe::AST;
 import util::string;
+
+alias AbstractInstruction = parsing::languages::recipe::AST::Instruction;
 
 public Instruction parseInstruction
 (

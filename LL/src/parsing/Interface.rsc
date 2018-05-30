@@ -12,7 +12,7 @@ module parsing::Interface
 import List;
 import parsing::Parser;
 import parsing::DataStructures;
-import parsing::transformations::TransformSyntaxTree;
+import parsing::transformations::CompleteSyntaxTree;
 import parsing::check::Interface;
 
 public TransformationArtifact parseAndTransform(loc projectFile)
