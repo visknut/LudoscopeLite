@@ -12,15 +12,14 @@ module parsing::DataStructures
 
 import errors::Parsing;
 import lpl::DataStructures;
+import lpl::language::AST;
+import parsing::languages::alphabet::AST;
 
 alias TileMap = list[list[Tile]];
-alias Tile = int;
+alias Tile = str;
 
-alias SymbolNameList = list[str];
-alias AlphabetMap = map[str, SymbolNameList];
-alias ModuleNameList = list[str];
-alias RuleNameList = list[str];
-alias RuleMap	= map[int, Rule];
+alias AlphabetMap = map[str, Alphabet];
+alias RuleMap	= map[str, Rule];
 alias Recipe = list[Instruction];
 
 data TransformationArtifact
@@ -30,20 +29,12 @@ data TransformationArtifact
 data LudoscopeProject
 	= ludoscopeProject(list[LudoscopeModule] modules, 
 		AlphabetMap alphabets,
-		ModuleNameList moduleNames,
-		RuleNameList ruleNames,
-		list[Property] properties)
+		LevelSpecification specification)
 	| undefinedProject();
 	
 data LudoscopeModule
-	= ludoscopeModule(int nameIndex,
-		list[int] inputs,
-		str alphabetName,
-		TileMap startingState, 
-		RuleMap rules, 
-		Recipe recipe)
-	| unfinishedLudoscopeModule(int nameIndex,
-		list[str] inputStrings,
+	= ludoscopeModule(str name,
+		list[str] inputs,
 		str alphabetName,
 		TileMap startingState, 
 		RuleMap rules, 
@@ -64,6 +55,6 @@ data Coordinates
 	= coordinates(int x, int y);
 
 data Instruction
-	= itterateRule(int ruleNameIndex)
-	| executeRule(int ruleNameIndex, int itterations)
+	= itterateRule(str ruleName)
+	| executeRule(str ruleName, int itterations)
 	| executeGrammar();

@@ -21,8 +21,7 @@ public Instruction parseInstruction
 	iterateRule(bool commented, str ruleName)
 )
 {
-	int ruleIndex = indexOf(artifact.project.ruleNames, removeQuotes(ruleName));
-	return itterateRule(ruleIndex);
+	return itterateRule(removeQuotes(ruleName));
 }
 
 public Instruction parseInstruction
@@ -31,6 +30,5 @@ public Instruction parseInstruction
 	executeRule(bool commented, str ruleName, int executions)
 )
 {
-	int ruleIndex = indexOf(artifact.project.ruleNames, removeQuotes(ruleName));
-	return executeRule(ruleIndex, executions);
+	return executeRule(removeQuotes(ruleName), executions);
 }

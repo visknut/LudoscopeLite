@@ -26,11 +26,11 @@ public ExecutionArtifact executeInstruction
 (
 	ExecutionArtifact artifact,
 	RuleMap rules, 
-	executeRule(int ruleNameIndex, int itterations))
+	executeRule(str ruleName, int itterations))
 {
 	for (int i <- [0 .. itterations])
 	{
-		artifact = executeInstruction(artifact, rules, itterateRule(ruleNameIndex));
+		artifact = executeInstruction(artifact, rules, itterateRule(ruleName));
 	}
 	return artifact;
 }
@@ -39,10 +39,10 @@ public ExecutionArtifact executeInstruction
 (
 	ExecutionArtifact artifact,
 	RuleMap rules, 
-	itterateRule(int ruleNameIndex)
+	itterateRule(str ruleName)
 )
 {
-	Rule rule = rules[ruleNameIndex];
+	Rule rule = rules[ruleName];
 	list[Coordinates] matches = 
 		findPatternInGrid(artifact.currentState, rule.leftHand);
 
@@ -52,7 +52,7 @@ public ExecutionArtifact executeInstruction
 		TileMap replacement = getOneFrom(rule.rightHands);
 		
 		RuleExecution ruleExecution = 
-			ruleExecution(ruleNameIndex, indexOf(rule.rightHands, replacement), match);
+			ruleExecution(ruleName, indexOf(rule.rightHands, replacement), match);
 		artifact.history[0].instructions[0].rules = 
 			push(ruleExecution, artifact.history[0].instructions[0].rules);
 
@@ -68,8 +68,8 @@ public ExecutionArtifact executeInstruction
 			}
 		}
 		
-		/* Update property report. */ //#NULL
-		artifact.propertyReport.history += updatePropertyReport(artifact);
+		/* Update property report. */
+		artifact.propertyReport = updatePropertyReport(artifact);
 	}
 	return artifact;
 }
@@ -84,12 +84,12 @@ public ExecutionArtifact executeInstruction
 	RuleMap currentRules = rules;
 	while (true)
 	{
-		int ruleNameIndex = getOneFrom(currentRules);
+		str ruleName = getOneFrom(currentRules);
 		TileMap oldTileMap = artifact.currentState;
-		artifact = executeInstruction(artifact, rules, itterateRule(ruleNameIndex));
+		artifact = executeInstruction(artifact, rules, itterateRule(ruleName));
 		if (oldTileMap == artifact.currentState)
 		{
-			currentRules = delete(currentRules, ruleNameIndex);
+			currentRules = delete(currentRules, ruleName);
 		}
 		else
 		{

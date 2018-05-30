@@ -17,7 +17,7 @@ import tests::parsing::Recipe;
 import tests::parsing::Project;
 import tests::parsing::Checking;
 import tests::parsing::CompleteProjects;
-import tests::parsing::Properties;
+import tests::parsing::LevelSpecification;
 
 import tests::execution::Matching;
 import tests::execution::Instructions;
@@ -38,7 +38,7 @@ public bool runAllTests()
 	&& instructionsTests()
 	&& moduleHierarchyTests()
 	&& metricsTests()
-	&& propertiesTests()
+	&& levelSpecificationTests()
 	&& completeProjectsExecutionTests;
 }
 
@@ -92,9 +92,9 @@ private test bool metricsTests()
 	return tests::metrics::MAD::runAllTests();
 }
 
-private test bool propertiesTests()
+private test bool levelSpecificationTests()
 {
-	return tests::parsing::Properties::runAllTests();
+	return tests::parsing::LevelSpecification::runAllTests();
 }
 
 private test bool completeProjectsExecutionTests()

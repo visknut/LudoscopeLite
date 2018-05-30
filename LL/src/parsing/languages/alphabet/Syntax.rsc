@@ -24,7 +24,8 @@ syntax MapType
 	| string: "STRING"
 	| graph: "GRAPH"
 	| shape: "SHAPE";
-	
+
+// TODO: use variable names (as in LPL).	
 syntax Symbol
 	= symbol: NAME "(" 
 	"color" COLORCODE

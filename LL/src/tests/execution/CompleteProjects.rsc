@@ -18,6 +18,11 @@ import execution::Execution;
 import parsing::DataStructures;
 import tests::parsing::Utility;
 import parsing::Interface;
+import util::TileMap;
+
+import lpl::language::AST;
+import lpl::DataStructures;
+import analysis::lplWrapper::PropertyHistory;
 
 public bool runAllTests()
 {
@@ -29,30 +34,20 @@ public bool runAllTests()
 //////////////////////////////////////////////////////////////////////////////
 
 // TODO: extract parsed project to module.
-private test bool executeProject0()
+// TOOD: generate tile maps.
+public test bool executeProject0()
 {
 	/* Arrange */
-	AlphabetMap alphabetMap = ("Alphabet":["*", "undefined", "defined"]);
+	AlphabetMap alphabetMap = ();
 	LudoscopeModule module1 = 
-		ludoscopeModule(0,[],"Alphabet",
-		[[1,1,1,1,1],
-		 [1,1,1,1,1],
-		 [1,1,1,1,1],
-		 [1,1,1,1,1],
-		 [1,1,1,1,1]],
-		(0 : rule(reflections(false,false,false),[[1]],[[[2]]])),
-		[executeRule(0, 100)]);
+		ludoscopeModule("module1",[],"Alphabet",
+		createTileMap("1", 5, 5),
+		("ruleName" : rule(reflections(false,false,false),[["1"]],[[["2"]]])),
+		[executeRule("ruleName", 100)]);
+	LudoscopeProject project = ludoscopeProject([module1], (), specification([]));
 		
-	TileMap expectedOutput =
-		[[2,2,2,2,2],
-		 [2,2,2,2,2],
-		 [2,2,2,2,2],
-		 [2,2,2,2,2],
-		 [2,2,2,2,2]];
-	
-	LudoscopeProject project = ludoscopeProject([module1], 
-		alphabetMap, ["Module"], ["ruleName"], []);
-	
+	TileMap expectedOutput = createTileMap("2", 5, 5);
+
 	/* Act */
 	ExecutionArtifact result = executeProject(project);
 	

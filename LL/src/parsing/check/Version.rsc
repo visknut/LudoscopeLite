@@ -8,7 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-module parsing::check::CheckVersion
+module parsing::check::Version
 
 import parsing::languages::project::AST;
 import parsing::languages::grammar::AST;

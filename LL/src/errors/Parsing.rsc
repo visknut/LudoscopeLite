@@ -21,7 +21,7 @@ data ParsingError
 	| rightAndLeftHandSize(int leftWidth, int leftHeight, 
 		int rightWidth, int rightHeight, loc fileLocation)
 	| propertyName(str propertyName, loc fileLocation)
-	| structureType(str structureType, loc fileLocation);
+	| nameType(str expectedType, str foundType, loc fileLocation);
 	
 str errorToString(parsing(loc fileLocation))
 {
@@ -95,10 +95,9 @@ str errorToString(propertyName(str propertyName, loc fileLocation))
 		Line: <fileLocation.begin.line>";
 }
 
-str errorToString(structureType(str structureType, loc fileLocation))
+str errorToString(nameType(str expectedType, str foundType, loc fileLocation))
 {
-	return "Error: the identifier of type <structureType>
-	cannot be located in the syntax Tree.
+	return "Error: A name referenced to a <foundType>, while a <expectedType> name was expected.
 		File: <fileLocation.path>
 		Line: <fileLocation.begin.line>";
 }

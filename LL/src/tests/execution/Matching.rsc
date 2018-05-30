@@ -21,8 +21,8 @@ public bool runAllTests()
 public test bool singleMatchInSmallGrid()
 {
 	/* Arrange */
-	TileMap pattern = [[1],[1],[1]];
-	TileMap grid = [[1, 0, 0], [1, 0, 0], [1, 0, 0]];
+	TileMap pattern = [["1"],["1"],["1"]];
+	TileMap grid = [["1", "0", "0"], ["1", "0", "0"], ["1", "0", "0"]];
 	list[Coordinates] expectedResult = [coordinates(0, 0)];
 	
 	/* Act */
@@ -35,8 +35,8 @@ public test bool singleMatchInSmallGrid()
 private test bool doubleMatchInSmallGrid()
 {
 	/* Arrange */
-	TileMap pattern = [[1],[1],[1]];
-	TileMap grid = [[1, 0, 1], [1, 0, 1], [1, 0, 1]];
+	TileMap pattern = [["1"],["1"],["1"]];
+	TileMap grid = [["1", "0", "1"], ["1", "0", "1"], ["1", "0", "1"]];
 	list[Coordinates] expectedResult = [coordinates(0, 0), coordinates(2, 0)];
 	
 	/* Act */

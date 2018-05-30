@@ -18,7 +18,7 @@ import errors::Execution;
 
 import lpl::DataStructures;
 
-alias OutputMap = map[int, TileMap];
+alias OutputMap = map[str, TileMap];
 alias ModuleHierarchy = list[set[LudoscopeModule]];
 alias Location =  tuple[int x, int y];
 
@@ -35,10 +35,10 @@ data PreparationArtifact =
 alias ExecutionHistory = list[ModuleExecution];
 
 data ModuleExecution 
-	= moduleExecution(int nameIndex, list[InstructionExecution] instructions);
+	= moduleExecution(str name, list[InstructionExecution] instructions);
 	
 data InstructionExecution
 	= instructionExecution(list[RuleExecution] rules);
 	
 data RuleExecution 
-	= ruleExecution(int nameIndex, int rightHandIndex, Coordinates location);
+	= ruleExecution(str name, int rightHandIndex, Coordinates location);

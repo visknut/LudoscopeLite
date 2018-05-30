@@ -19,7 +19,7 @@ import execution::DataStructures;
 public PreparationArtifact extractModuleHierarchy(LudoscopeProject project)
 {
 	list[LudoscopeModule] modules = project.modules;
-	list[int] checkedModules = [];
+	list[str] checkedModules = [];
 	PreparationArtifact artifact = preparationArtifact([], []);
 	while (modules != [])
 	{
@@ -28,14 +28,13 @@ public PreparationArtifact extractModuleHierarchy(LudoscopeProject project)
 			
 		if (readyModules == [])
 		{
-			list[int] moduleIndexes = [m.nameIndex | LudoscopeModule m <- modules];
-			list[str] moduleNames = [project.moduleNames[moduleIndex] | int moduleIndex <- moduleIndexes]; 
+			list[str] moduleNames = [m.name | LudoscopeModule m <- modules]; 
 			artifact.errors += [moduleConnection(moduleNames)];
 			return artifact;
 		}
 		
 		artifact.hierarchy += [toSet(readyModules)];
-		checkedModules += [readyModule.nameIndex | LudoscopeModule readyModule <- readyModules];
+		checkedModules += [readyModule.name | LudoscopeModule readyModule <- readyModules];
 		modules -= readyModules;
 	}
 	return artifact;
@@ -44,7 +43,7 @@ public PreparationArtifact extractModuleHierarchy(LudoscopeProject project)
 private list[LudoscopeModule] findReadyModules
 (
 	list[LudoscopeModule] modules,
-	list[int] checkedModules
+	list[str] checkedModules
 )
 {
 	list[LudoscopeModule] readyModules = [m | 
@@ -54,9 +53,9 @@ private list[LudoscopeModule] findReadyModules
 }
 
 
-private bool inputReady(LudoscopeModule ludoscopeModule, list[int] checkedModules)
+private bool inputReady(LudoscopeModule ludoscopeModule, list[str] checkedModules)
 {
-	list[int] inputsRemaining = [n | 
+	list[str] inputsRemaining = [n | 
 		n <- ludoscopeModule.inputs, 
 		n notin checkedModules];
 	return inputsRemaining == [];

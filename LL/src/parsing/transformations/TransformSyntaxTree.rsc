@@ -34,15 +34,9 @@ alias AbstractInstruction = parsing::languages::recipe::AST::Instruction;
 alias AbstractGrammar = parsing::languages::grammar::AST::Grammar;
 alias AbstractRule = parsing::languages::grammar::AST::Rule;
 
-data Name
- = moduleName(int nameIndex)
- | ruleName(int nameIndex)
- | symbolName(int nameIndex)
- | undefinedName(str name);
-
 public TransformationArtifact transformSyntaxTree(SyntaxTree syntaxTree)
 {
-	LudoscopeProject project = ludoscopeProject([], (), [], [], []);
+	LudoscopeProject project = ludoscopeProject([], (), specification([]));
 	TransformationArtifact artifact = transformationArtifact(project, []);
 	
 	artifact = transformProject(artifact, syntaxTree);
@@ -71,42 +65,17 @@ private TransformationArtifact transformProject(TransformationArtifact artifact,
 			str executionType, str recipe, str showMembers, str alwaysStartWithToken) :
 		{
 			list[str] cleanInputs = [removeQuotes(input) | str input <- inputs];
-			int moduleNameIndex = size(artifact.project.moduleNames);
-			artifact.project.moduleNames += [cleanGrammarName(name)];
 			artifact.project.modules +=
-				[unfinishedLudoscopeModule(moduleNameIndex, 
+				[ludoscopeModule(cleanGrammarName(name), 
 												cleanInputs,
-												cleanAlphabetName(alphabet), 
+												cleanAlphabetName(alphabet),
 												[[]], 
 												(), 
 												[])];
 		}
 	}
 	
-	artifact = replaceInputStrings(artifact);
 	return artifact;
-}
-
-private TransformationArtifact replaceInputStrings
-(
-	TransformationArtifact artifact
-)
-{
-	return visit (artifact)
-	{
-		case unfinishedLudoscopeModule(int nameIndex,
-		list[str] inputStrings,
-		str alphabetName,
-		TileMap startingState, 
-		RuleMap rules, 
-		Recipe recipe) => 
-		ludoscopeModule(nameIndex,
-		[indexOf(artifact.project.moduleNames, inputName) | str inputName <- inputStrings],
-		alphabetName,
-		startingState, 
-		rules, 
-		recipe)
-	};
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -118,13 +87,8 @@ private TransformationArtifact transformAplhabets(TransformationArtifact artifac
 {
 	for (str fileName <- syntaxTree.alphabets)
 	{
-		SymbolNameList transformendAlphabet = [];
 		AbstractAlphabet abstractAlphabet = syntaxTree.alphabets[fileName];
-		for (Symbol symbol <- abstractAlphabet.symbols)
-		{
-			transformendAlphabet += [symbol.name];
-		}
-		artifact.project.alphabets += (fileName : transformendAlphabet);
+		artifact.project.alphabets += (fileName : abstractAlphabet);
 	}
 	return artifact;
 }
@@ -155,14 +119,10 @@ private TransformationArtifact transformRecipes(TransformationArtifact artifact,
 
 private TransformationArtifact addEmptyRecipes(TransformationArtifact artifact)
 {
-	visit(artifact)
+	artifact = visit(artifact)
 	{
-		case ludoscopeModule(nameIndex, inputs,	alphabetName,	startingState, rules, []) : 
-		{
-			str name = artifact.project.moduleNames[nameIndex];
-			int moduleIndex = findModuleIndex(name, artifact);
-			artifact.project.modules[moduleIndex].recipe += [executeGrammar()];
-		}
+		case ludoscopeModule(name, inputs,	alphabetName,	startingState, rules, []) =>
+			ludoscopeModule(name, inputs,	alphabetName,	startingState, rules, [executeGrammar()])
 	}
 	return artifact;
 }
@@ -209,9 +169,7 @@ private TransformationArtifact parseRules(TransformationArtifact artifact,
 			
 		Rule newRule = parsing::DataStructures::rule(reflections, leftHand, rightHands);
 		
-		int ruleNameIndex = size(artifact.project.ruleNames);
-		artifact.project.ruleNames += [abstractRule.name];
-		transformedRules += (ruleNameIndex : newRule);
+		transformedRules += (abstractRule.name : newRule);
 	}
 	artifact.project.modules[moduleIndex].rules = transformedRules;
 	return artifact;
@@ -250,13 +208,12 @@ private TileMap parseExpression(TransformationArtifact artifact,
 {
 	TileMap newTileMap = [];
 	str alphabetName = artifact.project.modules[moduleIndex].alphabetName;
-	SymbolNameList alphabet = artifact.project.alphabets[alphabetName];
 	
 	int i = 0;
 	list[Tile] row = [];
 	for (Symbol symbol <- symbols)
 	{
-		row += [indexOf(alphabet, symbol.name)];
+		row += [symbol.name];
 		i += 1;
 		if (i == width)
 		{
@@ -275,13 +232,12 @@ private TileMap parseExpression(TransformationArtifact artifact,
 {
 	TileMap newTileMap = [];
 	str alphabetName = artifact.project.modules[moduleIndex].alphabetName;
-	SymbolNameList alphabet = artifact.project.alphabets[alphabetName];
 	
 	int i = 0;
 	list[Tile] row = [];
 	for (LeftHandSymbol symbol <- symbols)
 	{
-		row += [indexOf(alphabet, symbol.name)];
+		row += symbol.name;
 		i += 1;
 		if (i == width)
 		{
@@ -306,191 +262,27 @@ private TransformationArtifact transformProperties
 {
 	visit(syntaxTree)
 	{
-		case Property property:
+		case LevelSpecification specification:
 		{
-			artifact = 
-				transformProperty(artifact, property, property@location);
+			artifact.project.specification = specification;
 		}
 	}
 	return artifact;
-}
-
-public TransformationArtifact transformProperty
-(
-	TransformationArtifact artifact,
-	adjacency(bool negation, str tile, str adjecentTile),
-	loc propertyLocation
-)
-{
-	Property property =
-		lpl::DataStructures::adjacency(negation, symbolIndex(-1), symbolIndex(-1));
-		
-	Name tileType = findName(artifact, tile);
-	switch (tileType)
-	{
-		case symbolName(int nameIndex) :
-		{
-			property.tile.index = nameIndex;
-		}
- 		case ruleName(int nameIndex) :
- 		{
- 			artifact.errors += [structureType("rule", propertyLocation)];
- 			return artifact;
- 		}
- 		case moduleName(int nameIndex) :
- 		{
- 			artifact.errors = [structureType("module", propertyLocation)];
- 			return artifact;
- 		}
- 		case undefinedName(str name) :
- 		{
- 			artifact.errors += [propertyName(name, propertyLocation)];
- 			return artifact;
- 		}
-	}
-	
-	Name adjecentType = findName(artifact, adjecentTile);
-	switch (adjecentType)
-	{
-		case symbolName(int nameIndex) :
-		{
-			property.adjecentTile.index = nameIndex;
-		}
- 		case ruleName(int nameIndex) :
- 		{
- 			artifact.errors += [structureType("rule", propertyLocation)];
- 			return artifact;
- 		}
- 		case moduleName(int nameIndex) :
- 		{
- 			artifact.errors = [structureType("module", propertyLocation)];
- 			return artifact;
- 		}
- 		case undefinedName(str name) :
- 		{
- 			artifact.errors += [propertyName(name, propertyLocation)];
- 			return artifact;
- 		}
-	}
-	
-	artifact.project.properties += [property];
-	return artifact;
-}
-
-public TransformationArtifact transformProperty
-(
-	TransformationArtifact artifact,
-	occurrence(int count, str containted, str container),
-	loc propertyLocation
-)
-{
-	Property property;
-	if (container == "")
-	{
-		property = 
-			parsing::DataStructures::occurrence(count, symbolIndex(-1));
-	}
-	else
-	{
-		property = 
-			parsing::DataStructures::occurrence(count, symbolIndex(-1), ruleIndex(-1));
-	}
-	
-	Name containedType = findName(artifact, containted);
-	switch (containedType)
-	{
-		case symbolName(int nameIndex) :
-		{
-			property.tile.index = nameIndex;
-		}
- 		case ruleName(int nameIndex) :
- 		{
- 			artifact.errors += [structureType("rule", propertyLocation)];
- 			return artifact;
- 		}
- 		case moduleName(int nameIndex) :
- 		{
- 			artifact.errors = [structureType("module", propertyLocation)];
- 			return artifact;
- 		}
- 		case undefinedName(str name) :
- 		{
- 			artifact.errors += [propertyName(name, propertyLocation)];
- 			return artifact;
- 		}
-	}
-	
-	if (container != "")
-	{
-		Name containerType = findName(artifact, cleanContainerName(container));
-		switch (containerType)
-		{
-			case symbolName(int nameIndex) :
-			{
-				artifact.errors += [structureType("symbol", propertyLocation)];
-				return artifact;
-			}
-	 		case ruleName(int nameIndex) :
-	 		{
-				property.rule.index = nameIndex;
-	 		}
-	 		case moduleName(int nameIndex) :
-	 		{
-	 			artifact.errors = [structureType("module", propertyLocation)];
-	 			return artifact;
-	 		}
-	 		case undefinedName(str name) :
-	 		{
-	 			artifact.errors += [propertyName(name, propertyLocation)];
-	 			return artifact;
-	 		}
-		}
-	}
-	
-	artifact.project.properties += [property];
-	return artifact;
-}
-
-public Name findName
-(
-	TransformationArtifact artifact,
-	str name
-)
-{
-	for (str alphabetName <- artifact.project.alphabets)
-	{
-		SymbolNameList symbolNames = artifact.project.alphabets[alphabetName];
-		if (name in symbolNames)
-		{
-			return symbolName(indexOf(symbolNames, name));
-		}
-	}
-	if (name in artifact.project.moduleNames)
-	{
-		return moduleName(indexOf(artifact.project.moduleNames, name));
-	}
-	else if (name in artifact.project.ruleNames)
-	{
-		return ruleName(indexOf(artifact.project.ruleNames, name));
-	}
-	return undefinedName(name);
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Utility functions
 //////////////////////////////////////////////////////////////////////////////
 
-private int findModuleIndex(str moduleName, TransformationArtifact artifact)
-{
-	int moduleNameIndex = indexOf(artifact.project.moduleNames, moduleName);
-	for (int i <- [0 .. size(artifact.project.modules)])
-	{
-		if (artifact.project.modules[i].nameIndex == moduleNameIndex)
-		{
-			return i;
-		}
-	}
-	return -1;
+private int findModuleIndex(str moduleName, TransformationArtifact artifact) 
+{ 
+  for (int i <- [0 .. size(artifact.project.modules)]) 
+  { 
+    if (artifact.project.modules[i].name == moduleName)  
+    { 
+      return i; 
+    }
+  }
 }
 
 private list[bool] parseBitFlag(int bitFlag, int minimumSize)

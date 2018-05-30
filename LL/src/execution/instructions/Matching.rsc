@@ -21,7 +21,7 @@ public list[Coordinates] findPatternInGrid(TileMap grid, TileMap pattern)
 	int patternWidth = size(pattern[0]);
 	int patternHeight = size(pattern);
 	int gridHeight = size(grid);
-	list[int] patternFirstLine = pattern[0];
+	list[str] patternFirstLine = pattern[0];
 	
 	for (/[C*, [A*, patternFirstLine, B*], D*] := grid)
 	{

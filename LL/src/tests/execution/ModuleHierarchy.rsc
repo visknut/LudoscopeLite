@@ -11,68 +11,67 @@
 module tests::execution::ModuleHierarchy
 
 import List;
+import lpl::language::AST;
 import parsing::DataStructures;
 import execution::DataStructures;
 import execution::ModuleHierarchy;
 
 public bool runAllTests()
 {
-	return simpleHierarchy()
-	&& complexHierarchy()
-	&& incorrectHierarchy();
+ return simpleHierarchy()
+ && complexHierarchy()
+ && incorrectHierarchy();
 }
-
+ 
 private test bool simpleHierarchy()
 {
-	/* Arrange */
-	LudoscopeModule module1 = ludoscopeModule(0, [], "", [[]], (), []);
-	LudoscopeModule module2 = ludoscopeModule(1, [0], "", [[]], (), []);
-	LudoscopeModule module3 = ludoscopeModule(2, [1], "", [[]], (), []);
-	LudoscopeProject project = ludoscopeProject([module1, module2, module3], (), ["module1", "module2", "module3"], [], []);
-	
-	ModuleHierarchy expectedOutput = [{module1}, {module2}, {module3}];
-	
-	/* Act */
-	PreparationArtifact artifact = extractModuleHierarchy(project);
-	
-	/* Assert */
-	return artifact.errors == []
-	&& artifact.hierarchy == expectedOutput;
+ /* Arrange */
+ LudoscopeModule module1 = ludoscopeModule("module1", [], "", [[]], (), []);
+ LudoscopeModule module2 = ludoscopeModule("module2", ["module1"], "", [[]], (), []);
+ LudoscopeModule module3 = ludoscopeModule("module3", ["module2"], "", [[]], (), []);
+ LudoscopeProject project = ludoscopeProject([module1, module2, module3], (), specification([]));
+ 
+ ModuleHierarchy expectedOutput = [{module1}, {module2}, {module3}];
+ 
+ /* Act */
+ PreparationArtifact artifact = extractModuleHierarchy(project);
+ 
+ /* Assert */
+ return artifact.errors == []
+ && artifact.hierarchy == expectedOutput;
 }
-
+ 
 private test bool complexHierarchy()
 {
-	/* Arrange */
-	LudoscopeModule module1 = ludoscopeModule(0, [], "", [[]], (), []);
-	LudoscopeModule module2 = ludoscopeModule(1, [0], "", [[]], (), []);
-	LudoscopeModule module3 = ludoscopeModule(2, [0], "", [[]], (), []);
-	LudoscopeModule module4 = ludoscopeModule(3, [1, 2], "", [[]], (), []);
-	LudoscopeProject project = 
-		ludoscopeProject([module1, module2, module3, module4], (), ["module1", "module2", "module3", "module4"], [], []);
-	
-	ModuleHierarchy expectedOutput = [{module1}, {module2, module3}, {module4}];
-	
-	/* Act */
-	PreparationArtifact artifact = extractModuleHierarchy(project);
-	
-	/* Assert */
-	return artifact.errors == [] && artifact.hierarchy == expectedOutput;
+ /* Arrange */
+ LudoscopeModule module1 = ludoscopeModule("module1", [], "", [[]], (), []);
+ LudoscopeModule module2 = ludoscopeModule("module2", ["module1"], "", [[]], (), []);
+ LudoscopeModule module3 = ludoscopeModule("module3", ["module1"], "", [[]], (), []);
+ LudoscopeModule module4 = ludoscopeModule("module4", ["module2", "module3"], "", [[]], (), []);
+ LudoscopeProject project = ludoscopeProject([module1, module2, module3, module4], (), specification([]));
+ 
+ ModuleHierarchy expectedOutput = [{module1}, {module2, module3}, {module4}];
+ 
+ /* Act */
+ PreparationArtifact artifact = extractModuleHierarchy(project);
+ 
+ /* Assert */
+ return artifact.errors == [] && artifact.hierarchy == expectedOutput;
 }
 
 public test bool incorrectHierarchy()
 {
-	/* Arrange */
-	LudoscopeModule module1 = ludoscopeModule(0, [], "", [[]], (), []);
-	LudoscopeModule module2 = ludoscopeModule(1, [2], "", [[]], (), []);
-	LudoscopeModule module3 = ludoscopeModule(2, [3], "", [[]], (), []);
-	LudoscopeProject project = 
-		ludoscopeProject([module1, module2, module3], (), ["module1", "module2", "module3"], [], []);
-	
-	ModuleHierarchy expectedOutput = [{module1}];
-	
-	/* Act */
-	PreparationArtifact artifact = extractModuleHierarchy(project);
-	
-	/* Assert */
-	return size(artifact.errors) == 1	&& artifact.hierarchy == expectedOutput;
+ /* Arrange */
+ LudoscopeModule module1 = ludoscopeModule("module1", [], "", [[]], (), []);
+ LudoscopeModule module2 = ludoscopeModule("module2", ["module2"], "", [[]], (), []);
+ LudoscopeModule module3 = ludoscopeModule("module3", ["module3"], "", [[]], (), []);
+ LudoscopeProject project = ludoscopeProject([module1, module2, module3], (), specification([]));
+ 
+ ModuleHierarchy expectedOutput = [{module1}];
+ 
+ /* Act */
+ PreparationArtifact artifact = extractModuleHierarchy(project);
+ 
+ /* Assert */
+ return size(artifact.errors) == 1 && artifact.hierarchy == expectedOutput;
 }

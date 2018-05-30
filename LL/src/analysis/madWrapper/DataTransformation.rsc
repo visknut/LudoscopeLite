@@ -61,12 +61,12 @@ private list[CleanRule] ludoscopeRuleToCleanRules
 		|	TileMap rightHand <- ludoscopeRule.rightHands];
 }
 
-private TileMap madRuleScoreToTileMap
+private HeatMap madRuleScoreToTileMap
 (
 	MadRuleScoreMap madRuleScore
 )
 {
-	TileMap heatMap = [];
+	HeatMap heatMap = [];
 	list[int] row = [];
 	
 	for (int score <- madRuleScore.ruleScore.score)
@@ -100,22 +100,22 @@ private MadRuleMap cleanRuleToMadRuleMap
 
 private Detail SymbolGroupToDetail
 (
-	set[int] symbols, 
-	set[int] lowerSymbols
+	set[str] symbols, 
+	set[str] lowerSymbols
 )
 {
 	return {<"<symbol>", "<lowerSymbol>"> | 
-		int symbol <- symbols, 
-		int lowerSymbol <- lowerSymbols};
+		str symbol <- symbols, 
+		str lowerSymbol <- lowerSymbols};
 }
 
-private set[int] getLowerSymbols
+private set[str] getLowerSymbols
 (
 	SymbolHierarchy symbolHierarchy, 
 	SymbolGroup symbols
 )
 {
-	set[int] lowerSymbols = {};
+	set[str] lowerSymbols = {};
 	SymbolGroup currentSymbols = head(symbolHierarchy);
 	symbolHierarchy = tail(symbolHierarchy);
 	while (currentSymbols != symbols)

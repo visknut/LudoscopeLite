@@ -29,7 +29,7 @@ alias AbstractProjectList = list[parsing::languages::project::AST::Project];
 alias AbstractGrammarMap = map[str, parsing::languages::grammar::AST::Grammar] ;
 alias AbstractAlphabetMap = map[str, parsing::languages::alphabet::AST::Alphabet];
 alias AbstractRecipeMap = map[str, parsing::languages::recipe::AST::Recipe];
-alias AbstractPropertyList = list[lpl::language::AST::Properties];
+alias AbstractPropertyList = list[lpl::language::AST::LevelSpecification];
 
 data SyntaxTree
 	= syntaxTree(AbstractProjectList project,

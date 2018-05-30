@@ -11,13 +11,11 @@ module tests::execution::Instructions
 
 import IO;
 import execution::DataStructures;
-import execution::history::DataStructures;
 import execution::instructions::Instructions;
-import parsing::DataStructures;
-
 import analysis::lplWrapper::PropertyHistory;
+import parsing::DataStructures;
 import lpl::DataStructures;
-
+import lpl::language::AST;
 
 public bool runAllTests()
 {
@@ -31,130 +29,125 @@ public bool runAllTests()
 
 public test bool itterateRuleSingleResult()
 {
-	/* Arrange */
-	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]));
-	ExecutionHistory history = 
-		[moduleExecution(0, [instructionExecution([])])];
-	TileMap startingMap = [[0, 0], [1, 0]];
-	ExecutionArtifact artifact = 
-		executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history = initializeReport(2, 2, []);
-	
-	TileMap expectedResult = [[0, 0], [2, 0]];
-	
-	/* Act */
-	ExecutionArtifact result = 
-		executeInstruction(artifact, rules, itterateRule(0));
-	/* Assert */
-	return expectedResult == result.currentState;
+ /* Arrange */
+ RuleMap rules = ("rule" : rule(reflections(false,false,false),[["1"]],[[["2"]]]));
+ ExecutionHistory history = 
+  [moduleExecution("module", [instructionExecution([])])];
+ TileMap startingMap = [["0", "0"], ["1", "0"]];
+ PropertyReport emptyReport = initializeReport(2,	2, specification([]));
+ ExecutionArtifact artifact = executionArtifact((), startingMap, history, emptyReport, []);
+ 
+ TileMap expectedResult = [["0", "0"], ["2", "0"]];
+ 
+ /* Act */
+ ExecutionArtifact result = 
+  executeInstruction(artifact, rules, itterateRule("rule"));
+ 
+ /* Assert */
+ return expectedResult == result.currentState;
 }
-
+ 
 private test bool itterateRuleMultipleResults()
 {
-	/* Arrange */
-	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]));
-	ExecutionHistory history = 
-		[moduleExecution(0, [instructionExecution([])])];
-	TileMap startingMap = [[1, 0], [1, 0]];
-	ExecutionArtifact artifact = 
-		executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history += initializeReport(2, 2, []);
-	
-	list[TileMap] expectedResults = [[[1, 0], [2, 0]],
-																	 [[2, 0], [1, 0]]];
-	
-	/* Act */
-	ExecutionArtifact result 
-		= executeInstruction(artifact, rules, itterateRule(0));
-
-	/* Assert */
-	return result.currentState in expectedResults;
+ /* Arrange */
+ RuleMap rules = ("rule" : rule(reflections(false,false,false),[["1"]],[[["2"]]]));
+ ExecutionHistory history = 
+  [moduleExecution("module", [instructionExecution([])])];
+ TileMap startingMap = [["1", "0"], ["1", "0"]];
+ PropertyReport emptyReport = initializeReport(2,	2, specification([]));
+ ExecutionArtifact artifact = executionArtifact((), startingMap, history, emptyReport, []);
+ 
+ list[TileMap] expectedResults = [[["1", "0"], ["2", "0"]],
+                  [["2", "0"], ["1", "0"]]];
+ 
+ /* Act */
+ ExecutionArtifact result 
+  = executeInstruction(artifact, rules, itterateRule("rule"));
+ 
+ /* Assert */
+ return result.currentState in expectedResults;
 }
-
+ 
 private test bool executeRuleSingleResult()
 {
-	/* Arrange */
-	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]));
-	ExecutionHistory history = 
-		[moduleExecution(0, [instructionExecution([])])];
-	TileMap startingMap = [[1, 1], [1, 1]];
-	ExecutionArtifact artifact 
-		= executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history += initializeReport(2, 2, []);
-	
-	TileMap expectedResult = [[2, 2], [2, 2]];
-	int itterations = 4;
-	
-	/* Act */
-	ExecutionArtifact result = 
-		executeInstruction(artifact, rules, executeRule(0, itterations));
-	
-	/* Assert */
-	return expectedResult == result.currentState;
+ /* Arrange */
+ RuleMap rules = ("rule" : rule(reflections(false,false,false),[["1"]],[[["2"]]]));
+ ExecutionHistory history = 
+  [moduleExecution("module", [instructionExecution([])])];
+ TileMap startingMap = [["1", "1"], ["1", "1"]];
+ PropertyReport emptyReport = initializeReport(2,	2, specification([]));
+ ExecutionArtifact artifact = executionArtifact((), startingMap, history, emptyReport, []);
+ 
+ TileMap expectedResult = [["2", "2"], ["2", "2"]];
+ int itterations = 4;
+ 
+ /* Act */
+ ExecutionArtifact result = 
+  executeInstruction(artifact, rules, executeRule("rule", itterations));
+ 
+ /* Assert */
+ return expectedResult == result.currentState;
 }
-
+ 
 private test bool executeRuleMultipleResults()
 {
-	/* Arrange */
-	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]));
-	ExecutionHistory history = 
-		[moduleExecution(0, [instructionExecution([])])];
-	TileMap startingMap = [[1, 1], [1, 1]];
-	ExecutionArtifact artifact 
-		= executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history += initializeReport(2, 2, []);
-	
-	list[TileMap] expectedResults = [[[1, 2], [2, 2]],
-																	 [[2, 1], [2, 2]],
-																	 [[2, 2], [1, 2]],
-																	 [[2, 2], [2, 1]]];
-	int itterations = 3;
-	
-	/* Act */
-	ExecutionArtifact result = 
-		executeInstruction(artifact, rules, executeRule(0, itterations));
-
-	/* Assert */
-	return result.currentState in expectedResults;
+ /* Arrange */
+ RuleMap rules = ("rule" : rule(reflections(false,false,false),[["1"]],[[["2"]]]));
+ ExecutionHistory history = 
+  [moduleExecution("module", [instructionExecution([])])];
+ TileMap startingMap = [["1", "1"], ["1", "1"]];
+ PropertyReport emptyReport = initializeReport(2,	2, specification([]));
+ ExecutionArtifact artifact = executionArtifact((), startingMap, history, emptyReport, []);
+ 
+ list[TileMap] expectedResults = [[["1", "2"], ["2", "2"]],
+                  [["2", "1"], ["2", "2"]],
+                  [["2", "2"], ["1", "2"]],
+                  [["2", "2"], ["2", "1"]]];
+ int itterations = 3;
+ 
+ /* Act */
+ ExecutionArtifact result = 
+  executeInstruction(artifact, rules, executeRule("rule", itterations));
+ 
+ /* Assert */
+ return result.currentState in expectedResults;
 }
 
 private test bool executeGrammarOneRule()
 {
-	/* Arrange */
-	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]));
-	ExecutionHistory history = 
-		[moduleExecution(0, [instructionExecution([])])];
-	TileMap startingMap = [[1, 1], [1, 1]];
-	ExecutionArtifact artifact 
-		= executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history += initializeReport(2, 2, []);
-	
-	TileMap expectedResult = [[2, 2], [2, 2]];
-	
-	/* Act */
-	ExecutionArtifact result = executeInstruction(artifact, rules, executeGrammar());
-	
-	/* Assert */
-	return expectedResult == result.currentState;
+ /* Arrange */
+ RuleMap rules = ("rule" : rule(reflections(false,false,false),[["1"]],[[["2"]]]));
+ ExecutionHistory history = 
+  [moduleExecution("module", [instructionExecution([])])];
+ TileMap startingMap = [["1", "1"], ["1", "1"]];
+ PropertyReport emptyReport = initializeReport(2,	2, specification([]));
+ ExecutionArtifact artifact = executionArtifact((), startingMap, history, emptyReport, []);
+ 
+ TileMap expectedResult = [["2", "2"], ["2", "2"]];
+ 
+ /* Act */
+ ExecutionArtifact result = executeInstruction(artifact, rules, executeGrammar());
+ 
+ /* Assert */
+ return expectedResult == result.currentState;
 }
-
+ 
 public test bool executeGrammarMultipleRules()
 {
-	/* Arrange */
-	RuleMap rules = (0 : rule(reflections(false,false,false),[[1]],[[[2]]]),
-		1 : rule(reflections(false,false,false),[[2]],[[[3]]]));
-	ExecutionHistory history = 
-		[moduleExecution(0, [instructionExecution([])])];
-	TileMap startingMap = [[1, 1], [1, 1]];
-	ExecutionArtifact artifact 
-		= executionArtifact((), startingMap, history, propertyReport([], []), []);
-	artifact.propertyReport.history += initializeReport(2, 2, []);
-	
-	TileMap expectedResult = [[3, 3], [3, 3]];
-	
-	/* Act */
-	ExecutionArtifact result = executeInstruction(artifact, rules, executeGrammar());
-	
-	/* Assert */
-	return expectedResult == result.currentState;
+ /* Arrange */
+ RuleMap rules = ("rule1" : rule(reflections(false,false,false),[["1"]],[[["2"]]]),
+  "rule2" : rule(reflections(false,false,false),[["2"]],[[["3"]]]));
+ ExecutionHistory history = 
+  [moduleExecution("module", [instructionExecution([])])];
+ TileMap startingMap = [["1", "1"], ["1", "1"]];
+ PropertyReport emptyReport = initializeReport(2,	2, specification([]));
+ ExecutionArtifact artifact = executionArtifact((), startingMap, history, emptyReport, []);
+ 
+ TileMap expectedResult = [["3", "3"], ["3", "3"]];
+ 
+ /* Act */
+ ExecutionArtifact result = executeInstruction(artifact, rules, executeGrammar());
+ 
+ /* Assert */
+ return expectedResult == result.currentState;
 }

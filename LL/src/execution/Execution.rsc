@@ -29,10 +29,7 @@ import lpl::DataStructures;
 public ExecutionArtifact executeProject(LudoscopeProject project)
 {
 	list[LudoscopeModule] modules = project.modules;
-	PropertyReport propertyReport = propertyReport(project.properties, []);
-	ExecutionArtifact artifact = executionArtifact((), [], [], propertyReport, []);
-	PreparationArtifact preparationArtifact = 
-		extractModuleHierarchy(project);
+	PreparationArtifact preparationArtifact =  extractModuleHierarchy(project);
 		
 	if (preparationArtifact.errors != [])
 	{
@@ -44,8 +41,10 @@ public ExecutionArtifact executeProject(LudoscopeProject project)
 	LudoscopeModule ludoscopeModule = getOneFrom(preparationArtifact.hierarchy[0]);
 	int width = size(ludoscopeModule.startingState[0]);
 	int height = size(ludoscopeModule.startingState);
-	artifact.propertyReport.history = 
-		initializeReport(width, height, project.properties);
+	PropertyReport propertyReport = 
+		initializeReport(width, height, project.specification);
+		
+	ExecutionArtifact artifact = executionArtifact((), [], [], propertyReport, []);
 	
 	/* Execute all modules. */
 	for (set[LudoscopeModule] moduleGroup <- preparationArtifact.hierarchy)
@@ -66,7 +65,7 @@ public ExecutionArtifact executeModule
 )
 {
 	artifact.history = 
-		push(moduleExecution(ludoscopeModule.nameIndex, []), artifact.history);
+		push(moduleExecution(ludoscopeModule.name, []), artifact.history);
 	switch (size(ludoscopeModule.inputs))
 	{
 		case 0 : 
@@ -90,7 +89,7 @@ public ExecutionArtifact executeModule
 		}
 
 	}
-	artifact.output = (ludoscopeModule.nameIndex : artifact.currentState);
+	artifact.output = (ludoscopeModule.name : artifact.currentState);
 	return artifact;
 }
 

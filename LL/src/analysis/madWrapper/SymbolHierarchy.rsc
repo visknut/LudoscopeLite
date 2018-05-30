@@ -10,12 +10,13 @@
 
 module analysis::madWrapper::SymbolHierarchy
 
+import IO;
 import List;
 import parsing::DataStructures;
 import execution::DataStructures;
 
 alias SymbolHierarchy = list[SymbolGroup];
-alias SymbolGroup = set[int];
+alias SymbolGroup = set[str];
 
 public SymbolHierarchy extractSymbolHierarchy(ModuleHierarchy moduleHierarchy)
 {
@@ -30,7 +31,7 @@ public SymbolHierarchy extractSymbolHierarchy(ModuleHierarchy moduleHierarchy)
 	}
 	allUsedSymbols += newSymbolGroup;
 	symbolHierarchy += [newSymbolGroup];
-	
+
 	/* Extract the symbols from the right hands of rules. */
 	for (set[LudoscopeModule] moduleGroup <- moduleHierarchy)
 	{
@@ -66,7 +67,7 @@ private SymbolGroup extractNewSymbols
 	SymbolGroup usedSymbols = {};
 	visit (maps)
 	{
-		case int symbol:
+		case str symbol:
 		{
 			usedSymbols += symbol;
 		}

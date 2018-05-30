@@ -2,109 +2,129 @@ module experiments::dungeon::execution
 
 import IO;
 import List;
+import Map;
 import execution::Execution;
 import execution::DataStructures;
 import parsing::Interface;
 import parsing::DataStructures;
 
+import lpl::DataStructures;
+
 import errors::Parsing;
 
-public test bool parseAndExecuteDungeon()
+public loc projectFile = |project://LL/src/tests/correctTestData/dungeon/dungeon.lsp|;
+public loc projectFileVar1 = |project://LL/src/tests/correctTestData/dungeonVar1/dungeon.lsp|;
+public loc projectFileVar2 = |project://LL/src/tests/correctTestData/dungeonVar2/dungeon.lsp|;
+
+data Bug
+	=	bug(int rule, int property);
+	
+//public void bugTest()
+//{
+//	ExecutionArtifact artifact = parseAndExecuteFile(projectFile);
+//	int i = 0;
+//	for (a <- artifact.propertyReport.history)
+//	{
+//		println("\na<i>:");
+//		iprintln(a.mapState.tileIndex);
+//		iprintln(a.propertyStates);
+//		i += 1;
+//	}
+//	println("------");
+//	iprintln(findBugs(artifact));
+//}
+
+public void executeMultipleTimes(loc projectFile, int n)
 {
-	loc projectFile = |project://LL/src/tests/correctTestData/dungeon/dungeon.lsp|;
-	TransformationArtifact artifact = parseAndCheckForErrors(projectFile);
-	if (artifact.errors == [])
+	map[TileMap, int] outputCount = ();
+	map[list[ReportState], int] reportCount = ();
+	map[PropertyStates, int] propertyStatesCount = ();
+	map[int, int] propertyCount = ();
+	map[Bug, int] bugCount = ();
+	
+	for (int i <- [0 .. n])
 	{
-		ExecutionArtifact newArtifact = executeProject(artifact.project);
-		if (newArtifact.errors != [])
+		ExecutionArtifact artifact = parseAndExecuteFile(projectFile);
+		outputCount[artifact.currentState] ? 0 += 1;
+		reportCount[artifact.propertyReport.history] ? 0 += 1;
+		propertyStatesCount[last(artifact.propertyReport.history).propertyStates] ? 0 += 1;
+		
+		for (int i <- [0 .. size(last(artifact.propertyReport.history).propertyStates)])
 		{
-			println("There were errors found while parsing the project:");
-			for (ParsingError error <- artifact.errors)
+			if (!last(artifact.propertyReport.history).propertyStates[i])
 			{
-				println(errorToString(error));
+				propertyCount[i] ? 0 += 1;
 			}
 		}
-		else
+		
+		for (Bug bug <- findBugs(artifact))
 		{
-			int i = 0;
-			for (a <- newArtifact.propertyReport.history)
-			{
-				println("\na<i>:");
-				iprintln(a.mapState.tileIndex);
-				iprintln(a.propertyStates);
-				i += 1;
-			}
-			return true;
+			bugCount[bug] ? 0 += 1;
 		}
 	}
-	return false;
+	
+	println("Number of unique executions: <size(reportCount)>");
+	println("Number of unique outputs: <size(outputCount)>");
+	println("Number of unique property end states: <size(propertyStatesCount)>");
+	println("Number of bad maps: <size(outputCount) - propertyStatesCount[[true, true, true, true, true]]>");
+	println("Number of broken properties: <size(propertyCount)>");
+	println("Number of bugs: <size(bugCount)>");
+	iprintln(bugCount);
 }
 
-public test bool parseAndExecuteDungeonVar1()
+public list[Bug] findBugs(ExecutionArtifact artifact)
 {
-	loc projectFile = |project://LL/src/tests/correctTestData/dungeon/dungeon.lsp|;
-	TransformationArtifact artifact = parseAndCheckForErrors(projectFile);
-	if (artifact.errors == [])
+	list[ReportState] history = artifact.propertyReport.history;
+	list[Bug] bugs = [];
+	for (int i <- [0 .. size(last(history).propertyStates)])
 	{
-		ExecutionArtifact newArtifact = executeProject(artifact.project);
-		if (newArtifact.errors != [])
+		if (!last(history).propertyStates[i])
 		{
-			println("There were errors found while parsing the project:");
-			for (ParsingError error <- artifact.errors)
-			{
-				println(errorToString(error));
-			}
-		}
-		else
-		{
-			int i = 0;
-			for (a <- newArtifact.propertyReport.history)
-			{
-				println("\na<i>:");
-				iprintln(a.mapState.tileIndex);
-				iprintln(a.propertyStates);
-				i += 1;
-			}
-			return true;
+			bugs += bug(getRule(i, artifact), i);
 		}
 	}
-	return false;
+
+	return bugs;
 }
 
-public test bool parseAndExecuteDungeonVar2()
+public int getRule(int property, ExecutionArtifact artifact)
 {
-	loc projectFile = |project://LL/src/tests/correctTestData/dungeon/dungeon.lsp|;
-	TransformationArtifact artifact = parseAndCheckForErrors(projectFile);
-	if (artifact.errors == [])
+	list[ReportState] history = artifact.propertyReport.history;
+	int steps = size(history);
+	int problematicStep = -1;
+	for (int i <- [steps-1 .. -1])
 	{
-		ExecutionArtifact newArtifact = executeProject(artifact.project);
-		if (newArtifact.errors != [])
+		//println("STEP: <i>, PROPERT: <history[i].propertyStates[property]>");
+		if (history[i].propertyStates[property])
 		{
-			println("There were errors found while parsing the project:");
-			for (ParsingError error <- artifact.errors)
-			{
-				println(errorToString(error));
-			}
-		}
-		else
-		{
-			int i = 0;
-			for (a <- newArtifact.propertyReport.history)
-			{
-				println("\na<i>:");
-				iprintln(a.mapState.tileIndex);
-				iprintln(a.propertyStates);
-				i += 1;
-			}
-			return true;
+			problematicStep = i;
+			break;
 		}
 	}
-	return false;
+	
+	if (problematicStep != -1)
+	{
+		//println("STEP: <problematicStep>");
+		//println("Property: <property>");
+		int i = 0;
+		visit(artifact.history)
+		{
+			case ruleExecution(int nameIndex, int rightHandIndex, Coordinates location) :
+			{
+				//println(ruleExecution(nameIndex, rightHandIndex, location));
+				if (i == problematicStep)
+				{
+					return nameIndex;
+				}
+				i += 1;
+			}
+		}
+	}
+	return -1;
 }
 
-public test bool parseAndExecuteDungeonVar3()
+public ExecutionArtifact parseAndExecuteFile(loc projectFile)
 {
-	loc projectFile = |project://LL/src/tests/correctTestData/dungeon/dungeon.lsp|;
 	TransformationArtifact artifact = parseAndCheckForErrors(projectFile);
 	if (artifact.errors == [])
 	{
@@ -115,23 +135,25 @@ public test bool parseAndExecuteDungeonVar3()
 			for (ParsingError error <- artifact.errors)
 			{
 				println(errorToString(error));
+				throw(Timeout());
 			}
 		}
 		else
 		{
-			int i = 0;
-			for (a <- newArtifact.propertyReport.history)
-			{
-				println("\na<i>:");
-				iprintln(a.mapState.tileIndex);
-				iprintln(a.propertyStates);
-				i += 1;
-			}
-			return true;
+			//int i = 0;
+			//for (a <- newArtifact.propertyReport.history)
+			//{
+			//	println("\na<i>:");
+			//	iprintln(a.mapState.tileIndex);
+			//	iprintln(a.propertyStates);
+			//	i += 1;
+			//}
+			return newArtifact;
 		}
 	}
-	return false;
+	return newArtifact;
 }
+
 
 public TransformationArtifact parseAndCheckForErrors(loc projectFile)
 {
@@ -142,6 +164,7 @@ public TransformationArtifact parseAndCheckForErrors(loc projectFile)
 		for (ParsingError error <- artifact.errors)
 		{
 			println(errorToString(error));
+			throw(Timeout());
 		}
 	}
 	return artifact;

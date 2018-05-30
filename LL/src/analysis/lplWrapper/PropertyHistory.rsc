@@ -9,49 +9,51 @@ import execution::history::DataStructures;
 
 import lpl::PropertyValidation;
 import lpl::DataStructures;
+import lpl::language::AST;
 	
 //////////////////////////////////////////////////////////////////////////////
 // Initialize property report.
 //////////////////////////////////////////////////////////////////////////////
 
-public list[ReportState] initializeReport
+public PropertyReport initializeReport
 (
 	int width,
 	int height,
-	list[Property] properties
+	LevelSpecification specification
 )
 {
 	ExtendedTileMaps maps =	generateSartingMaps(width, height);
 	PropertyStates propertyStates = 
-		[false | Property property <- properties];
+		[false | Property property <- specification.properties];
 	
-	return [reportState(maps, propertyStates)];
+	return propertyReport(specification, [reportState(maps, propertyStates)]);
 }
 
-/* -1 is used in the history, so LPL can use a filter that matches every tile. */
+/* "all" is used in the history, so LPL can use a filter that matches every tile. */
 public ExtendedTileMaps generateSartingMaps
 (
 	int width,
 	int height
 )
 {
-	KileMap currentSymbolMap = createTileMap(-1, width, height);
-	KileMap currentModuleMap = createTileMap(-1, width, height);
-	KileMap currentRuleMap = createTileMap(-1, width, height);
-	return extendedTileMaps(currentModuleMap, currentRuleMap, currentSymbolMap);
+	Map currentSymbolMap = createTileMap(ALL, width, height);
+	Map currentRuleMap = createTileMap(ALL, width, height);
+	return extendedTileMaps(currentSymbolMap, currentRuleMap);
 }
 
 //////////////////////////////////////////////////////////////////////////////
 // Update report.
 //////////////////////////////////////////////////////////////////////////////
 
-public list[ReportState] updatePropertyReport(ExecutionArtifact artifact)
+public PropertyReport updatePropertyReport(ExecutionArtifact artifact)
 {
 	ExtendedTileMaps maps = extractExtendedTileMaps(artifact);
 	PropertyStates propertyStates = 
 		[checkProperty(property, artifact.propertyReport.history, maps) 
-		| Property property <- artifact.propertyReport.properties];
-	return [reportState(maps, propertyStates)];
+		| Property property <- artifact.propertyReport.specification.properties];
+	artifact.propertyReport.history + [reportState(maps, propertyStates)];
+	PropertyReport updatedReport = artifact.propertyReport;
+	return updatedReport;
 }
 
 public ExtendedTileMaps extractExtendedTileMaps
@@ -61,30 +63,25 @@ public ExtendedTileMaps extractExtendedTileMaps
 {
 	/* Retrieve information from the generation history. */
 	ModuleExecution history = artifact.history[0];
-	int moduleIndex = history.nameIndex;
-	int ruleIndex = history.instructions[0].rules[0].nameIndex;
+	str ruleName = history.instructions[0].rules[0].name;
 	ReportState previousState = last(artifact.propertyReport.history);
-	KileMap previousSymbolMap = previousState.mapState.tileIndex;
+	Map previousSymbolMap = previousState.mapStates.tileMap;
 
 	/* Generate maps for the current state. */
-	KileMap currentSymbolMap = artifact.currentState;
-	KileMap currentModuleMap = updateMap(previousState.mapState.moduleIndex,
-																			previousSymbolMap,
-																			currentSymbolMap,
-																			moduleIndex);
-	KileMap currentRuleMap = updateMap(previousState.mapState.ruleIndex,
+	Map currentSymbolMap = artifact.currentState;
+	Map currentRuleMap = updateMap(previousState.mapStates.ruleMap,
 																		previousSymbolMap,
 																		currentSymbolMap,
-																		ruleIndex);												
-	return extendedTileMaps(currentModuleMap, currentRuleMap, currentSymbolMap);
+																		ruleName);
+	return extendedTileMaps(currentSymbolMap, currentRuleMap);
 }
 
-private KileMap updateMap
+private Map updateMap
 (
-	KileMap toBeUpdated, 
-	KileMap previousState,
-	KileMap currentState,
-	int structureIndex
+	Map toBeUpdated, 
+	Map previousState,
+	Map currentState,
+	str structureName
 )
 {
 	for (int y <- [0 .. size(previousState)])
@@ -93,7 +90,7 @@ private KileMap updateMap
 		{
 			if (previousState[y][x] != currentState[y][x])
 			{
-				toBeUpdated[y][x] = structureIndex;
+				toBeUpdated[y][x] = structureName;
 			}
 		}
 	}
