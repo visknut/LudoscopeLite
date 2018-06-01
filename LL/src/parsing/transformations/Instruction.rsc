@@ -13,7 +13,7 @@ module parsing::transformations::Instruction
 import List;
 import parsing::DataStructures;
 import parsing::languages::recipe::AST;
-import util::string;
+import utility::String;
 
 alias AbstractInstruction = parsing::languages::recipe::AST::Instruction;
 

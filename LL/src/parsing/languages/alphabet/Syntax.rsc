@@ -25,7 +25,7 @@ syntax MapType
 	| graph: "GRAPH"
 	| shape: "SHAPE";
 
-// TODO: use variable names (as in LPL).	
+// TODO: use variable names (as in SAnR).	
 syntax Symbol
 	= symbol: NAME "(" 
 	"color" COLORCODE

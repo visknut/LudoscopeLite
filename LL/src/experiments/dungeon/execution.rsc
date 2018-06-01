@@ -8,7 +8,8 @@ import execution::DataStructures;
 import parsing::Interface;
 import parsing::DataStructures;
 
-import lpl::DataStructures;
+import sanr::DataStructures;
+import sanr::language::AST;
 
 import errors::Parsing;
 
@@ -17,7 +18,7 @@ public loc projectFileVar1 = |project://LL/src/tests/correctTestData/dungeonVar1
 public loc projectFileVar2 = |project://LL/src/tests/correctTestData/dungeonVar2/dungeon.lsp|;
 
 data Bug
-	=	bug(int rule, int property);
+	=	bug(str rule, Property property);
 	
 //public void bugTest()
 //{
@@ -66,7 +67,7 @@ public void executeMultipleTimes(loc projectFile, int n)
 	println("Number of unique executions: <size(reportCount)>");
 	println("Number of unique outputs: <size(outputCount)>");
 	println("Number of unique property end states: <size(propertyStatesCount)>");
-	println("Number of bad maps: <size(outputCount) - propertyStatesCount[[true, true, true, true, true]]>");
+	println("Number of bad maps: <size(outputCount) - (propertyStatesCount[[true, true, true, true, true]] ? 0 )>");
 	println("Number of broken properties: <size(propertyCount)>");
 	println("Number of bugs: <size(bugCount)>");
 	iprintln(bugCount);
@@ -80,21 +81,21 @@ public list[Bug] findBugs(ExecutionArtifact artifact)
 	{
 		if (!last(history).propertyStates[i])
 		{
-			bugs += bug(getRule(i, artifact), i);
+			bugs += bug(getRule(i, artifact), artifact.propertyReport.specification.properties[i]);
 		}
 	}
 
 	return bugs;
 }
 
-public int getRule(int property, ExecutionArtifact artifact)
+public str getRule(int property, ExecutionArtifact artifact)
 {
 	list[ReportState] history = artifact.propertyReport.history;
 	int steps = size(history);
 	int problematicStep = -1;
 	for (int i <- [steps-1 .. -1])
 	{
-		//println("STEP: <i>, PROPERT: <history[i].propertyStates[property]>");
+		//println("STEP: <i>, PROPERTY: <history[i].propertyStates[property]>");
 		if (history[i].propertyStates[property])
 		{
 			problematicStep = i;
@@ -109,12 +110,12 @@ public int getRule(int property, ExecutionArtifact artifact)
 		int i = 0;
 		visit(artifact.history)
 		{
-			case ruleExecution(int nameIndex, int rightHandIndex, Coordinates location) :
+			case ruleExecution(str name, int rightHandIndex, Coordinates location) :
 			{
 				//println(ruleExecution(nameIndex, rightHandIndex, location));
 				if (i == problematicStep)
 				{
-					return nameIndex;
+					return name;
 				}
 				i += 1;
 			}

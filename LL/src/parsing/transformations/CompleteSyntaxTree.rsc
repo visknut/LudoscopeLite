@@ -21,7 +21,7 @@ import parsing::transformations::Grammar;
 import parsing::transformations::Recipe;
 import parsing::transformations::Properties;
 
-import lpl::language::AST;
+import sanr::language::AST;
 
 public TransformationArtifact transformSyntaxTree(SyntaxTree syntaxTree)
 {

@@ -1,15 +1,14 @@
-module analysis::lplWrapper::PropertyHistory
+module analysis::sanrWrapper::PropertyHistory
 
-import IO;
 import List;
-import util::TileMap;
+import utility::TileMap;
 import parsing::DataStructures;
 import execution::DataStructures;
 import execution::history::DataStructures;
 
-import lpl::PropertyValidation;
-import lpl::DataStructures;
-import lpl::language::AST;
+import sanr::PropertyValidation;
+import sanr::DataStructures;
+import sanr::language::AST;
 	
 //////////////////////////////////////////////////////////////////////////////
 // Initialize property report.
@@ -29,7 +28,7 @@ public PropertyReport initializeReport
 	return propertyReport(specification, [reportState(maps, propertyStates)]);
 }
 
-/* "all" is used in the history, so LPL can use a filter that matches every tile. */
+/* 'ALL' is used in the history, so SAnR can use a filter that matches every tile. */
 public ExtendedTileMaps generateSartingMaps
 (
 	int width,
@@ -49,11 +48,10 @@ public PropertyReport updatePropertyReport(ExecutionArtifact artifact)
 {
 	ExtendedTileMaps maps = extractExtendedTileMaps(artifact);
 	PropertyStates propertyStates = 
-		[checkProperty(property, artifact.propertyReport.history, maps) 
+		[checkProperty(property, artifact.propertyReport.history, maps.tileMap)
 		| Property property <- artifact.propertyReport.specification.properties];
-	artifact.propertyReport.history + [reportState(maps, propertyStates)];
-	PropertyReport updatedReport = artifact.propertyReport;
-	return updatedReport;
+	artifact.propertyReport.history += [reportState(maps, propertyStates)];
+	return artifact.propertyReport;
 }
 
 public ExtendedTileMaps extractExtendedTileMaps

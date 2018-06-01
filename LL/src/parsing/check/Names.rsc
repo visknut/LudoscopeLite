@@ -12,7 +12,7 @@ module parsing::check::Names
 
 import errors::Parsing;
 import parsing::DataStructures;
-import lpl::language::AST;
+import sanr::language::AST;
 import parsing::languages::alphabet::AST;
 
 data Name

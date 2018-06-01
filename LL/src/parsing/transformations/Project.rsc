@@ -13,7 +13,7 @@ module parsing::transformations::Project
 import parsing::Parser;
 import parsing::languages::grammar::AST;
 import parsing::DataStructures;
-import util::string;
+import utility::String;
 
 // TODO: implement options and registers.
 public TransformationArtifact transformProject(TransformationArtifact artifact, 

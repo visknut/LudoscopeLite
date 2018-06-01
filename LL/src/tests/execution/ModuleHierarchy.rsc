@@ -11,7 +11,7 @@
 module tests::execution::ModuleHierarchy
 
 import List;
-import lpl::language::AST;
+import sanr::language::AST;
 import parsing::DataStructures;
 import execution::DataStructures;
 import execution::ModuleHierarchy;

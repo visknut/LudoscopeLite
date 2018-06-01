@@ -16,8 +16,8 @@ import parsing::Parser;
 import parsing::DataStructures;
 import tests::parsing::Utility;
 import parsing::Interface;
-import lpl::language::AST;
-import util::TileMap;
+import sanr::language::AST;
+import utility::TileMap;
 import parsing::languages::alphabet::AST;
 
 public bool runAllTests()

@@ -18,11 +18,11 @@ import execution::Execution;
 import parsing::DataStructures;
 import tests::parsing::Utility;
 import parsing::Interface;
-import util::TileMap;
+import utility::TileMap;
 
-import lpl::language::AST;
-import lpl::DataStructures;
-import analysis::lplWrapper::PropertyHistory;
+import sanr::language::AST;
+import sanr::DataStructures;
+import analysis::sanrWrapper::PropertyHistory;
 
 public bool runAllTests()
 {

@@ -12,7 +12,7 @@
 module analysis::madWrapper::MADFramework
 
 import List;
-import util::Integer;
+import utility::Integer;
 import util::mad::Metric;
 
 import parsing::DataStructures;

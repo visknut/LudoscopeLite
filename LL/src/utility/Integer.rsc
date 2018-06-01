@@ -1,4 +1,4 @@
-module util::Integer
+module utility::Integer
 
 public int sign(int number)
 {

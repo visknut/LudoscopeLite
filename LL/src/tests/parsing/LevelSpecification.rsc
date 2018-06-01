@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// Parsing tests for .lpl files.
-// @brief        This file contains unit tests for parsing .lpl files to an AST
+// Parsing tests for .sanr files.
+// @brief        This file contains unit tests for parsing .sanr files to an AST
 // @contributor  Quinten Heijn - samuel.heijn@gmail.com - UvA
 // @date         06-04-2018
 //
@@ -13,8 +13,8 @@ import parsing::DataStructures;
 import parsing::Parser;
 import tests::parsing::Utility;
 
-import lpl::language::AST;
-import lpl::DataStructures;
+import sanr::language::AST;
+import sanr::DataStructures;
 
 SyntaxTree emptySyntaxTree = syntaxTree([], (), (), (), [], []);
 
@@ -33,7 +33,7 @@ public test bool tryParsingAdjacency()
 {
 	/* Arrange */
 	loc fileLocation = 
-		|project://LL/src/tests/correctTestData/isolatedLevelSpecifications/adjacency.lpl|;
+		|project://LL/src/tests/correctTestData/isolatedLevelSpecifications/adjacency.sanr|;
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -46,7 +46,7 @@ public test bool tryParsingOccurrence()
 {
 	/* Arrange */
 	loc fileLocation = 
-		|project://LL/src/tests/correctTestData/isolatedLevelSpecifications/occurrence.lpl|;
+		|project://LL/src/tests/correctTestData/isolatedLevelSpecifications/occurrence.sanr|;
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
@@ -59,7 +59,7 @@ public test bool tryParsingOccurrenceAndContainment()
 {
 	/* Arrange */
 	loc fileLocation = 
-		|project://LL/src/tests/correctTestData/isolatedLevelSpecifications/occurrenceAndContainment.lpl|;
+		|project://LL/src/tests/correctTestData/isolatedLevelSpecifications/occurrenceAndContainment.sanr|;
 		
 	/* Act */
 	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);

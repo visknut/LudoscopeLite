@@ -12,10 +12,10 @@ module tests::execution::Instructions
 import IO;
 import execution::DataStructures;
 import execution::instructions::Instructions;
-import analysis::lplWrapper::PropertyHistory;
+import analysis::sanrWrapper::PropertyHistory;
 import parsing::DataStructures;
-import lpl::DataStructures;
-import lpl::language::AST;
+import sanr::DataStructures;
+import sanr::language::AST;
 
 public bool runAllTests()
 {

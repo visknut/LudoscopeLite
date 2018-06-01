@@ -12,7 +12,7 @@ module parsing::transformations::Properties
 
 import parsing::Parser;
 import parsing::DataStructures;
-import lpl::language::AST;
+import sanr::language::AST;
 
 public TransformationArtifact transformProperties
 (

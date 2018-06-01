@@ -1,4 +1,4 @@
-module util::Time
+module utility::Time
 
 import DateTime;
 

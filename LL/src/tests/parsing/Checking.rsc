@@ -16,7 +16,7 @@ import parsing::languages::alphabet::AST;
 import parsing::check::Version;
 import parsing::check::Maps;
 import parsing::check::Names;
-import lpl::language::AST;
+import sanr::language::AST;
 
 loc projectLocation = |project://LL/src/tests/incorrectTestData/isolatedProjects/notSet.txt|;
 loc grammarLocation = |project://LL/src/tests/incorrectTestData/isolatedGrammars/notSet.txt|;

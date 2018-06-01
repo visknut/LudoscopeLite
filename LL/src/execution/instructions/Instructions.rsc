@@ -18,8 +18,8 @@ import parsing::DataStructures;
 import execution::DataStructures;
 import execution::instructions::Matching;
 
-import analysis::lplWrapper::PropertyHistory;
-import lpl::DataStructures;
+import analysis::sanrWrapper::PropertyHistory;
+import sanr::DataStructures;
 
 // TODO: replace itterateRule with something that stops when tileMap doesn't change.
 public ExecutionArtifact executeInstruction

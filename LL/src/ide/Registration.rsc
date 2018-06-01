@@ -20,7 +20,7 @@ import parsing::languages::alphabet::Syntax;
 import parsing::languages::project::Syntax;
 import parsing::languages::grammar::Syntax;
 import parsing::languages::recipe::Syntax;
-import lpl::language::AST;
+import sanr::language::AST;
 
 str ALPHABETNAME = "Ludoscope Alphabet";
 str PROJECTNAME = "Ludoscope Project";
@@ -32,7 +32,7 @@ str ALPHABETABBREVIATION = "alp";
 str PROJECTABBREVIATION = "lsp";
 str GRAMMARABBREVIATION = "grm";
 str RECIPENABBREVIATION = "rcp";
-str PROPERTIESABBREVIATTION = "lpl";
+str PROPERTIESABBREVIATTION = "sanr";
 
 Contribution STYLE =
   categories
@@ -51,7 +51,7 @@ public void registerLanguages()
 	registerLanguage(PROJECTNAME, PROJECTABBREVIATION, parsing::languages::project::Syntax::parseProject);
 	registerLanguage(GRAMMARNAME, GRAMMARABBREVIATION, parseGrammar);
 	registerLanguage(RECIPENAME, RECIPENABBREVIATION, parseRecipe);
-	registerLanguage(PROPERTIESNAME, PROPERTIESABBREVIATTION, parseLpl);
+	registerLanguage(PROPERTIESNAME, PROPERTIESABBREVIATTION, parseSAnR);
 }
 
 public void addSyntaxHighLights()

@@ -1,4 +1,4 @@
-module util::TileMap
+module utility::TileMap
 
 import List;
 import parsing::DataStructures;

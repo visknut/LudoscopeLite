@@ -23,8 +23,8 @@ import execution::DataStructures;
 import execution::ModuleHierarchy;
 import execution::history::DataStructures;
 
-import analysis::lplWrapper::PropertyHistory;
-import lpl::DataStructures;
+import analysis::sanrWrapper::PropertyHistory;
+import sanr::DataStructures;
 
 public ExecutionArtifact executeProject(LudoscopeProject project)
 {

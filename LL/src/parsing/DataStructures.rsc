@@ -11,8 +11,8 @@
 module parsing::DataStructures
 
 import errors::Parsing;
-import lpl::DataStructures;
-import lpl::language::AST;
+import sanr::DataStructures;
+import sanr::language::AST;
 import parsing::languages::alphabet::AST;
 
 alias TileMap = list[list[Tile]];

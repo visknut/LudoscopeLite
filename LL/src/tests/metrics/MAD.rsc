@@ -18,7 +18,7 @@ import analysis::madWrapper::SymbolHierarchy;
 import parsing::DataStructures;
 import execution::DataStructures;
 import util::mad::Metric;
-import lpl::language::AST;
+import sanr::language::AST;
 
 public bool runAllTests()
 {

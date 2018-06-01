@@ -10,13 +10,13 @@
 
 module execution::DataStructures
 
-import analysis::lplWrapper::PropertyHistory;
-import lpl::PropertyValidation;
+import analysis::sanrWrapper::PropertyHistory;
+import sanr::PropertyValidation;
 import execution::history::DataStructures;
 import parsing::DataStructures;
 import errors::Execution;
 
-import lpl::DataStructures;
+import sanr::DataStructures;
 
 alias OutputMap = map[str, TileMap];
 alias ModuleHierarchy = list[set[LudoscopeModule]];

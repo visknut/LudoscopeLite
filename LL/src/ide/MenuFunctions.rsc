@@ -15,7 +15,7 @@ import errors::Parsing;
 import String;
 import DateTime;
 
-import util::Time;
+import utility::Time;
 
 import parsing::Interface;
 import parsing::DataStructures;

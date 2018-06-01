@@ -19,17 +19,17 @@ import parsing::languages::alphabet::AST;
 import parsing::languages::recipe::AST;
 import parsing::languages::grammar::AST;
 
-import lpl::language::AST;
+import sanr::language::AST;
 
 import parsing::DataStructures;
 import errors::Parsing;
-import util::string;
+import utility::String;
 
 alias AbstractProjectList = list[parsing::languages::project::AST::Project];
 alias AbstractGrammarMap = map[str, parsing::languages::grammar::AST::Grammar] ;
 alias AbstractAlphabetMap = map[str, parsing::languages::alphabet::AST::Alphabet];
 alias AbstractRecipeMap = map[str, parsing::languages::recipe::AST::Recipe];
-alias AbstractPropertyList = list[lpl::language::AST::LevelSpecification];
+alias AbstractPropertyList = list[sanr::language::AST::LevelSpecification];
 
 data SyntaxTree
 	= syntaxTree(AbstractProjectList project,
@@ -51,7 +51,7 @@ public SyntaxTree parseFile(loc file, SyntaxTree syntaxTree)
 				case "grm" : syntaxTree.grammars += (fileName(file) : parseGrammarToAST(file));
 				case "alp" : syntaxTree.alphabets += (fileName(file) : parseAlphabetToAST(file));
 				case "rcp" : syntaxTree.recipes += (fileName(file) : parseRecipeToAST(file));
-				case "lpl" : syntaxTree.properties += [parseLplToAST(file)];
+				case "sanr" : syntaxTree.properties += [parseSAnRToAST(file)];
 				default : syntaxTree.errors += [errors::Parsing::extension(file)];
 			}
 		}
@@ -114,7 +114,7 @@ private list[loc] gatherFileLocations(SyntaxTree syntaxTree, loc projectFile)
 		}
 	}
 	
-	loc propertiesFile = fileLocation(projectFile, fileName(projectFile), ".lpl");
+	loc propertiesFile = fileLocation(projectFile, fileName(projectFile), ".sanr");
 	if (exists(propertiesFile))
 	{
 			fileLocations += [propertiesFile];
