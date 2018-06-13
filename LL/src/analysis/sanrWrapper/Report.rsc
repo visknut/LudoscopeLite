@@ -1,4 +1,4 @@
-module experiments::dungeon::execution
+module analysis::sanrWrapper::Report
 
 import IO;
 import List;
@@ -17,23 +17,15 @@ public loc projectFile = |project://LL/src/tests/correctTestData/dungeon/dungeon
 public loc projectFileVar1 = |project://LL/src/tests/correctTestData/dungeonVar1/dungeon.lsp|;
 public loc projectFileVar2 = |project://LL/src/tests/correctTestData/dungeonVar2/dungeon.lsp|;
 
+
+//data sanrBugReport =
 data Bug
 	=	bug(str rule, Property property);
 	
-//public void bugTest()
-//{
-//	ExecutionArtifact artifact = parseAndExecuteFile(projectFile);
-//	int i = 0;
-//	for (a <- artifact.propertyReport.history)
-//	{
-//		println("\na<i>:");
-//		iprintln(a.mapState.tileIndex);
-//		iprintln(a.propertyStates);
-//		i += 1;
-//	}
-//	println("------");
-//	iprintln(findBugs(artifact));
-//}
+alias OutputCount = map[TileMap, int];
+alias ReportCount	= map[list[ReportState], int];
+alias	PropertyCount = map[int, int];
+alias	BugCount = map[Bug, int];
 
 public void executeMultipleTimes(loc projectFile, int n)
 {
