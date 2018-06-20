@@ -21,54 +21,54 @@ start syntax Project
 	Declaration*;
 	
 syntax Declaration
-	=	declaredAlphabet: Alphabet 
-	| declaredModule: 	Module 
-	| declaredOption: 	Option 
-	| declaredRegister:	Register;
+	=	declaredAlphabet: Alphabet declaredAlphabet
+	| declaredModule: 	Module declaredModule
+	| declaredOption: 	Option declaredOption
+	| declaredRegister:	Register declaredRegister;
 
 syntax Alphabet
 	= alphabet: "alphabet"
-	"name" String
-	"position" Position;
+	"name" String name
+	"position" Position position;
 
 syntax Module
   = lspmodule: "module" 
-  ("name" String)?
-	("alphabet" String)?
-	("position" Position)?
-	("type" NAME)?
-	("fileName" String)?
-	("match" NAME)?
-	("inputs" String*)?
-	("maxIterations" INTEGER)?
-	("filter" String)?
-	("grammar" BOOLEAN)?
-	("executionType" NAME)?
-	("recipe" BOOLEAN)?
-	("showMembers" BOOLEAN)?
-	("alwaysStartWithToken" BOOLEAN)?;
+  ("name" String name)?
+	("alphabet" String alphabet)?
+	("position" Position moduleType)?
+	("type" NAME moduleType)?
+	("fileName" String fileName)?
+	("match" NAME match)?
+	("inputs" String* inputs)?
+	("maxIterations" INTEGER maxIterations)?
+	("filter" String moduleFilter)?
+	("grammar" BOOLEAN grammar)?
+	("executionType" NAME executionType)?
+	("recipe" BOOLEAN recipe)?
+	("showMembers" BOOLEAN showMembers)?
+	("alwaysStartWithToken" BOOLEAN alwaysStartWithToken)?;
 	
 syntax Register
-	= register: "register" Variable;
+	= register: "register" Variable registerContent;
 	
 syntax Option
-	= option: "option" Variable;
+	= option: "option" Variable optionContent;
 
 syntax Variable 
-  = variableInteger:  NAME INTEGER
-  | variableFloat:		NAME FLOAT 
-  | variableString:   NAME String 
-  | variableList:   	NAME "[" String* "]"
-  | variableBoolean:  NAME BOOLEAN 
-  | variablePosition: NAME Position 
-  | variableName:  		NAME NAME 
-  | variableNull:   	NAME "null"; 
+  = variableInteger:  NAME name INTEGER integer
+  | variableFloat:		NAME name FLOAT float
+  | variableString:   NAME name String string
+  | variableList:   	NAME name "[" String* "]" listOfVariable
+  | variableBoolean:  NAME name BOOLEAN boolean
+  | variablePosition: NAME name Position position
+  | variableName:  		NAME name NAME variableName
+  | variableNull:   	NAME name "null"; 
   
 syntax String
   = @category="String" "\"" STRING "\"";
     
 syntax Position
-  = position: "(" INTEGER INTEGER ")";
+  = position: "(" INTEGER x INTEGER y ")";
 
 //////////////////////////////////////////////////////////////////////////////
 // Lexer Rules

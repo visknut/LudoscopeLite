@@ -115,14 +115,14 @@ private TileMap parseExpression(TransformationArtifact artifact,
 
 // TODO: remove duplicate function.
 private TileMap parseExpression(TransformationArtifact artifact,
-			list[LeftHandSymbol] symbols, tileMap(int width, int height), int moduleIndex)
+			list[MatchingSymbol] symbols, tileMap(int width, int height), int moduleIndex)
 {
 	TileMap newTileMap = [];
 	str alphabetName = artifact.project.modules[moduleIndex].alphabetName;
 	
 	int i = 0;
 	list[Tile] row = [];
-	for (LeftHandSymbol symbol <- symbols)
+	for (MatchingSymbol symbol <- symbols)
 	{
 		row += symbol.name;
 		i += 1;

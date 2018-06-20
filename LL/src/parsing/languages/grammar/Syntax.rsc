@@ -17,70 +17,103 @@ import ParseTree;
 //////////////////////////////////////////////////////////////////////////////  
 
 start syntax Grammar
-	= grammar: "version" ":" FLOAT StartInput Rule* Options;
+	= grammar: 
+			"version" ":" FLOAT version 
+			StartInput startInput
+			Rule* rules
+			Options options;
 	
 syntax StartInput
-  = startInput: "start" ":" Expression;
+  = startInput: "start" ":" Expression expression;
   
 syntax Rule
-	= rule: "rule" ":" NAME ("(" RuleSettings+ ")")? "=" 
-		LeftHandExpression "\>" RightHandExpression+;
+	= rule: 
+			"rule" ":" NAME name
+			("(" RuleSettings+ settings ")")? "=" 
+			LeftHandExpression leftHand"\>" 
+			RightHandExpression+ rightHands;
 
 syntax Options
-	= options: ("checkCollisions" ":" BOOLEAN)?
-		("stayWithinBounds" ":" BOOLEAN)?
-		("trackNonTerminals" ":" BOOLEAN)?
-		("findOnlyOneOption" ":" BOOLEAN)?;
+	= options: 
+			("checkCollisions" ":" BOOLEAN checkCollisions)?
+			("stayWithinBounds" ":" BOOLEAN stayWithinBounds)?
+			("trackNonTerminals" ":" BOOLEAN trackNonTerminals)?
+			("findOnlyOneOption" ":" BOOLEAN findOnlyOneOption)?;
 		
 syntax Expression
-	= expression: MapType Symbol+;
+	= expression: 
+			MapType mapType 
+			Symbol+ symbols;
 	
 syntax RightHandExpression
-	= rightHandExpression: "{" INTEGER "=" Expression "}";
-	
+	= rightHandExpression: 
+			"{" INTEGER id "=" 
+			Expression expression "}";
+
 syntax LeftHandExpression
-	= leftHandExpression: MapType LeftHandSymbol+;
-	
+	= leftHandExpression: 
+			MapType mapType
+			MatchingSymbol+ symbols;
+
 syntax Symbol
-	= symbol: INTEGER ":" NAME ("(" MemberStatement+ ")")?;
+	= symbol:
+			INTEGER id ":" 
+			NAME name
+			("(" MemberStatement+ members ")")?;
 	
-syntax LeftHandSymbol
-	= leftHandSymbol: INTEGER ":" NAME ("(" MemberExpression+ ")")?;
+syntax MatchingSymbol
+	= matchingSymbol: 
+			INTEGER id ":" 
+			NAME name
+			("(" MemberExpression+ members ")")?;
 	
 syntax MemberStatement
-	= memberStatement: NAME "=" Value;
+	= memberStatement: 
+			NAME identifier "=" 
+			Value memberValue;
 
 // TODO: Implement expressions.
 syntax MemberExpression
 	= memberExpression: NAME "==" Value;
 
 syntax MapType
-	= tileMap: "TILEMAP" INTEGER INTEGER
+	= tileMap: 
+			"TILEMAP" INTEGER width
+			INTEGER height
 	| string: "STRING"
 	| graph: "GRAPH"
 	| shape: "SHAPE";
 
 syntax RuleSettings
-	= ruleWidth: "width" "=" INTEGER
-	|	ruleHeight: "height" "=" INTEGER
-	| ruleReflections: "gt" "=" INTEGER;
+	= ruleWidth: "width" "=" INTEGER width
+	|	ruleHeight: "height" "=" INTEGER height
+	| ruleReflections: "gt" "=" INTEGER reflections;
 
 syntax Value
-	= integerValue: INTEGER 
-	| floatValue: FLOAT 
-	| stringValue: String 
-	| booleanValue: BOOLEAN
-	| colorValue:	COLORCODE
-	| vectorValue: Vector
-	| listValue: "[" Value* "]";
+	= integerValue: INTEGER integer
+	| floatValue: FLOAT float
+	| stringValue: String string
+	| booleanValue: BOOLEAN boolean
+	| colorValue:	COLORCODE color
+	| vectorValue: Vector vector
+	| listValue: "[" Value* memberList "]";
 
 syntax String
   = @category="String" "\"" STRING "\"";
   
 syntax Vector
-	= vector2d: "(" INTEGER INTEGER ")"
-	| vector3d: "(" INTEGER INTEGER INTEGER ")"
-	| vector4d: "(" INTEGER INTEGER INTEGER INTEGER ")";
+	= vector2d: 
+			"(" INTEGER x
+			INTEGER y ")"
+	| vector3d: 
+			"(" INTEGER x
+			INTEGER y
+			INTEGER z ")"
+	| vector4d: 
+			"(" INTEGER x
+			INTEGER y
+			INTEGER z
+			INTEGER a ")";
 
 //////////////////////////////////////////////////////////////////////////////
 // Lexer Rules

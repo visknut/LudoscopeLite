@@ -9,6 +9,7 @@
 
 module tests::parsing::Checking
 
+import IO;
 import parsing::Parser;
 import parsing::DataStructures;
 import parsing::languages::alphabet::AST;
@@ -133,7 +134,7 @@ private test bool nameFound()
 	AlphabetMap alphabet = ("Alphabet":alphabet(
       tileMap(1,1),
       [
-        symbol("symbolName","#B0B0B0","#404040","","")
+        symbolInfo("symbolName","#B0B0B0","#404040","","")
       ]));
 	TransformationArtifact artifact = 
 		transformationArtifact(ludoscopeProject([], alphabet, specification([])), []);
@@ -141,7 +142,7 @@ private test bool nameFound()
 	Name expectedResult = tileName();
 	
 	/* Act */
-	Name result  = findName(artifact, name);
+	Name result = findName(artifact, name);
 	
 	/* Assert */
 	return expectedResult == result;

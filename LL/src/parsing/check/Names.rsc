@@ -107,7 +107,7 @@ public Name findName
 {
 	visit(artifact)
 	{
-		case symbol(str symbolName, str color, str fill, str abbreviation, str shape) :
+		case symbolInfo(str symbolName, str color, str fill, str abbreviation, str shape) :
 		{
 			if (symbolName == name)
 			{

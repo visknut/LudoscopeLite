@@ -9,7 +9,7 @@ alias History = list[SymbolMap];
 alias Location = tuple[int x, int y];
 alias LevelProperties = list[str property];
 
-//void transformPorpertyReport(PropertyReport report, Alphabet)
-//{
-//	
-//}
+void transformPorpertyReport(PropertyReport report, LudoscopeProject project)
+{
+	
+}

@@ -81,9 +81,9 @@ public test bool parseAndTransfromProject0()
 	AlphabetMap expectedAlphabetMap = ("Alphabet":alphabet(
         tileMap(1,1),
         [
-          symbol("*","#B0B0B0","#404040","",""),
-          symbol("undefined","#404040","#B0B0B0","abbreviation=\"u\"",""),
-          symbol("defined","#404040","#B0B0B0","abbreviation=\"d\"","")
+          symbolInfo("*","#B0B0B0","#404040","",""),
+          symbolInfo("undefined","#404040","#B0B0B0","abbreviation=\"u\"",""),
+          symbolInfo("defined","#404040","#B0B0B0","abbreviation=\"d\"","")
         ]));
 	LudoscopeModule expectedModule = 
 		ludoscopeModule("Module",[],"Alphabet",
@@ -107,9 +107,9 @@ public test bool parseAndTransfromProject1()
 	AlphabetMap expectedAlphabetMap = ("Alphabet":alphabet(
       tileMap(1,1),
       [
-        symbol("*","#B0B0B0","#404040","",""),
-        symbol("undefined","#404040","#B0B0B0","abbreviation=\"u\"",""),
-        symbol("defined","#000000","#FFFFFF","abbreviation=\"d\"","")
+        symbolInfo("*","#B0B0B0","#404040","",""),
+        symbolInfo("undefined","#404040","#B0B0B0","abbreviation=\"u\"",""),
+        symbolInfo("defined","#000000","#FFFFFF","abbreviation=\"d\"","")
       ]));
 	LudoscopeModule expectedModule1 = 
 		ludoscopeModule("Module1" ,[],"Alphabet",
@@ -140,9 +140,9 @@ public test bool parseAndTransfromProject2()
 	AlphabetMap expectedAlphabetMap = ("Alphabet":alphabet(
         tileMap(1,1),
         [
-          symbol("*","#B0B0B0","#404040","",""),
-          symbol("undefined","#404040","#B0B0B0","abbreviation=\"u\"",""),
-          symbol("defined","#404040","#B0B0B0","abbreviation=\"d\"","")
+          symbolInfo("*","#B0B0B0","#404040","",""),
+          symbolInfo("undefined","#404040","#B0B0B0","abbreviation=\"u\"",""),
+          symbolInfo("defined","#404040","#B0B0B0","abbreviation=\"d\"","")
         ]));
 	LudoscopeModule expectedModule = 
 		ludoscopeModule("Module",[],"Alphabet",

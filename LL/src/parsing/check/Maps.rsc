@@ -58,7 +58,7 @@ public SyntaxTree checkMapSize(SyntaxTree syntaxTree)
 						size(symbols), mapType@location)];
 				}
 			}
-			case leftHandExpression(MapType mapType, list[LeftHandSymbol] symbols) :
+			case leftHandExpression(MapType mapType, list[MatchingSymbol] symbols) :
 			{
 				if (mapType.width * mapType.height != size(symbols))
 				{

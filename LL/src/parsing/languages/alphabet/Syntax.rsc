@@ -17,21 +17,21 @@ import ParseTree;
 //////////////////////////////////////////////////////////////////////////////  
 
 start syntax Alphabet
-	= alphabet: MapType Symbol*;
+	= alphabet: MapType SymbolInfo*;
 	
 syntax MapType
-	= tileMap: "TILEMAP" INTEGER INTEGER
+	= tileMap: "TILEMAP" INTEGER width INTEGER height
 	| string: "STRING"
 	| graph: "GRAPH"
 	| shape: "SHAPE";
 
 // TODO: use variable names (as in SAnR).	
-syntax Symbol
-	= symbol: NAME "(" 
-	"color" COLORCODE
-	"fill" COLORCODE
-	("abbreviation" String)?
-	("shape" INTEGER)?
+syntax SymbolInfo
+	= symbolInfo: NAME name "(" 
+	"color" COLORCODE color
+	"fill" COLORCODE fill
+	("abbreviation" String abbreviation)?
+	("shape" INTEGER shape)?
 	")";
 	
 syntax String

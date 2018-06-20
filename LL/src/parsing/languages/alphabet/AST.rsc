@@ -25,14 +25,14 @@ public parsing::languages::alphabet::AST::Alphabet parseAlphabetToAST(loc locati
   
 anno loc Alphabet@location;
 anno loc MapType@location;
-anno loc Symbol@location;
+anno loc SymbolInfo@location;
 
 //////////////////////////////////////////////////////////////////////////////
 // AST
 //////////////////////////////////////////////////////////////////////////////
 		
 data Alphabet
-	= alphabet(MapType mapType, list[Symbol] symbols);
+	= alphabet(MapType mapType, list[SymbolInfo] symbols);
 	
 data MapType
 	= tileMap(int width, int height)
@@ -40,5 +40,10 @@ data MapType
 	|	graph()
 	|	shape();
 
-data Symbol
-	= symbol(str name, str color, str fill, str abbreviation, str shape); // TODO: accept shape as int
+data SymbolInfo
+	= symbolInfo(
+			str name, 
+			str color, 
+			str fill, 
+			str abbreviation, 
+			str shape);

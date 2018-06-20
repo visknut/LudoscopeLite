@@ -30,44 +30,81 @@ public parsing::languages::grammar::AST::Grammar parseGrammarToAST(loc location)
 anno loc MapType@location;
 
 data Grammar
-	= grammar(str version, 
-	StartInput startInput,
-	list[Rule] rules,
-	Options options);
+	= grammar
+		(
+			str version, 
+			StartInput startInput,
+			list[Rule] rules,
+			Options options
+		);
 
 data StartInput
 	= startInput(Expression expression);
 
 data Rule
-	= rule(str name, list[RuleSetting] settings, LeftHandExpression leftHand, 
-		list[RightHandExpression] rightHands);
+	= rule
+		(
+			str name, 
+			list[RuleSetting] settings, 
+			LeftHandExpression leftHand, 
+			list[RightHandExpression] rightHands
+		);
 	
 data Expression
-	= expression(MapType mapType, list[Symbol] symbols);
+	= expression
+		(
+			MapType mapType, 
+			list[Symbol] symbols
+		);
 	
 data LeftHandExpression
-	= leftHandExpression(MapType mapType, list[LeftHandSymbol] symbols);
+	= leftHandExpression
+		(
+			MapType mapType, 
+			list[MatchingSymbol] symbols
+		);
 	
 data RightHandExpression
-	= rightHandExpression(int id, Expression expression);
+	= rightHandExpression
+		(
+			int id, 
+			Expression expression
+		);
 	
 data MapType
-	= tileMap(int width, int height)
+	= tileMap
+		(
+			int width, 
+			int height
+		)
 	| string()
 	| graph()
 	| shape();
 	
 data Symbol
-	= symbol(int id, str name, list[MemberStatement] members);
+	= symbol
+		(
+			int id, 
+			str name, 
+			list[MemberStatement] members
+		);
 	
-data LeftHandSymbol
-	= leftHandSymbol(int id, str name, list[MemberExpression] members);
+data MatchingSymbol
+	= matchingSymbol
+		(
+			int id, 
+			str name,
+			list[MemberExpression] members
+		);
 	
 data Options
-	= options(str checkCollisions, 
-		str stayWithinBounds, 
-		str trackNonTerminals, 
-		str findOnlyOneOption);
+	= options
+		(
+			bool checkCollisions, 
+			bool stayWithinBounds, 
+			bool trackNonTerminals, 
+			bool findOnlyOneOption
+		);
 		
 data RuleSetting
 	= ruleWidth(int width)
@@ -75,21 +112,44 @@ data RuleSetting
 	| ruleReflections(int reflections);
 		
 data MemberStatement
-	= memberStatement(str identifier, Value memberValue);
+	= memberStatement
+		(
+			str identifier, 
+			Value memberValue
+		);
 	
 data MemberExpression
-	= memberExpression(str identifier, Value memberValue);
+	= memberExpression
+		(
+			str identifier, 
+			Value memberValue
+		);
 	
 data Value
-	= integerValue(str integer)
+	= integerValue(int integer)
 	| floatValue(str float)
 	| stringValue(str string)
-	| booleanValue(str boolean)
+	| booleanValue(bool boolean)
 	| colorValue(str color)
 	| vectorValue(Vector vector)
 	| listValue(list[Value] memberList);
 	
 data Vector
-	= vector2d(int x, int y)
-	| vector3d(int x, int y, int z)
-	| vecotr4d(int x, int y, int z, int a);
+	= vector2d
+		(
+			int x, 
+			int y
+		)
+	| vector3d
+		(
+			int x, 
+			int y,
+			int z
+		)
+	| vecotr4d
+		(
+			int x, 
+			int y, 
+			int z, 
+			int a
+		);
