@@ -65,7 +65,7 @@ private test bool tryParsingOnlyStart()
 	return checkErrors(syntaxTree);
 }
 
-private test bool tryParsingAllMemberTypes()
+public test bool tryParsingAllMemberTypes()
 {
 	/* Arrange */
 	fileLocation.file = "allMemberTypes.grm";
@@ -89,18 +89,6 @@ private test bool tryParsingRuleWithMultipleRightHands()
 	return checkErrors(syntaxTree);
 }
 
-// TODO:
-private test bool tryParsingRuleWithNestedSymbol()
-{
-	/* Arrange */
-	fileLocation.file = "ruleWithNestedSymbol.grm";
-		
-	/* Act */
-	SyntaxTree syntaxTree = parseFile(fileLocation, emptySyntaxTree);
-	
-	/* Assert */
-	return checkErrors(syntaxTree);
-}
 
 private test bool tryParsingSimpleRule()
 {
