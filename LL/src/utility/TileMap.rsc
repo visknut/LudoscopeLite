@@ -3,39 +3,36 @@ module utility::TileMap
 import List;
 import parsing::DataStructures;
 
+data Transformations =
+	transformations(bool horizontal, bool vertical, int rotated);
+
 public list[list[str]] createTileMap(str symbol, int width, int height)
 {
 	return [[symbol | int i <- [0 .. width]] | int j <- [0 .. height]];
 }
 
-public list[TileMap] gatherLeftHands(Reflections reflections, TileMap leftHand)
+public TileMap applyTransformation
+(
+	Transformations transformations,
+	TileMap tileMap
+)
 {
-	list[TileMap] leftHands = [leftHand];
-	if (reflections.mirrorHorizontal)
+	if (transformations.horizontal)
 	{
-		leftHands += [mirrorVertical(leftHand)];
-	}
-	if (reflections.mirrorVertical)
-	{
-		leftHands += [mirrorHorizontal(leftHand)];
-	}
-	if (reflections.rotate)
-	{
-		leftHands += getAllRotations(leftHand);
-	}
-	return leftHands;
-}
-
-public list[TileMap] getAllRotations(TileMap tileMap)
-{
-	list[TileMap] rotations = [rotateCounterClockwise(tileMap)];
-	
-	for (int i <- [0 .. 2])
-	{
-		rotations += [rotateCounterClockwise(last(rotations))];
+		tileMap = mirrorHorizontal(tileMap);
 	}
 	
-	return rotations;
+	if (transformations.vertical)
+	{
+	 tileMap = mirrorVertical(tileMap);
+	}
+	
+	for (int i <- [0 .. transformations.rotated])
+	{
+		tileMap = rotateCounterClockwise(tileMap);
+	}
+	
+	return tileMap;
 }
 
 public TileMap rotateCounterClockwise(TileMap tileMap)
@@ -43,8 +40,8 @@ public TileMap rotateCounterClockwise(TileMap tileMap)
 	TileMap rotation = [];
 	for (int i <- reverse([0 .. size(head(tileMap))]))
 	{
-		list[int] newRow = [];
-		for (list[int] row <- tileMap)
+		list[str] newRow = [];
+		for (list[str] row <- tileMap)
 		{
 			newRow += row[i];
 		}
@@ -55,7 +52,7 @@ public TileMap rotateCounterClockwise(TileMap tileMap)
 
 public TileMap mirrorHorizontal(TileMap tileMap)
 {
-	return [reverse(row) | list[int] row <- tileMap];
+	return [reverse(row) | list[str] row <- tileMap];
 }
 
 public TileMap mirrorVertical(TileMap tileMap)

@@ -14,6 +14,8 @@ import IO;
 import List;
 import Map;
 
+import utility::TileMap;
+
 import parsing::DataStructures;
 import execution::DataStructures;
 import execution::instructions::Matching;
@@ -43,27 +45,29 @@ public ExecutionArtifact executeInstruction
 )
 {
 	Rule rule = rules[ruleName];
-	list[Coordinates] matches = 
-		findPatternInGrid(artifact.currentState, rule.leftHand);
+	lrel[Coordinates, Transformations] matches = 
+		findPatternWithTransformations(artifact.currentState, rule);
 
 	if (size(matches) > 0)
 	{
-		Coordinates match = getOneFrom(matches);
+		tuple[Coordinates c, Transformations t] match = getOneFrom(matches);
 		TileMap replacement = getOneFrom(rule.rightHands);
+		replacement =	applyTransformation(match.t, replacement);
 		
+		// TODO: Also store transformation.
 		RuleExecution ruleExecution = 
-			ruleExecution(ruleName, indexOf(rule.rightHands, replacement), match);
+			ruleExecution(ruleName, indexOf(rule.rightHands, replacement), match.c);
 		artifact.history[0].instructions[0].rules = 
 			push(ruleExecution, artifact.history[0].instructions[0].rules);
 
-		int patternWidth = size(rule.leftHand[0]);
-		int patternHeight = size(rule.leftHand);
+		int patternWidth = size(replacement[0]);
+		int patternHeight = size(replacement);
 		
 		for (int i <- [0 .. patternWidth])
 		{
 			for (int j <- [0 .. patternHeight])
 			{
-				artifact.currentState[j + match.y][i + match.x] = 
+				artifact.currentState[j + match.c.y][i + match.c.x] = 
 					replacement[j][i];
 			}
 		}
@@ -82,7 +86,7 @@ public ExecutionArtifact executeInstruction
 )
 {
 	RuleMap currentRules = rules;
-	while (true)
+	while (size(currentRules) > 0)
 	{
 		str ruleName = getOneFrom(currentRules);
 		TileMap oldTileMap = artifact.currentState;

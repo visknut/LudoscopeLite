@@ -20,7 +20,7 @@ import parsing::languages::alphabet::Syntax;
 import parsing::languages::project::Syntax;
 import parsing::languages::grammar::Syntax;
 import parsing::languages::recipe::Syntax;
-import sanr::language::AST;
+import sanr::language::Syntax;
 
 str ALPHABETNAME = "Ludoscope Alphabet";
 str PROJECTNAME = "Ludoscope Project";
