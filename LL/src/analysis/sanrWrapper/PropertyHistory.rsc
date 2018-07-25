@@ -84,7 +84,7 @@ private Map updateMap
 {
 	for (int y <- [0 .. size(previousState)])
 	{
-		for (int x <- [0 .. size(previousState)])
+		for (int x <- [0 .. size(previousState[0])])
 		{
 			if (previousState[y][x] != currentState[y][x])
 			{

@@ -55,6 +55,47 @@ public void executeProject(Tree tree, loc projectFile)
 	iprintln(newArtifact);
 }
 
+public void executeProjectToFile(Tree tree, loc projectFile)
+{
+	if (exists(|project://LL/src/ide/output/ide.output|))
+	{
+		TransformationArtifact artifact = parseAndCheckForErrors(projectFile);
+		if (artifact.errors == [])
+		{
+			ExecutionArtifact newArtifact = executeProject(artifact.project);
+			if (newArtifact.errors != [])
+			{
+				writeFile(|project://LL/src/ide/output/ide.output|, 
+					"There were errors found while executing the project:\n");
+				for (ParsingError error <- artifact.errors)
+				{
+					appendToFile(|project://LL/src/ide/output/ide.output|, errorToString(error));
+				}
+			}
+			else
+			{
+				writeFile(|project://LL/src/ide/output/ide.output|, newArtifact.output);
+			}
+		} 
+		else
+		{
+		writeFile(|project://LL/src/ide/output/ide.output|, 
+					"There were errors found while parsing the project:\n");
+		appendToFile(|project://LL/src/ide/output/ide.output|, newArtifact);
+		}
+		iprintln("Result saved at: |project://LL/src/ide/output/ide.output|");
+	}
+	else
+	{
+		iprintln("|project://LL/src/ide/output/ide.output| missing");
+	}
+}
+
+public void sanrReportToFile(Tree tree, loc projectFile)
+{
+
+}
+
 public void timeExecution1x(Tree tree, loc projectFile)
 	= timeExecution(tree, projectFile, 1);
 	

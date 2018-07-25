@@ -86,23 +86,30 @@ public ExecutionArtifact executeInstruction
 )
 {
 	RuleMap currentRules = rules;
-	while (size(currentRules) > 0)
+	if (size(currentRules) > 0)
 	{
-		str ruleName = getOneFrom(currentRules);
-		TileMap oldTileMap = artifact.currentState;
-		artifact = executeInstruction(artifact, rules, itterateRule(ruleName));
-		if (oldTileMap == artifact.currentState)
+		/* Loop stops after 500 instructions of after no matches are left. */
+		// TODO: Read maxIterations from module.
+		int i = 0;
+		while (i < 300)
 		{
-			currentRules = delete(currentRules, ruleName);
-		}
-		else
-		{
-			currentRules = rules;
-		}
-		
-		if (currentRules == ())
-		{
-			break;
+			str ruleName = getOneFrom(currentRules);
+			TileMap oldTileMap = artifact.currentState;
+			artifact = executeInstruction(artifact, rules, itterateRule(ruleName));
+			if (oldTileMap == artifact.currentState)
+			{
+				currentRules = delete(currentRules, ruleName);
+			}
+			else
+			{
+				currentRules = rules;
+				i += 1;
+			}
+			
+			if (currentRules == ())
+			{
+				break;
+			}
 		}
 	}
 	return artifact;

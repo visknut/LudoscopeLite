@@ -17,6 +17,7 @@ public loc projectFile = |project://LL/src/tests/correctTestData/dungeon/dungeon
 public loc projectFileVar1 = |project://LL/src/tests/correctTestData/dungeonVar1/dungeon.lsp|;
 public loc projectFileVar2 = |project://LL/src/tests/correctTestData/dungeonVar2/dungeon.lsp|;
 
+private loc reportFile = |project://LL/src/ide/output/sanr.output|;
 
 //data sanrBugReport =
 data Bug
@@ -35,9 +36,22 @@ public void executeMultipleTimes(loc projectFile, int n)
 	map[int, int] propertyCount = ();
 	map[Bug, int] bugCount = ();
 	
+	LudoscopeProject parsedProject = parseAndTransform(projectFile).project;
+	
 	for (int i <- [0 .. n])
 	{
-		ExecutionArtifact artifact = parseAndExecuteFile(projectFile);
+		ExecutionArtifact artifact = executeProject(parsedProject);
+		
+		if (artifact.errors != [])
+		{
+			println("There were errors found while parsing the project:");
+			for (ParsingError error <- artifact.errors)
+			{
+				println(errorToString(error));
+				throw(Timeout());
+			}
+		}
+		
 		outputCount[artifact.currentState] ? 0 += 1;
 		reportCount[artifact.propertyReport.history] ? 0 += 1;
 		propertyStatesCount[last(artifact.propertyReport.history).propertyStates] ? 0 += 1;
@@ -54,15 +68,36 @@ public void executeMultipleTimes(loc projectFile, int n)
 		{
 			bugCount[bug] ? 0 += 1;
 		}
+		
+		if (exists(reportFile))
+		{
+			writeFile(reportFile, 
+						"BUG REPORT\n__________________\n");
+			appendToFile(reportFile, "Number of unique executions: <size(reportCount)>\n");
+			appendToFile(reportFile, "Number of unique outputs: <size(outputCount)>\n");
+			appendToFile(reportFile, "Number of unique property end states: <size(propertyStatesCount)>\n");
+			appendToFile(reportFile, "Number of bad maps: " + 
+				"<size(outputCount) - (propertyStatesCount[[true, true, true, true, true]] ? 0 )>\n");
+			appendToFile(reportFile, "Number of broken properties: <size(propertyCount)>\n");
+			appendToFile(reportFile, "Number of bugs: <size(bugCount)>\n");
+			
+			appendToFile(reportFile,"\nBugs: \n -----------------");
+			for (Bug bug <- bugCount)
+			{
+				appendToFile(reportFile,"\n\nProperty: ");
+				appendToFile(reportFile,readFileLines(bug.property@location)[0]);
+				appendToFile(reportFile,"\nBroken by: ");
+				appendToFile(reportFile,bug.rule);
+				appendToFile(reportFile,"\nCount: ");
+				appendToFile(reportFile,bugCount[bug]);
+			}
+			println("<i + 1>/<n>");
+		}
+		else
+		{
+			iprintln("<reportFile> missing");
+		}
 	}
-	
-	println("Number of unique executions: <size(reportCount)>");
-	println("Number of unique outputs: <size(outputCount)>");
-	println("Number of unique property end states: <size(propertyStatesCount)>");
-	println("Number of bad maps: <size(outputCount) - (propertyStatesCount[[true, true, true, true, true]] ? 0 )>");
-	println("Number of broken properties: <size(propertyCount)>");
-	println("Number of bugs: <size(bugCount)>");
-	iprintln(bugCount);
 }
 
 public list[Bug] findBugs(ExecutionArtifact artifact)
@@ -113,7 +148,7 @@ public str getRule(int property, ExecutionArtifact artifact)
 			}
 		}
 	}
-	return -1;
+	return "none";
 }
 
 public ExecutionArtifact parseAndExecuteFile(loc projectFile)

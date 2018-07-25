@@ -80,7 +80,18 @@ public void addMenuItems()
 	        "LL: basic functions",
 	        [
 	          action("Parse and transform", parseAndTransform),
-	          action("Execute Project", executeProject)
+	          action("Execute project", executeProject),
+	          action("Execute and save result", executeProjectToFile)
+	        ]
+	       )
+	      ),
+	  	popup
+	    (
+	      menu
+	      (
+	        "SAnR",
+	        [
+	          action("SAnR report to file", sanrReportToFile)
 	        ]
 	       )
 	      ),
