@@ -1,0 +1,99 @@
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  line-height: 60px; /* Vertically center the text there */
+  background-color: #f5f5f5;
+}
+
+.node rect {
+  stroke: #999;
+  fill: #fff;
+  stroke-width: 1.5px;
+}
+
+.edgePath path {
+  stroke: #333;
+  stroke-width: 1.5px;
+}
+
+.optionOn {
+  color: black;
+  text-align: right;
+  font-weight: bold;
+}
+
+.svgWrapper {
+  position:relative;
+}
+
+svg {
+  position:relative;
+}
+
+.optionOff {
+  color: lightgray;
+  text-align: right;
+  font-weight: bold;
+}
+
+
+.negativeMAD {
+  color: red;
+  text-align: right;
+  font-weight: bold;
+}
+
+.positiveMAD {
+  color: black;
+  text-align: right;
+  font-weight: bold;
+}
+
+.scrollBox {
+  height: 500px;
+  overflow-y: auto;
+}
+
+.arrow {
+  font-size:30px;
+}
+
+#pipeline {
+ outline: 2px lightgray solid;
+}
+
+.CodeMirror {
+  height: 500px;
+}
+
+.moduleLink {
+  color: white;
+}
+
+.moduleLink:hover {
+    color: lightgray;
+}
+
+.executionHistory {
+  overflow-y: auto;
+}
+
+.mapDisplay {
+  height: 300px;
+}
+
+.ruleRow {
+ padding-left: 50px;
+ padding-right: 50px;
+}

@@ -12,9 +12,9 @@ module tests::execution::History
 import IO;
 import execution::Execution;
 import execution::DataStructures;
-import execution::history::DataStructures;
 import execution::instructions::Instructions;
 import parsing::DataStructures;
+import sanr::language::AST;
 
 public bool runAllTests()
 {
@@ -25,27 +25,18 @@ public bool runAllTests()
 private test bool checkHistorySingleModule()
 {
 	/* Arrange */
-	RuleMap rules = (1 : rule(reflections(false,false,false),[[1]],[[[2]]]),
-		2 : rule(reflections(false,false,false),[[2]],[[[3]]]));
-	TileMap startingMap = [[1]];
+	RuleMap rules = ("rule1" : rule(reflections(false,false,false),[["1"]],[[["2"]]]),
+		"rule2" : rule(reflections(false,false,false),[["2"]],[[["3"]]]));
+	TileMap startingMap = [["1"]];
 	LudoscopeModule module1 = 
-		ludoscopeModule(1, [], "alphabet", startingMap, rules, [executeGrammar()]);
-	LudoscopeProject project = ludoscopeProject([module1], (), []);
+		ludoscopeModule("module1", [], "alphabet", startingMap, rules, [executeGrammar()]);
+	LudoscopeProject project = ludoscopeProject([module1], (), specification([]));
 	
-  ExecutionHistory expectedResult = 
-    [moduleExecution(
-      "module1",
-      [instructionExecution([
-            ruleExecution(
-              "rule1",
-              0,
-              coordinates(0,0)),
-            ruleExecution(
-              "rule2",
-              0,
-              coordinates(0,0))
-          ])])];
-	
+	Step step1 = step([["2"]], "module1", itterateRule("rule1"), "rule1", 0, coordinates(0,0));
+	Step step2 = step([["3"]], "module1", itterateRule("rule2"), "rule2", 0, coordinates(0,0));
+
+  ExecutionHistory expectedResult = [step1, step2];
+
 	/* Act */
 	ExecutionArtifact result = executeProject(project);
 	
@@ -65,33 +56,14 @@ public test bool checkHistoryMultipleModules()
     ludoscopeModule("module1", [], "alphabet", startingMap, rules1, [executeGrammar()]);
   LudoscopeModule module2 = 
     ludoscopeModule("module2", ["module1"], "alphabet", startingMap, rules2, [executeGrammar()]);
-  LudoscopeProject project = ludoscopeProject([module1, module2], (), []);
+  LudoscopeProject project = ludoscopeProject([module1, module2], (), specification([]));
   
-  ExecutionHistory expectedResult = 
-    [moduleExecution(
-      "module1",
-      [instructionExecution([
-            ruleExecution(
-              "rule1",
-              0,
-              coordinates(0,0)),
-            ruleExecution(
-              "rule2",
-              0,
-              coordinates(0,0))
-          ])]),
-    moduleExecution(
-      "module2",
-      [instructionExecution([
-            ruleExecution(
-              "rule1",
-              0,
-              coordinates(0,0)),
-            ruleExecution(
-              "rule2",
-              0,
-              coordinates(0,0))
-          ])])];
+  Step step1 = step([["2"]], "module1", itterateRule("rule1"), "rule1", 0, coordinates(0,0));
+	Step step2 = step([["3"]], "module1", itterateRule("rule2"), "rule2", 0, coordinates(0,0));
+  Step step3 = step([["2"]], "module2", itterateRule("rule1"), "rule1", 0, coordinates(0,0));
+	Step step4 = step([["1"]], "module2", itterateRule("rule2"), "rule2", 0, coordinates(0,0));
+  
+  ExecutionHistory expectedResult = [step1, step2, step3, step4];
 	
 	/* Act */
 	ExecutionArtifact result = executeProject(project);

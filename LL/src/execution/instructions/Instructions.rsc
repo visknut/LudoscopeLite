@@ -27,12 +27,12 @@ import sanr::DataStructures;
 public ExecutionArtifact executeInstruction
 (
 	ExecutionArtifact artifact,
-	RuleMap rules, 
+	LudoscopeModule \module, 
 	executeRule(str ruleName, int itterations))
 {
 	for (int i <- [0 .. itterations])
 	{
-		artifact = executeInstruction(artifact, rules, itterateRule(ruleName));
+		artifact = executeInstruction(artifact, \module, itterateRule(ruleName));
 	}
 	return artifact;
 }
@@ -40,10 +40,11 @@ public ExecutionArtifact executeInstruction
 public ExecutionArtifact executeInstruction
 (
 	ExecutionArtifact artifact,
-	RuleMap rules, 
+	LudoscopeModule \module, 
 	itterateRule(str ruleName)
 )
 {
+	RuleMap rules = \module.rules;
 	Rule rule = rules[ruleName];
 	lrel[Coordinates, Transformations] matches = 
 		findPatternWithTransformations(artifact.currentState, rule);
@@ -53,12 +54,6 @@ public ExecutionArtifact executeInstruction
 		tuple[Coordinates c, Transformations t] match = getOneFrom(matches);
 		TileMap replacement = getOneFrom(rule.rightHands);
 		replacement =	applyTransformation(match.t, replacement);
-		
-		// TODO: Also store transformation.
-		RuleExecution ruleExecution = 
-			ruleExecution(ruleName, indexOf(rule.rightHands, replacement), match.c);
-		artifact.history[0].instructions[0].rules = 
-			push(ruleExecution, artifact.history[0].instructions[0].rules);
 
 		int patternWidth = size(replacement[0]);
 		int patternHeight = size(replacement);
@@ -72,6 +67,15 @@ public ExecutionArtifact executeInstruction
 			}
 		}
 		
+		Step newStep = 
+			step(artifact.currentState, 
+					\module.name, 
+					itterateRule(ruleName), // TODO: Add actual instruction.
+					ruleName, 
+					indexOf(rule.rightHands, replacement),
+					match.c);
+		artifact.history = push(newStep, artifact.history);
+		
 		/* Update property report. */
 		artifact.propertyReport = updatePropertyReport(artifact);
 	}
@@ -81,21 +85,22 @@ public ExecutionArtifact executeInstruction
 public ExecutionArtifact executeInstruction
 (
 	ExecutionArtifact artifact,
-	RuleMap rules, 
+	LudoscopeModule \module, 
 	executeGrammar()
 )
 {
+	RuleMap rules = \module.rules;
 	RuleMap currentRules = rules;
 	if (size(currentRules) > 0)
 	{
-		/* Loop stops after 500 instructions of after no matches are left. */
+		/* Loop stops after 300 instructions of after no matches are left. */
 		// TODO: Read maxIterations from module.
 		int i = 0;
 		while (i < 300)
 		{
 			str ruleName = getOneFrom(currentRules);
 			TileMap oldTileMap = artifact.currentState;
-			artifact = executeInstruction(artifact, rules, itterateRule(ruleName));
+			artifact = executeInstruction(artifact, \module, itterateRule(ruleName));
 			if (oldTileMap == artifact.currentState)
 			{
 				currentRules = delete(currentRules, ruleName);

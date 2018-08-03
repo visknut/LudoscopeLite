@@ -92,7 +92,7 @@ public SyntaxTree parseCompleteProject(loc projectFile)
 	return syntaxTree;
 }
 
-private list[loc] gatherFileLocations(SyntaxTree syntaxTree, loc projectFile)
+public list[loc] gatherFileLocations(SyntaxTree syntaxTree, loc projectFile)
 {
 	list[loc] fileLocations = [];
 

@@ -12,7 +12,7 @@ module execution::DataStructures
 
 import analysis::sanrWrapper::PropertyHistory;
 import sanr::PropertyValidation;
-import execution::history::DataStructures;
+//import execution::history::DataStructures;
 import parsing::DataStructures;
 import errors::Execution;
 
@@ -27,18 +27,19 @@ data ExecutionArtifact =
 										TileMap currentState,
 										ExecutionHistory history,
 										PropertyReport propertyReport,
-										list[ExecutionError] errors);
+										list[ExecutionError] errors)
+	| emptyExecutionArtifact();
 	
 data PreparationArtifact =
-	preparationArtifact(ModuleHierarchy hierarchy, list[ExecutionError] errors);
+	preparationArtifact(ModuleHierarchy hierarchy, list[ExecutionError] errors)
+	| emptyPreparationArtifact();
 	
-alias ExecutionHistory = list[ModuleExecution];
+alias ExecutionHistory = list[Step];
 
-data ModuleExecution 
-	= moduleExecution(str name, list[InstructionExecution] instructions);
-	
-data InstructionExecution
-	= instructionExecution(list[RuleExecution] rules);
-	
-data RuleExecution 
-	= ruleExecution(str name, int rightHandIndex, Coordinates location);
+data Step = 
+	step(TileMap tileMap, 
+			str moduleName, 
+			Instruction instruction, 
+			str ruleName, 
+			int rightHand, 
+			Coordinates location);

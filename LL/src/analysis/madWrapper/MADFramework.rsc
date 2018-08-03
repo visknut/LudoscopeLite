@@ -24,7 +24,7 @@ import analysis::madWrapper::DataTransformation;
 
 alias ProjectScore = map[str, ModuleScore];
 alias ModuleScore = map[str, list[RightHandScore]];
-alias RightHandScore = tuple[int, HeatMap];
+alias RightHandScore = tuple[int score, HeatMap heatmap];
 alias HeatMap = list[list[int]];
 
 public ProjectScore calculateMAD(LudoscopeProject project)

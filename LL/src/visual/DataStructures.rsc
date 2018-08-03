@@ -2,14 +2,11 @@ module visual::DataStructures
 
 import parsing::DataStructures;
 //import sanr::DataStructures;
+import parsing::languages::alphabet::AST;
 
-alias Symbol = tuple[str name, str fill, str colour];
 alias SymbolMap = list[list[Symbol]];
 alias History = list[SymbolMap];
 alias Location = tuple[int x, int y];
 alias LevelProperties = list[str property];
 
-void transformPorpertyReport(PropertyReport report, LudoscopeProject project)
-{
-	
-}
+alias History = list[Step];

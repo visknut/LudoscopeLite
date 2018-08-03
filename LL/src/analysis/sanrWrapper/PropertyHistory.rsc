@@ -60,8 +60,8 @@ public ExtendedTileMaps extractExtendedTileMaps
 )
 {
 	/* Retrieve information from the generation history. */
-	ModuleExecution history = artifact.history[0];
-	str ruleName = history.instructions[0].rules[0].name;
+	Step step = artifact.history[0];
+	str ruleName = step.ruleName;
 	ReportState previousState = last(artifact.propertyReport.history);
 	Map previousSymbolMap = previousState.mapStates.tileMap;
 

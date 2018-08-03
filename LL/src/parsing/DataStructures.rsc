@@ -24,7 +24,8 @@ alias Recipe = list[Instruction];
 
 data TransformationArtifact
 	= transformationArtifact(LudoscopeProject project, 
-		list[ParsingError] errors);
+		list[ParsingError] errors)
+	| emptyArtifact();
 
 data LudoscopeProject
 	= ludoscopeProject(list[LudoscopeModule] modules, 

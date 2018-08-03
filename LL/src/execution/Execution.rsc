@@ -21,13 +21,13 @@ import parsing::DataStructures;
 import execution::instructions::Instructions;
 import execution::DataStructures;
 import execution::ModuleHierarchy;
-import execution::history::DataStructures;
 
 import analysis::sanrWrapper::PropertyHistory;
 import sanr::DataStructures;
 
 public ExecutionArtifact executeProject(LudoscopeProject project)
 {
+	iprintln(project);
 	list[LudoscopeModule] modules = project.modules;
 	PreparationArtifact preparationArtifact =  extractModuleHierarchy(project);
 		
@@ -54,7 +54,7 @@ public ExecutionArtifact executeProject(LudoscopeProject project)
 			artifact = executeModule(artifact, currentModule);
 		}
 	}
-	artifact.history = reverseHistory(artifact.history);
+	artifact.history = reverse(artifact.history);
 	return artifact;
 }
 
@@ -64,23 +64,17 @@ public ExecutionArtifact executeModule
 	LudoscopeModule ludoscopeModule
 )
 {
-	artifact.history = 
-		push(moduleExecution(ludoscopeModule.name, []), artifact.history);
 	switch (size(ludoscopeModule.inputs))
 	{
 		case 0 : 
 		{
 			artifact.currentState = ludoscopeModule.startingState;
-			artifact = executeRecipe(artifact,
-				ludoscopeModule.rules, 
-				ludoscopeModule.recipe);
+			artifact = executeRecipe(artifact, ludoscopeModule);
 		}
 		case 1 : 
 		{
 			artifact.currentState = artifact.output[head(ludoscopeModule.inputs)];
-			artifact = executeRecipe(artifact,
-				ludoscopeModule.rules,
-				ludoscopeModule.recipe);
+			artifact = executeRecipe(artifact, ludoscopeModule);
 		}
 		default :
 		{
@@ -96,15 +90,13 @@ public ExecutionArtifact executeModule
 public ExecutionArtifact executeRecipe
 (
 	ExecutionArtifact artifact,
-	RuleMap rules,
-	Recipe recipe
+	LudoscopeModule \module
 )
 {
+	Recipe recipe = \module.recipe;
 	for (Instruction instruction <- recipe)
 	{
-		artifact.history[0].instructions = 
-			push(instructionExecution([]), artifact.history[0].instructions);
-		artifact = executeInstruction(artifact, rules, instruction);
+		artifact = executeInstruction(artifact, \module, instruction);
 	}
 	return artifact;
 }
@@ -113,13 +105,13 @@ public ExecutionArtifact executeRecipe
 // Utility functions.
 ////////////////////////////////////////////////////////////////////////////// 
 
-private ExecutionHistory reverseHistory(ExecutionHistory history)
-{
-	history = visit (history)
-	{
-		case list[ModuleExecution] timeline => reverse(timeline)
-		case list[InstructionExecution] timeline => reverse(timeline)
-		case list[RuleExecution] timeline => reverse(timeline)
-	};
-	return history;
-}
+//private ExecutionHistory reverseHistory(ExecutionHistory history)
+//{
+//	history = visit (history)
+//	{
+//		case list[ModuleExecution] timeline => reverse(timeline)
+//		case list[InstructionExecution] timeline => reverse(timeline)
+//		case list[RuleExecution] timeline => reverse(timeline)
+//	};
+//	return history;
+//}

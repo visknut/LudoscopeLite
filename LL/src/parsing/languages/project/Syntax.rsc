@@ -17,8 +17,8 @@ import ParseTree;
 ////////////////////////////////////////////////////////////////////////////// 
 
 start syntax Project
-	= project: "version" FLOAT 
-	Declaration*;
+	= project: "version" FLOAT version
+	Declaration* declarations;
 	
 syntax Declaration
 	=	declaredAlphabet: Alphabet declaredAlphabet

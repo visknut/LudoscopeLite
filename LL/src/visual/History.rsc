@@ -1,11 +1,3 @@
-@license{
-  Copyright (c) Tijs van der Storm <Centrum Wiskunde & Informatica>.
-  All rights reserved.
-  This file is licensed under the BSD 2-Clause License, which accompanies this project
-  and is available under https://opensource.org/licenses/BSD-2-Clause.
-}
-@contributor{Tijs van der Storm - storm@cwi.nl - CWI}
-
 module visual::History
 
 import salix::App;
