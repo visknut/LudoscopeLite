@@ -1,0 +1,4 @@
+version: 0.6f
+start: TILEMAP 1 1 0:undefined
+rule: addNorthDoor(height=2) = TILEMAP 1 2 0:wall 1:route > {0 = TILEMAP 1 2 0:door 1:route}
+rule: addEastDoor(width=2) = TILEMAP 2 1 0:route 1:wall > {0 = TILEMAP 2 1 0:route 1:door}

@@ -1,0 +1,6 @@
+version: 0.6f
+start: TILEMAP 1 1 0:undefined
+rule: startRoute(width=2) = TILEMAP 2 1 0:floor 1:wall > {0 = TILEMAP 2 1 0:route 1:wall}
+rule: continueRoute(width=5) = TILEMAP 5 1 0:floor 1:floor 2:floor 3:route 4:wall > {0 = TILEMAP 5 1 0:floor 1:floor 2:route 3:route 4:wall} | {1 = TILEMAP 5 1 0:floor 1:route 2:route 3:route 4:wall} | {2 = TILEMAP 5 1 0:route 1:route 2:route 3:route 4:wall}
+rule: continueRoute2(width=2, height=2) = TILEMAP 2 2 0:floor 1:floor 2:route 3:route > {0 = TILEMAP 2 2 0:route 1:floor 2:route 3:route}
+rule: continueRoute3(height=3) = TILEMAP 1 3 0:floor 1:route 2:route > {0 = TILEMAP 1 3 0:route 1:route 2:route}

@@ -1,0 +1,1 @@
+TILEMAP 1 1 *(color=#B0B0B0, fill=#404040) floor(color=#000000, fill=#FFFFFF, abbreviation="f") route(color=#000000, fill=#DDDDDD, abbreviation="r") wall(color=#000000, fill=#404040, abbreviation="w") door(color=#000000, fill=#7DF07D, abbreviation="d") pillar(color=#000000, fill=#F04B4B, abbreviation="p") water(color=#000000, fill=#7D7DDC, abbreviation="a")

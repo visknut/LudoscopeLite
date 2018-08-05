@@ -63,54 +63,103 @@ public void view(Model model) {
 
 void viewBugReport(Model model)
 {
-	if (model.executionViewInfo.executionArtifact == emptyExecutionArtifact())
-	{
-		h3("The project stil contains parsing errors..");
-	} 
-	else
-	{
-		int itterations = model.bugReportViewInfo.itterations;
-		input(\value("<itterations>"),\type("number"), min("1"), max("10000"), onInput(setItterations));
-		button(onClick(startNewAnalysis()), "Start analysis");
-		
-		Report report = model.bugReportViewInfo.bugReport;
-		
-		if (report != emptyReport())
+	div(class("container"), () {
+		if (model.executionViewInfo.executionArtifact == emptyExecutionArtifact())
 		{
-			int actualItterations = 0;
-			for (key <- report.outputs)
-			{
-				actualItterations += report.outputs[key];
-			}
-			h3("Executions: <actualItterations>");
-			h3("Unique results: <size(report.outputs)>");
-			h3("Broken results: <report.brokenOutputs>");
-			
-			table(class("table table-hover table-condensed"), () {
-			thead(() {
-				th(scope("col"), class("text-center"), () {
-					text("Property");
-				});
-				th(scope("col"), class("text-center"), () {
-					text("Broken By");
-				});
+			h3("The project stil contains parsing errors..");
+		} 
+		else
+		{
+			div(class("row"), () {
+				int itterations = model.bugReportViewInfo.itterations;
+				input(\value("<itterations>"),\type("number"), min("1"), max("10000"), onInput(setItterations));
+				button(onClick(startNewAnalysis()), "Start analysis");
 			});
-			tbody(() {
-				for(BugType bugType <- report.bugTypes)
-				{
-					tr(() {
-						th(scope("row"), () {
-							text(propertyToText(bugType.property));
+			
+			Report report = model.bugReportViewInfo.bugReport;
+			
+			if (report != emptyReport())
+			{
+				div(class("row"), () {
+					int actualItterations = 0;
+					for (key <- report.outputs)
+					{
+						actualItterations += report.outputs[key];
+					}
+	
+					div(class("col-md-3"), () {
+			
+						h3("Executions: <actualItterations>");
+						h3("Unique results: <size(report.outputs)>");
+						h3("Broken results: <report.brokenOutputs>");
+					});
+
+					div(class("col-md-6 scrollBox"), () {
+						table(class("table table-hover table-condensed"), () {
+						thead(() {
+							th(scope("col"), () {
+								text("Property");
+							});
+							th(scope("col"), () {
+								text("Broken By");
+							});
+							th(scope("col"), () {
+								text("Occurences");
+							});
 						});
-						th(scope("row"), () {
-							text(bugType.rule);
+						tbody(() {
+							for(BugType bugType <- report.bugTypes)
+							{
+								list[Bug] bugs = report.bugs[bugType];
+								real percentage = ((1.0*size(bugs))/actualItterations) * 100.0;
+								if (bugType == model.bugReportViewInfo.selectedBugType)
+								{
+									tr(class("active"), onClick(setBugType(emptyBugType())), () {
+										th(scope("row"), () {
+											text(propertyToText(bugType.property));
+										});
+										th(scope("row"), () {
+											text(bugType.rule);
+										});
+										th(scope("row"), () {
+											text("<size(bugs)> (<percentage>%)");
+										});
+									});
+									for (Bug bug <- bugs)
+									{
+										tr(class("warning"), onClick(inspectExecution(bug.execution, bug.step)), () {
+											th(scope("row"), () {
+												text("↳		Execution #<bug.executionNumber>");
+											});
+											th(scope("row"), () {
+											});
+											th(scope("row"), () {
+											});
+										});
+									}
+								}
+								else
+								{
+									tr(onClick(setBugType(bugType)), () {
+										th(scope("row"), () {
+											text(propertyToText(bugType.property));
+										});
+										th(scope("row"), () {
+											text(bugType.rule);
+										});
+										th(scope("row"), () {
+											text("<size(bugs)> (<percentage>%)");
+										});
+									});
+								}
+							}
 						});
 					});
-				}
-			});
-		});
+				});
+				});
+			}
 		}
-	}
+	});
 }
 
 void viewExecution(model)
@@ -256,7 +305,7 @@ void viewProject(Model model)
     div(class("row"), () {
       div(class("col-md-6"), () {
 	      codeMirrorWithMode("cm", model.projectViewInfo.mode, onChange(cmChange), style(("height": "500")),
-	        lineNumbers(true), \value(model.projectViewInfo.initialSrc), lineWrapping(true));
+	        lineNumbers(true), \value(model.projectViewInfo.initialSrc), lineWrapping(true), class("cm-s-3024-night"));
 
 		    button(onClick(saveChanges()), "Save changes");
 		  });
@@ -561,13 +610,13 @@ void viewHeader(Model model) {
 							if (project == model.projectViewInfo.selectedProject)
 							{
 							  li(class("active"), () {
-									a(href("#"), onClick(selectedFile(project)), project);
+									a(href("#"), onClick(selectedProject(project)), project);
 								});
 							}
 							else
 							{
 							  li(() {
-									a(href("#"), onClick(selectedFile(project)), project);
+									a(href("#"), onClick(selectedProject(project)), project);
 								});
 							}
 						}
@@ -604,6 +653,9 @@ void viewHeader(Model model) {
 					ul(class("dropdown-menu"), () {
 					  li(() {
 							a(href("#"), onClick(changeView(executionView())), "Execute project");
+						});
+						li(() {
+							a(href("#"), onClick(generateSoundLevel()), "Generate sound level");
 						});
 						li(() {
 							a(href("#"), onClick(changeView(bugReportView())), "SaNR analysis");

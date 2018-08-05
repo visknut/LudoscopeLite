@@ -41,6 +41,7 @@ import errors::Execution;
 
 /* SAnR */
 import analysis::sanrWrapper::Report;
+import sanr::DataStructures;
 
 alias Model = 
 	tuple[
@@ -73,14 +74,15 @@ alias ExecutionViewInfo
 alias BugReportViewInfo
 	= tuple[
 		Report bugReport,
-		int itterations
+		int itterations,
+		BugType selectedBugType
 	];
 	
 alias SymbolMap = list[list[SymbolInfo]];
 
 private loc projectsFolder = |project://LL/src/visual/projects|;
 
-App[str] cmApp()
+App[str] LLApp()
   = app(init, 
   	view, 
   	update, 
@@ -117,7 +119,8 @@ Model init() {
 	BugReportViewInfo bugReportViewInfo =
 		<
 			emptyReport(),
-			10
+			10,
+			emptyBugType()
 		>;
 		
 	Model newModel = 
@@ -145,7 +148,10 @@ data Msg
   | changeView(View newView)
   | setStep(int newStep)
   | setItterations(int itterations)
-  | startNewAnalysis();
+  | startNewAnalysis()
+  | setBugType(BugType bugType)
+  | inspectExecution(ExecutionArtifact executionArtifact, int currentStep)
+  | generateSoundLevel();
 
 private list[str] mySplit(str sep, str s) {
   if (/^<before:.*?><sep>/m := s) {
@@ -192,6 +198,7 @@ Model update(Msg msg, Model model) {
     	model = selectFile(model, model.projectViewInfo.projectFiles[0]);
     	
 			model = tryAndParse(model);
+			model.bugReportViewInfo.bugReport = emptyReport();
     }
     case selectedFile(str file):
     {
@@ -219,6 +226,21 @@ Model update(Msg msg, Model model) {
     	model.bugReportViewInfo.bugReport 
     		= analyseProject(model.projectViewInfo.parsedProject.project, 
     			model.bugReportViewInfo.itterations);
+    }
+    case setBugType(BugType bugType):
+    {
+    	model.bugReportViewInfo.selectedBugType = bugType;
+    }
+    case inspectExecution(ExecutionArtifact executionArtifact, int currentStep):
+    {
+    	model.view = executionView();
+    	model.executionViewInfo.executionArtifact = executionArtifact;
+    	model.executionViewInfo.currentStep = currentStep;
+    }
+    case generateSoundLevel():
+    {
+    	model = generateSoundLevel(model);
+    	model.view = executionView();
     }
   }
   return model;
@@ -251,6 +273,29 @@ Model tryAndParse(Model model)
 			break;
 		}
 	}
+	return model;
+}
+
+Model generateSoundLevel(Model model)
+{
+	ExecutionArtifact artifact = model.executionViewInfo.executionArtifact;
+	PropertyStates finalPropertyStates = last(artifact.propertyReport.history).propertyStates;
+	
+	// TODO: 100 executions can take a long time. Measure time.
+	for (int i <- [0 .. 100])
+	{
+		if (false in finalPropertyStates)
+		{
+			model.executionViewInfo.executionArtifact 
+				= executeProject(model.projectViewInfo.parsedProject.project);
+		}
+		else
+		{
+			return model;
+		}
+	}
+	println("Couldn\'t generate sound level");
+	
 	return model;
 }
 

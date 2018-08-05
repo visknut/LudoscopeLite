@@ -1,0 +1,1 @@
+IterateRule("addWater") ExecuteRule("addPillar", 3)

@@ -22,10 +22,10 @@ data Report
 	| emptyReport();
 	
 data BugType
-	= bugType(str rule, Property property);
+	= bugType(str rule, Property property) | emptyBugType();
 
 data Bug
-	=	bug(str rule, Property property, ExecutionArtifact execution, int step);
+	=	bug(str rule, Property property, ExecutionArtifact execution, int executionNumber, int step);
 
 public Report analyseProject(LudoscopeProject project, int itterations)
 {
@@ -49,6 +49,7 @@ public Report analyseProject(LudoscopeProject project, int itterations)
 		
 		for (Bug bug <- findBugs(artifact))
 		{
+			bug.executionNumber = i;
 			BugType bugType = bugType(bug.rule, bug.property);
 			bugTypes += bugType;
 			if (bugType in bugMap)
@@ -79,7 +80,7 @@ public list[Bug] findBugs(ExecutionArtifact artifact)
 			
 			int step = getStep(i, artifact);
 			str ruleName = artifact.history[step].ruleName;
-			bugs += bug(ruleName, property, artifact, step);
+			bugs += bug(ruleName, property, artifact, -1, step);
 		}
 	}
 
