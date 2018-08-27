@@ -5,6 +5,8 @@ html {
 body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
+  /* TODO: revert after presentation. */
+  font-size: 200%;
 }
 .footer {
   position: absolute;
@@ -14,6 +16,11 @@ body {
   height: 60px;
   line-height: 60px; /* Vertically center the text there */
   background-color: #f5f5f5;
+}
+
+
+text {
+	font-size: 150%;
 }
 
 .node rect {
@@ -87,6 +94,7 @@ svg {
 
 .executionHistory {
   overflow-y: auto;
+  height: 500px
 }
 
 .mapDisplay {
@@ -96,4 +104,18 @@ svg {
 .ruleRow {
  padding-left: 50px;
  padding-right: 50px;
+}
+
+.saveButton {
+	margin-top: 10px;
+}
+
+.analysisResults {
+	margin-top: 10px;
+	outline: 3px double gray;
+}
+
+.propertyList {
+  overflow-y: auto;
+  height: 500px
 }

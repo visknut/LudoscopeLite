@@ -24,7 +24,7 @@ public bool runAllTests()
 	&& matchNoDuplicates();
 }
 
-private test bool findPatternInGridSingleMatch()
+public test bool findPatternInGridSingleMatch()
 {
 	/* Arrange */
 	TileMap pattern = [["1"],
@@ -42,7 +42,7 @@ private test bool findPatternInGridSingleMatch()
 	return expectedResult == result;
 }
 
-private test bool findPatternInGridDouble()
+public test bool findPatternInGridDouble()
 {
 	/* Arrange */
 	TileMap pattern = [["1"],
@@ -60,7 +60,7 @@ private test bool findPatternInGridDouble()
 	return expectedResult == result;
 }
 
-private test bool matchHorizontalMirror()
+public test bool matchHorizontalMirror()
 {
 	/* Arrange */
 	Reflections reflections = reflections(true, false, false);
@@ -80,7 +80,7 @@ private test bool matchHorizontalMirror()
 	return expectedResult == result;
 }
 
-private test bool matchVerticalMirror()
+public test bool matchVerticalMirror()
 {
 	/* Arrange */
 	Reflections reflections = reflections(false, true, false);
@@ -102,7 +102,7 @@ private test bool matchVerticalMirror()
 	return expectedResult == result;
 }
 
-private test bool matchSingleRotation()
+public test bool matchSingleRotation()
 {
 	/* Arrange */
 	Reflections reflections = reflections(false, false, true);
@@ -124,7 +124,7 @@ private test bool matchSingleRotation()
 	return expectedResult == result;
 }
 
-private test bool matchNoDuplicates()
+public test bool matchNoDuplicates()
 {
 	/* Arrange */
 	Reflections reflections = reflections(true, true, true);
@@ -144,5 +144,5 @@ private test bool matchNoDuplicates()
 		findPatternWithTransformations(grid, rule);
 
 	/* Assert */
-	return expectedResult == result;
+	return expectedResult := result;
 }

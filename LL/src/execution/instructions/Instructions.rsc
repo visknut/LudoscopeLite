@@ -96,7 +96,7 @@ public ExecutionArtifact executeInstruction
 		/* Loop stops after 300 instructions of after no matches are left. */
 		// TODO: Read maxIterations from module.
 		int i = 0;
-		while (i < 300)
+		while (i < 500)
 		{
 			str ruleName = getOneFrom(currentRules);
 			TileMap oldTileMap = artifact.currentState;

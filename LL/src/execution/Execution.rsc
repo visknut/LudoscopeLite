@@ -27,7 +27,6 @@ import sanr::DataStructures;
 
 public ExecutionArtifact executeProject(LudoscopeProject project)
 {
-	iprintln(project);
 	list[LudoscopeModule] modules = project.modules;
 	PreparationArtifact preparationArtifact =  extractModuleHierarchy(project);
 		

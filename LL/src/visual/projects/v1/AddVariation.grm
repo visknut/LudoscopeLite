@@ -1,0 +1,6 @@
+version: 0.6f
+start: TILEMAP 1 1 0:undefined
+rule: SwapSpaceAndDirt2x1(width=2, gt=2) = TILEMAP 2 1 0:dirt 1:space > {0 = TILEMAP 2 1 0:space 1:dirt}
+rule: SwapSpaceAndDirt2x2(width=2, height=2, gt=2) = TILEMAP 2 2 0:dirt 1:dirt 2:space 3:dirt > {0 = TILEMAP 2 2 0:dirt 1:dirt 2:dirt 3:space}
+rule: SwapDiamond(width=2, gt=1) = TILEMAP 2 1 0:boulder 1:diamond > {0 = TILEMAP 2 1 0:diamond 1:boulder}
+rule: ReplaceDirt(width=4, height=3, gt=7) = TILEMAP 4 3 0:dirt 1:dirt 2:dirt 3:dirt 4:dirt 5:dirt 6:dirt 7:dirt 8:dirt 9:dirt 10:dirt 11:dirt > {0 = TILEMAP 4 3 0:dirt 1:dirt 2:dirt 3:dirt 4:dirt 5:space 6:dirt 7:dirt 8:dirt 9:dirt 10:dirt 11:dirt} | {1 = TILEMAP 4 3 0:dirt 1:dirt 2:dirt 3:dirt 4:dirt 5:diamond 6:dirt 7:dirt 8:dirt 9:dirt 10:dirt 11:dirt} | {2 = TILEMAP 4 3 0:dirt 1:dirt 2:dirt 3:dirt 4:dirt 5:brick 6:dirt 7:dirt 8:dirt 9:dirt 10:dirt 11:dirt}

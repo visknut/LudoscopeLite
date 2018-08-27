@@ -199,6 +199,7 @@ Model update(Msg msg, Model model) {
     	
 			model = tryAndParse(model);
 			model.bugReportViewInfo.bugReport = emptyReport();
+			model.executionViewInfo.currentStep = 0;
     }
     case selectedFile(str file):
     {
@@ -279,11 +280,12 @@ Model tryAndParse(Model model)
 Model generateSoundLevel(Model model)
 {
 	ExecutionArtifact artifact = model.executionViewInfo.executionArtifact;
-	PropertyStates finalPropertyStates = last(artifact.propertyReport.history).propertyStates;
-	
+		
 	// TODO: 100 executions can take a long time. Measure time.
 	for (int i <- [0 .. 100])
 	{
+		PropertyStates finalPropertyStates = last(artifact.propertyReport.history).propertyStates;
+		
 		if (false in finalPropertyStates)
 		{
 			model.executionViewInfo.executionArtifact 

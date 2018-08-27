@@ -1,0 +1,4 @@
+------------------------
+ - Not enough diamonds.
+ - Some non terminal symbols.
+ - Puzzle bug.

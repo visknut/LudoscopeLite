@@ -72,7 +72,10 @@ void viewBugReport(Model model)
 		{
 			div(class("row"), () {
 				int itterations = model.bugReportViewInfo.itterations;
+				text("Number of executions: ");
 				input(\value("<itterations>"),\type("number"), min("1"), max("10000"), onInput(setItterations));
+			});
+			div(class("row"), () {
 				button(onClick(startNewAnalysis()), "Start analysis");
 			});
 			
@@ -87,21 +90,21 @@ void viewBugReport(Model model)
 						actualItterations += report.outputs[key];
 					}
 	
-					div(class("col-md-3"), () {
+					div(class("col-md-3 analysisResults"), () {
 			
 						h3("Executions: <actualItterations>");
 						h3("Unique results: <size(report.outputs)>");
 						h3("Broken results: <report.brokenOutputs>");
 					});
 
-					div(class("col-md-6 scrollBox"), () {
+					div(class("col-md-8 scrollBox"), () {
 						table(class("table table-hover table-condensed"), () {
 						thead(() {
 							th(scope("col"), () {
 								text("Property");
 							});
 							th(scope("col"), () {
-								text("Broken By");
+								text("Broken by");
 							});
 							th(scope("col"), () {
 								text("Occurences");
@@ -195,7 +198,7 @@ void viewExecution(model)
 					
 					/* Maps */
 					TileMap tileMap = step.tileMap;	
-					int svgWidth = 300;
+					int svgWidth = 500;
 					int svgHeight 
 						= calculateSvgHeight(svgWidth, size(tileMap[0]), size(tileMap));
 					
@@ -221,7 +224,7 @@ void viewExecution(model)
 				PropertyStates propertyStates 
 					= propertyReport.history[1 + model.executionViewInfo.currentStep].propertyStates;
 				
-				div(class("col-md-3"), () {
+				div(class("col-md-3 propertyList"), () {
 					h3("Properties");
 					table(class("table table-condensed"), () {
 						tbody(() {
@@ -263,9 +266,10 @@ void viewHistory(Model model)
 				th(scope("col"), class("text-center"), () {
 					text("Module");
 				});
-				th(scope("col"), class("text-center"), () {
-					text("Instruction");
-				});
+				// TODO: add instruction back.
+				//th(scope("col"), class("text-center"), () {
+				//	text("Instruction");
+				//});
 				th(scope("col"), class("text-center"), () {
 					text("Rule");
 				});
@@ -286,9 +290,10 @@ void viewHistory(Model model)
 						th(scope("row"), () {
 							text(step.moduleName);
 						});
-						th(scope("row"), () {
-							text(step.instruction);
-						});
+						// TODO: add instruction back.
+						//th(scope("row"), () {
+						//	text(step.instruction);
+						//});
 						th(scope("row"), () {
 							text(step.ruleName);
 						});
@@ -307,7 +312,7 @@ void viewProject(Model model)
 	      codeMirrorWithMode("cm", model.projectViewInfo.mode, onChange(cmChange), style(("height": "500")),
 	        lineNumbers(true), \value(model.projectViewInfo.initialSrc), lineWrapping(true), class("cm-s-3024-night"));
 
-		    button(onClick(saveChanges()), "Save changes");
+		    button(class("saveButton"), onClick(saveChanges()), "Save changes");
 		  });
 			div(class("col-md-6"), () {
 				if (model.projectViewInfo.parsedProject == emptyArtifact())
@@ -349,6 +354,7 @@ void viewProject(Model model)
 
 void viewPipeline(Model model)
 {
+	h3("Pipeline of \'<model.projectViewInfo.selectedProject>\'");
 	rel[str, str] graph = {};
 	for (int i <- [1 .. size(model.projectViewInfo.prepairedProject.hierarchy)])
 	{
@@ -512,12 +518,12 @@ void viewOptionsRule(Reflections reflections, int madScore)
 				text("H");
 			});
 		}
-		else
-		{
-			div(class("optionOff"), () {
-				text("H");
-			});
-		}
+		//else
+		//{
+		//	div(class("optionOff"), () {
+		//		text("H");
+		//	});
+		//}
 	});
 	div(class("row"), () {
 		if (reflections.mirrorVertical)
@@ -526,12 +532,12 @@ void viewOptionsRule(Reflections reflections, int madScore)
 				text("V");
 			});
 		}
-		else
-		{
-			div(class("optionOff"), () {
-				text("V");
-			});
-		}
+		//else
+		//{
+		//	div(class("optionOff"), () {
+		//		text("V");
+		//	});
+		//}
 	});
 	div(class("row"), () {
 		if (reflections.rotate)
@@ -540,12 +546,12 @@ void viewOptionsRule(Reflections reflections, int madScore)
 				text("R");
 			});
 		}
-		else
-		{
-			div(class("optionOff"), () {
-				text("R");
-			});
-		}
+		//else
+		//{
+		//	div(class("optionOff"), () {
+		//		text("R");
+		//	});
+		//}
 	});
 	div(class("row"), () {
 		if (madScore < 0)
@@ -669,11 +675,12 @@ void viewHeader(Model model) {
 
 void viewFooter(Model model)
 {
-  footer(class("footer"), () {
-  	div(class("container"), () {
-  		span(class("text-muted"), () {
-  			text("Powered by: Rascal & Salix");
-  		});
-  	});
-  });
+	// TODO: return footer.
+  //footer(class("footer"), () {
+  //	div(class("container"), () {
+  //		span(class("text-muted"), () {
+  //			text("Powered by: Rascal & Salix");
+  //		});
+  //	});
+  //});
 }

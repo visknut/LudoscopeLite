@@ -1,0 +1,1 @@
+IterateRule("AddTemplateStart") IterateRule("AddTemplateEnd") IterateRule("AddTemplateMonster") ExecuteRule("AddTemplateReward", 1) ExecuteRule("AddTemplateMaze", 1) ExecuteRule("AddTemplateBoulder", 1) ExecuteRule("AddTemplateTraversal", 1) ExecuteRule("AddTemplatePuzzle", 1)

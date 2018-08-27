@@ -1,0 +1,28 @@
+0x dirtOrSpace
+0x diamondOrBoulder
+0x dirtOrDiamond
+0x fireflyOrButterfly
+0x brickOrMagic
+0x dirtOrBoulder
+0x TemplateSpot
+0x Empty
+0x TemplateStart
+0x TemplateEnd
+0x TemplateMonster
+0x TemplateReward
+0x TemplateBoulder
+0x TemplateTraversal
+0x TemplateMaze1
+0x TemplateMaze2
+0x TemplateMaze3
+0x TemplateMaze4
+
+1x rockford
+1x exit
+1x firefly in AddTemplateMaze
+1x diamond in AddTemplateMaze
+2x dirt in AddTemplateMaze
+1x boulder adjacent to space in AddMediumTemplatePuzzle
+
+at least 5x diamond
+at most 15x diamond

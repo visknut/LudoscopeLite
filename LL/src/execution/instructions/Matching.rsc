@@ -14,6 +14,7 @@ import IO;
 import List;
 import parsing::DataStructures;
 import utility::TileMap;
+import util::Math;
 
 public lrel[Coordinates, Transformations] findPatternWithTransformations
 (
@@ -151,7 +152,8 @@ private lrel[Coordinates, Transformations] findRotationsOfPattern
 	return matches;
 }
 
-// TODO: try different approach (for example: generate permutations and compair to pattern).
+// TODO: Don't collect all the matches. But one random match, by starting 
+// The search at a random location on the tile map.
 public list[Coordinates] findPatternInGrid(TileMap grid, TileMap pattern)
 {
 	list[Coordinates] matches = [];
@@ -183,4 +185,65 @@ public list[Coordinates] findPatternInGrid(TileMap grid, TileMap pattern)
 		}
 	}
 	return matches;
+}
+
+public list[Coordinates] findPatternInGrid2(TileMap grid, TileMap pattern)
+{
+	int patternWidth = size(pattern[0]);
+	int patternHeight = size(pattern);
+	
+	int gridHeight = size(grid);
+	int gridWidth = size(grid[0]);
+	
+	int startX = arbInt(gridWidth);
+	int startY = arbInt(gridHeight);
+	
+	int currentX = startX + 1;
+	int currentY = startY + 1;
+	
+	while (startX != currentX && startY != currentY)
+	{
+
+		/* start at the next row. */
+		if (currentX >= gridWidth)
+		{
+			currentX = 0;
+			currentY += 1;
+		}
+		/* Start at the beginning of the grid. */
+		if (currentY >= gridHeight)
+		{
+			currentY = 0;
+		}
+		
+		/* Only check when within bounds. */
+		if ((currentX <= gridWidth - patternWidth) 
+			&& (currentY <= gridHeight - patternHeight))
+		{
+			bool match = true;
+			for (int x <- [0 .. patternWidth])
+			{
+				for (int y <- [0 .. patternHeight])
+				{
+					if (pattern[y][x] != grid[currentY + y][currentX + x])
+					{
+						match = false;
+						break;
+					}
+				}
+				if (!match)
+				{
+					break;
+				}
+			}
+			
+			if (match)
+			{
+				return [coordinates(currentX, currentY)];
+			}
+		}
+		currentX += 1;
+	}
+	
+	return [];
 }

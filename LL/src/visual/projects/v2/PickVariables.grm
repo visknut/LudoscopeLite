@@ -1,0 +1,8 @@
+version: 0.6f
+start: TILEMAP 1 1 0:undefined
+rule: PickDirtOrSpace = TILEMAP 1 1 0:dirtOrSpace > {0 = TILEMAP 1 1 0:dirt} | {1 = TILEMAP 1 1 0:space}
+rule: PickDiamondOrBoulder = TILEMAP 1 1 0:diamondOrBoulder > {0 = TILEMAP 1 1 0:diamond} | {1 = TILEMAP 1 1 0:boulder} | {2 = TILEMAP 1 1 0:boulder}
+rule: PickDirtOrDiamond = TILEMAP 1 1 0:dirtOrDiamond > {0 = TILEMAP 1 1 0:dirt} | {1 = TILEMAP 1 1 0:diamond} | {2 = TILEMAP 1 1 0:dirt}
+rule: PickFireFlyOrButterfly = TILEMAP 1 1 0:fireflyOrButterfly > {0 = TILEMAP 1 1 0:dirt} | {1 = TILEMAP 1 1 0:diamond}
+rule: PickBrickOrMagic = TILEMAP 1 1 0:brickOrMagic > {0 = TILEMAP 1 1 0:brick} | {1 = TILEMAP 1 1 0:magic}
+rule: PickDirtOrBoulder = TILEMAP 1 1 0:dirtOrBoulder > {0 = TILEMAP 1 1 0:dirt} | {1 = TILEMAP 1 1 0:boulder}

@@ -1,0 +1,1 @@
+ExecuteRule("SwapSpaceAndDirt2x2", 20) ExecuteRule("SwapSpaceAndDirt2x1", 0) ExecuteRule("SwapDiamond", 20) ExecuteRule("ReplaceDirt", 5)
